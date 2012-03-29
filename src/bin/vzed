@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+define("VECTOR_PATH", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR);
+define("VECTOR_TEMPLATES", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR);
+define("VECTOR_CLI", dirname(__FILE__));
+
+defined("DS") or define("DS", DIRECTORY_SEPARATOR);
+defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
+
+require_once "Vzed.php";
