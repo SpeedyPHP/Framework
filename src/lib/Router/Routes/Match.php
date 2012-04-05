@@ -17,15 +17,15 @@ class Match extends Route {
 	 * @param array $options
 	 */
 	public function __construct($params = array()) {
-		reset($params);
+		reset($params); 
 		
-		$firstKey	= key($params);
-		$to		= $params[$firstKey];
+		$firstKey	= key($params); 
+		$to		= $params[$firstKey]; 
 		if (is_int($firstKey)) {
 			$format	= $to;
 		} elseif (is_string($firstKey) && strpos($to, '#')) {
-			$format	= $firstKey;
-			$action	= split('#', $to);
+			$format	= $firstKey; 
+			$action	= explode('#', $to); 
 			$params['controller']	= array_shift($action);
 			$params['action']		= array_shift($action);
 		}
@@ -40,7 +40,6 @@ class Match extends Route {
 		$controller	= $request[0];
 	
 		return ($controller == $this->getName()) ? true : false;*/
-		
 		return $this->_compile($request);
 	}
 	

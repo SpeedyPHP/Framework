@@ -94,7 +94,7 @@ abstract class Route {
 	/**
 	 * Getter for format
 	 */
-	public function getFormat() {
+	public function format() {
 		return $this->_format;
 	}
 	
@@ -106,10 +106,16 @@ abstract class Route {
 		$on	= $this->getOption('on');
 		if ($on && strtolower($on) != strtolower($request->method())) return false; 
 		
-		$uri	= $request->getParam('url');
-		$format	= preg_quote($this->getFormat(), '#');
-		$greedy	= (strpos($format, '*') == strlen($format) - 1) ? true : false;
-		preg_match_all('#:?([A-Za-z0-9_-]+[A-Z0-9a-z]*)#', $format, $matches);
+		//  Set vars uri and format, if they're equal then it's a match! early ofcourse
+		$uri	= $request->url();
+		if (!$uri || strlen($uri) < 1) $uri = '/';
+		$format	= preg_quote($this->format(), '#');
+		
+		// is the format greedy and get tokens
+		// then loop matches to build regex match 
+		// for matching the format to the uri
+		$greedy	= (strpos($format, '*') === strlen($format) - 1) ? true : false;
+		preg_match_all('#:?([A-Za-z0-9_-]+[A-Z0-9a-z]*)#', $format, $matches); 
 	
 		$tokens	= array();
 		$regex	= "#";
@@ -118,6 +124,7 @@ abstract class Route {
 			if ($i) $regex	.= '/';
 			else $regex .= '^';
 				
+			// if the part starts with colon then it's a token and add it as such
 			if (preg_match("#^:#", $match)) {
 				$regex		.= "([A-Za-z0-9_\-]+[A-Z0-9a-z]*)";
 				$tokens[]	= substr_replace($match, '', 0, 1);
@@ -127,18 +134,22 @@ abstract class Route {
 	
 			$i++;
 		}
+		// Add the regex end if it's not greedy
 		if (!$greedy) $regex .= '$';
 		$regex	.= '#';
 	
+		// Find matches
 		$success 	= preg_match_all($regex, $uri, $matches);
 		$base		= array_shift($matches);
 		$params		= array();
 	
-		//output($uri);
-		//output($regex);
-		//output($success);
+		// output("Uri - $uri");
+		// output("Regex - $regex");
+		// output("Success? $success");
+		// Fail if it doesn't match
 		if (!$success) return false;
 	
+		// Loop the matches to find the token values
 		$i = 0;
 		foreach($matches as $key => $value) {
 			$value = $value[0];
@@ -149,8 +160,9 @@ abstract class Route {
 			}
 		}
 	
+		// On greedy find remaining variables
 		if ($greedy && (strlen($base[0]) < strlen($uri))) {
-			$passed	= substr($uri, strlen($base[0]) + 1, strlen($uri));
+			$passed	= substr($uri, strlen($base[0]), strlen($uri));
 			$params['passed'] = explode('/', $passed);
 		}
 	

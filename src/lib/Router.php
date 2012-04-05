@@ -20,7 +20,14 @@ class Router extends Object {
 	 * Current matched route
 	 * @var 
 	 */
-	private $_matchedRoute;
+	private $_matchedRoute = null;
+	
+	/**
+	 * Request object
+	 * @var Vzed\Request
+	 */
+	private $_request;
+	
 	
 	
 	static private function init() {
@@ -30,14 +37,14 @@ class Router extends Object {
 
 		self::$_instance = new Router; 
 		
-		return $this;
+		return self::$_instance;
 	}
 	
 	/**
 	 * Get shared instance of router
 	 * @return Vzed\Router
 	 */
-	static public function getInstance() {
+	static public function instance() {
 		if (self::$_instance == null) {
 			self::init();
 		}
@@ -63,7 +70,7 @@ class Router extends Object {
 		return $this;
 	}
 	
-	public function getRoutes() {
+	public function routes() {
 		return $this->_routes;
 	}
 	
@@ -71,22 +78,28 @@ class Router extends Object {
 	 * Attempts to discover the matching route and return it
 	 * @return Object matched route
 	 */
-	public function getRoute() {
-		if ($route = $this->getMatchedRoute()) return $route; 
+	public function route() {
+		if ($route = $this->matchedRoute()) return $route; 
 		
 		$match	= false;
-		$routes	= $this->getRoutes();
-		$request= App::request();
+		$routes	= $this->routes();
+		$request= $this->request();
 		reset($routes);
 		
-		while ($match === false && $route = next($routes)) {
+		foreach ($routes as $route) {
+			if ($match) {
+				continue;
+			}
+			
 			if ($route->match($request)) {
-				$match = true;
+				$match = true; 
 				$this->_setMatchedRoute($route->getRoute());
+				
+				break;
 			}
 		}
 		
-		return $this->getMatchedRoute();
+		return $this->matchedRoute();
 	}
 	
 	/**
@@ -102,9 +115,46 @@ class Router extends Object {
 	 * Getter for matched request
 	 * @return
 	 */
-	public function getMatchedRoute() {
+	public function matchedRoute() {
 		return $this->_matchedRoute;
 	}
+	
+	/**
+	 * Gets the routes from app draw class
+	 * @param string $name
+	 */
+	public function draw($name) {
+		if (!$name || !is_string($name)) {
+			throw new Router\Exception("Router#draw method missing \$name or \$name is not a string");
+		}
+		
+		$drawer	= new $name();
+		$drawer->draw();
+		
+		return;
+	}
+	
+	/**
+	 * Setter for request
+	 * @param \Vzed\Request $request
+	 */
+	public function setRequest(\Vzed\Request &$request) {
+		$this->_request	=& $request;
+		return $this;
+	}
+	
+	/**
+	 * Getter for request
+	 * @return \Vzed\Request
+	 */
+	public function request() {
+		if (!$this->_request && !($this->_request instanceof \Vzed\Request)) {
+			throw new Exception('Request is null or not instance of \\Vzed\\Request');
+		}
+		
+		return $this->_request;
+	}
+	
 }
 
 ?>

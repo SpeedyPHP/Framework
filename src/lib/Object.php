@@ -3,6 +3,7 @@ namespace Vzed;
 
 const DEBUG = true;
 require_once "Loader.php";
+require_once "Exception.php";
 
 class Object {
 	
@@ -127,7 +128,7 @@ class Object {
 			}
 		}
 		
-		throw new \Exception("No method exists for [$name] in class " . get_class($this));
+		throw new Exception("No method exists $name#" . get_class($this));
 		
 		return null;
 	}
@@ -145,7 +146,7 @@ class Object {
 		}
 		
 		
-		$parts = explode(VS, $name);
+		$parts = explode(self::VS, $name);
 		$return =& $array;
 		
 		for ($i = 0; $i < count($parts)-1; $i++) {
@@ -171,7 +172,7 @@ class Object {
 	 * @return $this;
 	 */
 	protected function __dotSetter($name, $value, &$array) {
-		$keys 	= explode(VS, $name);
+		$keys 	= explode(self::VS, $name);
 		$total 	= count($keys);
 		$current=& $array;
 		

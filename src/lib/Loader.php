@@ -110,7 +110,7 @@ class Loader extends Object {
 	 * @return boolean
 	 */
 	public function loaded($path) {
-		return isset($this->_loaded[$path]);
+		return in_array($path, $this->_loaded);
 	}
 	
 	/**
@@ -122,7 +122,7 @@ class Loader extends Object {
 		if (!require_once($path)) {
 			return false;
 		} else {
-			$this->_loaded[$path] = true;
+			$this->_loaded[] = $path;
 			return true;
 		}
 		
@@ -145,8 +145,10 @@ class Loader extends Object {
 		
 		if (!$this->hasNamespace($namespace)) {
 			$namespace	= $namespace . '.' . array_shift($aPath);
-			if (!$this->hasNamespace($namespace)) return false;
-		}
+			if (!$this->hasNamespace($namespace)) {
+				throw new Exception('No namespace for ' . $namespace);
+			}
+		} 
 		
 		$aClass	= array();
 		foreach ($aPath as $val) {

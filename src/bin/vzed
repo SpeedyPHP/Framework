@@ -1,11 +1,28 @@
 #!/usr/bin/env php
 <?php
 
+defined("DS") or define("DS", DIRECTORY_SEPARATOR);
+
 define("VECTOR_PATH", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "lib" . DIRECTORY_SEPARATOR);
 define("VECTOR_TEMPLATES", dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . "templates" . DIRECTORY_SEPARATOR);
 define("VECTOR_CLI", dirname(__FILE__));
 
-defined("DS") or define("DS", DIRECTORY_SEPARATOR);
+define("APP_ROOT", getcwd());
+define("APP_CONFIG", APP_ROOT . DS . 'config');
+define("APP_PATH", APP_ROOT . DS . 'app');
 defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
+
+require_once VECTOR_PATH . 'Loader.php';
+
+$pathToApp	= APP_CONFIG . DS . 'App.php';
+if (file_exists($pathToApp)) {
+	include $pathToApp;
+}
+
+if (class_exists('App')) {
+	define("APP_LOADED", true);
+} else {
+    define("APP_LOADED", false);
+}
 
 require_once "Vzed.php";

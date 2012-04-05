@@ -34,7 +34,7 @@ class Request extends Object {
 	 * Accessor for params
 	 * @return mixed
 	 */
-	public function getParams() {
+	public function params() {
 		return $this->_params;
 	} 
 
@@ -43,8 +43,8 @@ class Request extends Object {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function getParam($name) {
-		return $this->_params[$name];
+	public function param($name) {
+		return (isset($this->_params[$name])) ? $this->_params[$name] : null;
 	}
 	
 	/**
@@ -56,6 +56,15 @@ class Request extends Object {
 	public function setParam($name, $value) {
 		$this->_params[$name] = $value;
 		return $this;
+	}
+	
+	/**
+	 * Checks if a param exists in params array
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function hasParam($name) {
+		return (isset($this->_params[$name])) ? true : false;
 	}
 	
 	/**
@@ -86,12 +95,16 @@ class Request extends Object {
 		return $this->getData('REQUEST_URI');
 	}
 	
-	public function parseUri() {
-		$url = $this->getParam("url");
+	/**
+	 * Getter for url
+	 * @return string
+	 */
+	public function url() {
+		return ($this->hasParam('url')) ? $this->param('url') : '/'; 
+	}
 	
-		if (!$url) {
-			return array();
-		}
+	public function parseUri() {
+		$url = $this->url();
 		
 		$urlParts	= explode("/", $url);
 		$last		= end($urlParts);
@@ -105,7 +118,7 @@ class Request extends Object {
 			$this->setParam('url', str_replace('.' . $lastParts[1], '', $url));
 		}
 		
-		$this->setParam('request', $urlParts);
+		$this->setParam('request', ($url !== '/') ? $urlParts : array());
 		
 		return $this;
 	}

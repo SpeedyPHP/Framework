@@ -13,8 +13,8 @@ defined('TMP_PATH') or define('TMP_PATH', ROOT . DS . 'tmp');	// Define path to 
 if (!getenv('VZED_PATH')) trigger_error("Could not find library path for VectorizedPHP. Be sure to add environment variable VZED_PATH with absolute path to the library.");
 defined('VZED_PATH') or define('VZED_PATH', getenv('VZED_PATH'));
 
-if (function_exists('ini_set) && 
-	ini_set('include_path', VZED_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path')) {
+if (function_exists('ini_set') && 
+	ini_set('include_path', VZED_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
 	define('CORE_PATH', null);
 } else {
 	define('CORE_PATH', ROOT . DS);
@@ -24,7 +24,7 @@ if (!include(CONFIG_PATH . DS . 'App.php')) {
 	trigger_error("Could not find App class for current application, please check that app file is in CONFIG_PATH/App.php");
 }
 
-\$app	= new $namespace\App();
+\$app	= App::instance();
 \$app->bootstrap()->run();
 
 ?>

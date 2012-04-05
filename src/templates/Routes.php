@@ -3,12 +3,12 @@ return <<<EOF
 <?php
 namespace $namespace\Config;
 
-import('vzed.router.routes.draw');
-use \Vzed\Router\Routes\Draw as VzedDraw;
+\Vzed\import('vzed.router.draw');
+use \Vzed\Router\Draw as VzedDraw;
 
 class Routes extends VzedDraw {
 
-	protected function draw() {
+	public function draw() {
 	
 		// Resource routing example:
 		// \$this->resources('posts');

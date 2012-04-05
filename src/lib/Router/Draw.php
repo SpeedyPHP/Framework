@@ -1,14 +1,15 @@
 <?php 
-namespace Vzed\Routes;
+namespace Vzed\Router;
 
-import('vzed.router');
-import('vzed.router.routes.match');
-import('vzed.router.routes.route');
-import('vzed.router.routes.resource');
+\Vzed\import('vzed.router');
+\Vzed\import('vzed.router.routes.match');
+\Vzed\import('vzed.router.routes.route');
+\Vzed\import('vzed.router.routes.resource');
 
 use \Vzed\Router;
 use \Vzed\Router\Routes\Resource;
 use \Vzed\Router\Routes\Match;
+use \Vzed\Object;
 
 abstract class Draw extends Object {
 	
@@ -27,7 +28,7 @@ abstract class Draw extends Object {
 	
 	
 	public function __construct() {
-		$this->_setRouter(Router::getInstance());
+		$this->_setRouter(Router::instance());
 	}
 	
 	/**
@@ -73,8 +74,8 @@ abstract class Draw extends Object {
 	 * @param array $options
 	 * @return $this
 	 */
-	public function match(string $format, array $options = null) {
-		return $this->pushRoute(new Match($format, $options));
+	public function match(array $options = null) {
+		return $this->pushRoute(new Match($options));
 	}
 	
 	/**
@@ -91,7 +92,7 @@ abstract class Draw extends Object {
 	 * @param array $params
 	 */
 	protected function rootTo($toString, $params) {
-		$params['/'] = $toString;
+		$params	= array_merge(array('/' => $toString), $params);
 		return $this->pushRoute(new Match($params));
 	} 
 }

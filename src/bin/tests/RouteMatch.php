@@ -24,33 +24,45 @@ class RouteMatch extends \Vzed\Test {
 		$_REQUEST["and"]			= "this";
 		$_REQUEST["PHPSESSID"]		= "d318f4894469c17090540c972a4398fb";
 		$_REQUEST["url"]			= "testcontroller/1.html";
-		
-		output("Instanting the Match Class");
-		$this->_instance = new Match(array( "/testcontroller/:id" => 'test#show', 'on' => 'GET' )); 
+		  
 	}
 	
 	public function test() {
-		$instance 	=& $this->_instance;
 		$request	= new Request();
 		
-		output("Starting the test");
-		
-		$match = $instance->match($request);
-		output($match);
-		
-		if ($match) {
+		output("Starting the first test");
+		$route1 = new Match(array( "/testcontroller/:id" => 'test#show', 'on' => 'GET' ));
+		if ($route1->match($request)) {
 			output("Route matches");
-			$params	= $instance->getRoute();
-			print_r($params);
+			print_r($route1->getRoute($request));
 		} else {
 			output("No route");
 		}
-		/*if ($instance->match($request)) {
+		
+		output("Starting the second test");
+		$route2 = new Match(array( "/" => 'test#edit', 'on' => 'GET' ));
+		$_REQUEST["url"]			= "";
+		$request->addData($_SERVER);
+		$request->addParams($_REQUEST);
+		$request->parseUri();
+		if ($route2->match($request)) {
 			output("Matched - index route");
-			print_r($instance->getRoute($request));
+			print_r($route2->getRoute($request));
 		} else {
 			output("Failed!");
-		}*/
+		}
+		
+		output("Starting the third test");
+		$_REQUEST["url"]			= "/";
+		$request->addData($_SERVER);
+		$request->addParams($_REQUEST);
+		$request->parseUri();
+		if ($route2->match($request)) {
+			output("Matched - index route");
+			print_r($route2->getRoute($request));
+		} else {
+			output("Failed!");
+		}
 	}
 	
 }

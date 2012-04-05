@@ -115,7 +115,8 @@ EOF;
 	private function _files($dir) {
 		$files 	= array(
 			'config'	=> array(
-				'App.php' => 'App.php'
+				'App.php' => 'App.php',
+				'Routes.php'=> 'Routes.php'
 			),
 			'public'	=> array(
 				'index.php'	=> 'index.php'

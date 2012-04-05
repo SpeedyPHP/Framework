@@ -5,8 +5,10 @@ require_once "Loader.php";
 import('vzed.object');
 import('vzed.router');
 import('vzed.dispatcher');
+import('vzed.utility.inflector');
 
 use \Vzed\Router;
+use \Vzed\Utility\Inflector;
 
 class App extends Object {
 	
@@ -15,6 +17,18 @@ class App extends Object {
 	protected $_request;
 	
 	private $_router;
+	
+	/**
+	 * Define the name which will be the namespace of the app
+	 * @var string
+	 */
+	protected $_name;
+	
+	/**
+	 * Defined namespace of app
+	 * @var string
+	 */
+	protected $_ns;
 	
 	
 	/**
@@ -28,13 +42,28 @@ class App extends Object {
 	}
 	
 	/**
+	 * initiates the singleton class;
+	 * @throws Exception
+	 */
+	private static function _init() {
+		if (self::$_instance !== null) {
+			throw new Exception('App class already has shared instance');
+		}
+		
+		$class	= get_called_class();
+		self::$_instance = new $class();
+		
+		return self::$_instance;
+	}
+	
+	/**
 	 * Get the singleton instance
-	 * @throws \Exception
+	 * @throws \Vzed\Exception
 	 * @return \Vzed\App
 	 */
 	public static function instance() {
-		if (self::$_instance === null) {
-			throw new \Exception('App class already has one instance');
+		if (self::$_instance == null) {
+			self::_init();
 		}
 		
 		return self::$_instance;
@@ -44,9 +73,41 @@ class App extends Object {
 	 * Strap together all resources
 	 */
 	public function __construct() {
+		if (!$this->name()) {
+			throw new Exception("Subclass of App needs property \$_name defined.");
+		}
+		
 		$this->_setRequest(new Request());
+		$this->setNs(Inflector::underscore($this->name()));
+		
+		$loader = Loader::getInstance();
+		$loader->registerNamespace($this->ns(), APP_PATH);
+		$loader->registerNamespace("{$this->ns()}.config", CONFIG_PATH);
 		
 		self::_setInstance($this);
+	}
+	
+	/**
+	 * Setter for namespace
+	 * @param string $ns
+	 */
+	protected function setNs($ns) {
+		$this->_ns	= strtolower($ns);
+		return $this;
+	}
+	
+	/**
+	 * Getter for namespace
+	 */
+	public function ns() {
+		return (!empty($this->_ns)) ? $this->_ns : null;
+	}
+	
+	/**
+	 * Getter for name
+	 */
+	public function name() {
+		return (!empty($this->_name)) ? $this->_name : null;
 	}
 
 	/**
@@ -54,36 +115,37 @@ class App extends Object {
 	 * @return $this;
 	 */
 	public function bootstrap() {
-		$methods = $this->getBootstrapMethods();
+		$methods = $this->bootstrapMethods();
 		foreach ($methods as $method) {
 			$this->{$method}();
 		}
 		
-		// TODO: Hook this up to run user defined router draw method
-		$router	= Router::getInstance();
-		$router->draw();
+		$router	= Router::instance();
+		$router
+			->setRequest($this->_request())
+			->draw($this->name() . '\Config\Routes');
 		
 		return $this;
 	}
 	
 	public function run() {
-		Dispatcher::run($this->router()->getRoute());
+		Dispatcher::run($this->router());
 	}
 	
 	/**
 	 * Getter for just bootstrap methods
 	 * @return array of bootstrap methods
 	 */
-	private function getBootstrapMethods() {
+	private function bootstrapMethods() {
 		$methods = get_class_methods($this);
 		return array_filter($methods, array($this, 'filterMethods'));
 	}
 	
 	/**
 	 * Filter methods array for initMethods only 
-	 * @param array $array
+	 * @param array $value
 	 */
-	public function filterMethods($array) {
+	public function filterMethods($value) {
 		return preg_match("/^init[A-Z]{1,}[\w]+$/", $value);
 	}
 	
@@ -102,7 +164,7 @@ class App extends Object {
 	 */
 	public function router() {
 		if (!$this->_router) {
-			$this->_setRouter(Router::getInstance());
+			$this->_setRouter(Router::instance());
 		}
 		
 		return $this->_router;
@@ -121,7 +183,7 @@ class App extends Object {
 	/**
 	 * Getter for request property
 	 */
-	public function getRequest() {
+	public function _request() {
 		return $this->_request;
 	}
 	
@@ -129,7 +191,8 @@ class App extends Object {
 	 * Static Getter for request property
 	 */
 	public static function request() {
-		return self::getInstance()->request();
+		$self	= self::instance();
+		return $self->_request();
 	}
 	
 }

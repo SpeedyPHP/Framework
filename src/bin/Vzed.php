@@ -1,5 +1,4 @@
 <?php
-require_once VECTOR_PATH . 'Loader.php';
 Vzed\import('vzed.task');
 
 class Vzed extends Vzed\Task {
@@ -11,6 +10,7 @@ class Vzed extends Vzed\Task {
 		$help = <<<EOF
 -h/--help		This help menu
 test			Test unit
+g			Generators
 EOF;
 		output($help);
 	}
@@ -19,11 +19,12 @@ EOF;
 		$out = <<<EOF
 ------------------------------------------------
 --------------- Vectorized PHP -----------------
-------------------------------------------------
-		
+------------------------------------------------	
 EOF;
 		output($out);
+		if (APP_LOADED) $this->_loadApp();
 		$this->_loadTasks();
+		output();
 		
 		if ($this->argsCount() < 1) {
 			$this->help();
@@ -36,6 +37,14 @@ EOF;
 		$task = $this->getTask($taskName);
 		
 		return $task->run();
+	}
+	
+	/**
+	 * Attempt to load app in current directory
+	 */
+	private function _loadApp() {
+		$app	= App::instance();
+		output("Loaded {$app->name()} from path " . APP_CONFIG);
 	}
 	
 	private function _loadTasks() {
