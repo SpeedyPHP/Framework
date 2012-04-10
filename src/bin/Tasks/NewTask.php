@@ -29,8 +29,9 @@ EOF;
 		$dir	= $this->getData(0);
 		$base	= basename($dir);
 		$namespace	= ucfirst(strtolower($base));
-		$this->set('namespace', $namespace);
-		$this->set('lcNamespace', strtolower($namespace));
+		$this->set('namespace',		$namespace);
+		$this->set('lcNamespace',	strtolower($namespace));
+		$this->set('controller',	'Application');
 		
 		if (empty($dir)) {
 			$this->help();
@@ -120,6 +121,9 @@ EOF;
 			),
 			'public'	=> array(
 				'index.php'	=> 'index.php'
+			),
+			'controllers' => array(
+				'Application.php'	=> 'AppController.php'
 			)
 		);
 		

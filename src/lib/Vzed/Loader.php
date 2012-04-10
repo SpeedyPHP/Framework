@@ -48,7 +48,7 @@ class Loader extends Object {
 	 * Returns shared instance of loader
 	 * @return Vzed\Loader
 	 */
-	public static function getInstance() {
+	public static function instance() {
 		if (self::$_self == null) {
 			self::$_self = self::init();
 		}
@@ -139,6 +139,19 @@ class Loader extends Object {
 		// Check if already loaded
 		if ($this->loaded($namespace)) return true;
 		
+		$path	= $this->toPath($namespace);
+		if (file_exists($path)) {
+			if ($this->load($path)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		return false;
+	}
+	
+	public function toPath($namespace) {
 		// Explode the $namespace and to build path
 		$aPath 		= explode('.', $namespace);
 		$namespace 	= array_shift($aPath);
@@ -148,7 +161,7 @@ class Loader extends Object {
 			if (!$this->hasNamespace($namespace)) {
 				throw new Exception('No namespace for ' . $namespace);
 			}
-		} 
+		}
 		
 		$aClass	= array();
 		foreach ($aPath as $val) {
@@ -157,31 +170,14 @@ class Loader extends Object {
 		
 		// Attempt to find and load the file return result
 		$pathTo = $this->getPath($namespace);
-		$path	= $pathTo . DS . implode(DS, $aPath) . '.php';
-		$path = $pathTo . DS . implode(DS, $aClass) . '.php';
-		if (file_exists($path)) {
-			if ($this->load($path)) {
-				return '\\' . implode('\\', $aClass);
-			} else {
-				return false;
-			}
-		}
-		
-		if (file_exists($path)) {
-			if ($this->load($path)) {
-				return '\\' . implode('\\', $aClass);
-			} else {
-				return false;
-			}
-		} 
-		
-		return false;
+		//$path	= $pathTo . DS . implode(DS, $aPath) . '.php';
+		return $pathTo . DS . implode(DS, $aClass) . '.php';
 	}
 	
 }
 
-function import($classPath) {
-	$loader = Loader::getInstance();
+function import($classPath, $vars = null) {
+	$loader = Loader::instance();
 	
 	return $loader->import($classPath);
 }

@@ -4,6 +4,11 @@ namespace Vzed;
 import('vzed.object');
 import('vzed.request');
 import('vzed.response');
+import('vzed.utility.logger');
+import('vzed.view');
+
+use \Vzed\Utility\Logger;
+use \Vzed\View;
 
 class Controller extends Object {
 	
@@ -26,10 +31,22 @@ class Controller extends Object {
 	protected $_response;
 	
 	/**
+	 * Name of the layout
+	 * @var string
+	 */
+	public $layout;
+	
+	/**
 	 * View has been rendered
 	 * @var boolean
 	 */
 	private $__rendered = false;
+	
+	/**
+	 * Template variables
+	 * @var array
+	 */
+	protected $_tplVars	= array();
 	
 	
 	
@@ -55,6 +72,10 @@ class Controller extends Object {
 		$this->__runFilter('before');
 		
 		$this->{$action}();
+		
+		if (!$this->isRendered()) {
+			$this->render($this->param('action'));
+		}
 		
 		$this->__runFilter('after');
 		
@@ -105,7 +126,7 @@ class Controller extends Object {
 	 * Getter for all params
 	 * @return mixed
 	 */
-	protected function params() {
+	public function params() {
 		return $this->_params;
 	}
 	
@@ -114,7 +135,7 @@ class Controller extends Object {
 	 * @param string $name
 	 * @return mixed
 	 */
-	protected function param($name) {
+	public function param($name) {
 		return $this->__dotAccess($name, $this->_params);
 	}
 	
@@ -165,6 +186,58 @@ class Controller extends Object {
 		$callback($format);
 	}
 	
+	/**
+	 * Render the page
+	 * @param string $path
+	 */
+	protected function render($path = null) {
+		$options	= [ 'layout' => $this->layout() ];
+		$view	= new View($this, $options);
+		$view->render($path);
+	} 
+	
+	/**
+	 * Check if the current action is rendered
+	 * @return boolean
+	 */
+	private function isRendered() {
+		return $this->_rendered;
+	}
+	
+	/**
+	 * Layout setter
+	 * @param string $layout
+	 */
+	protected function setLayout($layout) {
+		$this->layout = $layout;
+		return $this;
+	}
+	
+	/**
+	 * Getter for layout
+	 * @return string layout name
+	 */
+	protected function layout() {
+		return $this->layout;
+	}
+	
+	/**
+	 * Template variable setter
+	 * @param string $name
+	 * @param mixed $value
+	 */
+	protected function set($name, $value) {
+		$this->_tplVars[$name]	= $value;
+		return $this;
+	}
+	
+	/**
+	 * Getter for template variables
+	 * @return array
+	 */
+	public function tplVars() {
+		return $this->_tplVars;
+	}
 }
 
 ?>

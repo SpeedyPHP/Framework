@@ -128,7 +128,7 @@ class Object {
 			}
 		}
 		
-		throw new Exception("No method exists $name#" . get_class($this));
+		throw new Exception("No method exists " . get_class($this) . "#$name");
 		
 		return null;
 	}

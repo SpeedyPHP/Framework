@@ -141,7 +141,7 @@ abstract class Route {
 		// Find matches
 		$success 	= preg_match_all($regex, $uri, $matches);
 		$base		= array_shift($matches);
-		$params		= array();
+		$params		= array( 'ext' => ($request->hasParam('ext')) ? $request->param('ext') : 'html' );
 	
 		// output("Uri - $uri");
 		// output("Regex - $regex");

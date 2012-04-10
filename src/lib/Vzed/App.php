@@ -80,7 +80,7 @@ class App extends Object {
 		$this->_setRequest(new Request());
 		$this->setNs(Inflector::underscore($this->name()));
 		
-		$loader = Loader::getInstance();
+		$loader = Loader::instance();
 		$loader->registerNamespace($this->ns(), APP_PATH);
 		$loader->registerNamespace("{$this->ns()}.config", CONFIG_PATH);
 		

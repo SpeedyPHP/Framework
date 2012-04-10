@@ -3,11 +3,11 @@ return <<<EOF
 <?php
 namespace {$namespace}\Controllers;
 
-\Vzed\import('vzed.controller');
+\Vzed\import('{$lcNamespace}.controller.application');
 
-use \Vzed\Controller;
+use \{$namespace}\Application;
 
-class {$controller} extends Controller {
+class {$controller} extends Application {
 
 	{$actions}
 
