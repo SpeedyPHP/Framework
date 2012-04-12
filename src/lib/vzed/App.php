@@ -9,6 +9,7 @@ import('vzed.utility.inflector');
 
 use \Vzed\Router;
 use \Vzed\Utility\Inflector;
+use \Vzed\Config;
 
 class App extends Object {
 	
@@ -29,6 +30,14 @@ class App extends Object {
 	 * @var string
 	 */
 	protected $_ns;
+	
+	/**
+	 * Config of the app
+	 * @var \Vzed\Config
+	 */
+	protected $_config;
+	
+	
 	
 	
 	/**
@@ -83,8 +92,29 @@ class App extends Object {
 		$loader = Loader::instance();
 		$loader->registerNamespace($this->ns(), APP_PATH);
 		$loader->registerNamespace("{$this->ns()}.config", CONFIG_PATH);
+		$loader->registerNamespace('active_record', VZED_PATH . DS . 'activerecord');
+		
+		$config	= $this->config();
 		
 		self::_setInstance($this);
+	}
+	
+	/**
+	 * Setter for config
+	 * @param \Vzed\Config $config
+	 * @return \Vzed\App
+	 */
+	protected function setConfig(\Vzed\Config &$config) {
+		$this->_config =& $config;
+		return $this;
+	}
+	
+	public function config() {
+		if (!$this->_config) {
+			$this->setConfig(Config::instance());
+		}
+		
+		return $this->_config;
 	}
 	
 	/**

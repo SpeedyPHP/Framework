@@ -5,12 +5,28 @@ use \Vzed\Loader;
 
 class View {
 	
+	/**
+	 * Reference to controller
+	 * @var \Vzed\Controller
+	 */
 	private $_controller;
 	
+	/**
+	 * Path to the template
+	 * @var string
+	 */
 	private $_templatePath;
 	
+	/**
+	 * Options for template
+	 * @var array
+	 */
 	private $_options;
 	
+	/**
+	 * Template variables
+	 * @var array
+	 */
 	private $_tplVars;
 	
 	
@@ -105,6 +121,10 @@ class View {
 			$path	= "{$ns}.views.{$controller}.$path";
 		}
 		
+		if (!file_exists(Loader::instance()->toPath($path))) {
+			// TODO: No view found
+		}
+		
 		if ($options['layout']) {
 			$vars	= $this->tplVars();
 			$layout	= $options['layout'];
@@ -112,12 +132,23 @@ class View {
 			$layoutPath	= Loader::instance()->toPath($layout); 
 			$content_for_layout	= $this->renderToString($path);
 			
+			if (!file_exists($layoutPath)) {
+				// TODO: No layout found
+			}
+			
 			include_once $layoutPath;
 		} else {
 			\Vzed\import($path);
 		}
+		
+		// TODO: Throw unknown error exception
 	}
 	
+	/**
+	 * Renders the template to a string
+	 * @param string $template path to template
+	 * @return string
+	 */
 	public function renderToString($template) {
 		ob_start();
 		\Vzed\import($template);

@@ -73,10 +73,6 @@ class Controller extends Object {
 		
 		$this->{$action}();
 		
-		if (!$this->isRendered()) {
-			$this->render($this->param('action'));
-		}
-		
 		$this->__runFilter('after');
 		
 	}
@@ -183,7 +179,17 @@ class Controller extends Object {
 		$format = $this->param('ext');
 		if (empty($format)) $format	= 'html';
 		
-		$callback($format);
+		$this->response()->printHeaders();
+		$return	= $callback($format);
+		
+		if ($this->isRendered()) return;
+		
+		if (is_string($return)) {
+			echo $return;
+			$this->rendered();
+		} else {
+			$this->render($this->param('action'));
+		}
 	}
 	
 	/**
@@ -191,7 +197,7 @@ class Controller extends Object {
 	 * @param string $path
 	 */
 	protected function render($path = null) {
-		$options	= [ 'layout' => $this->layout() ];
+		$options	= array( 'layout' => $this->layout() );
 		$view	= new View($this, $options);
 		$view->render($path);
 	} 
@@ -202,6 +208,15 @@ class Controller extends Object {
 	 */
 	private function isRendered() {
 		return $this->_rendered;
+	}
+	
+	/**
+	 * Sets rendered to true
+	 * @return \Vzed\Controller
+	 */
+	private function rendered() {
+		$this->__rendered	= true;
+		return $this;
 	}
 	
 	/**
@@ -237,6 +252,21 @@ class Controller extends Object {
 	 */
 	public function tplVars() {
 		return $this->_tplVars;
+	}
+	
+	/**
+	 * Convert mixed value into json representation 
+	 * and set headers for reponse
+	 * @param mixed $mixed
+	 * @return string json representation
+	 */
+	protected function toJson($mixed) {
+		$this->response()
+			->setHeader('Cache-Control', 'no-cache, must-revalidate')
+			->setHeader('Expires', date('r'))
+			->setHeader('Content-Type', 'application/json');
+		
+		return json_encode($mixed);
 	}
 }
 

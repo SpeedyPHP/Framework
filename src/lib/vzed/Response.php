@@ -30,7 +30,7 @@ class Response extends Object {
 	 * prints out the header that has been setup
 	 * @return \Vzed\Response
 	 */
-	public function printHeader() {
+	public function printHeaders() {
 		$headers	= $this->headers();
 		
 		if (empty($headers)) return $this;

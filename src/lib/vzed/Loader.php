@@ -9,8 +9,9 @@ namespace Vzed;
 
 const DS 	= DIRECTORY_SEPARATOR;
 
-ini_set('include_path', getenv('VZED_PATH') . PATH_SEPARATOR . getenv('include_path'));
 require_once "Object.php";
+
+use \Vzed\Utility\Inflector;
 
 class Loader extends Object {
 	
@@ -57,7 +58,7 @@ class Loader extends Object {
 	}
 	
 	public function __construct() {
-		$this->registerNamespace('vzed', $_ENV['VZED_PATH']);
+		$this->registerNamespace('vzed', $_ENV['VZED_PATH'] . DS . 'vzed');
 		
 		return $this;
 	}
@@ -174,6 +175,24 @@ class Loader extends Object {
 		return $pathTo . DS . implode(DS, $aClass) . '.php';
 	}
 	
+	
+	public function toNamespace($class) {
+		if (!strpos($class, '\\')) return false;
+		
+		$classArr	= explode('\\', $class);
+		foreach ($classArr as &$value) {
+			$value	= Inflector::underscore($value);
+		}
+		$namespace	= array_shift($classArr);
+		
+		if (!$this->hasNamespace($namespace)) {
+			$namespace	= $namespace . '.' . array_shift($classArr);
+			if (!$this->hasNamespace($namespace)) return false;
+		}
+		
+		return $namespace . '.' . implode('.', $classArr);
+	}
+	
 }
 
 function import($classPath, $vars = null) {
@@ -182,4 +201,11 @@ function import($classPath, $vars = null) {
 	return $loader->import($classPath);
 }
 
-//spl_auto_register(__NAMESPACE__ . '\import');
+function autoload($className) {
+	if (!strpos($className, '\\')) return false;
+	 
+	$namespace	= Loader::instance()->toNamespace($className);
+	return import($namespace);
+}
+
+\spl_autoload_register('Vzed\autoload', false);
