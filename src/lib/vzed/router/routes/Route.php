@@ -143,9 +143,9 @@ abstract class Route {
 		$base		= array_shift($matches);
 		$params		= array( 'ext' => ($request->hasParam('ext')) ? $request->param('ext') : 'html' );
 	
-		// output("Uri - $uri");
-		// output("Regex - $regex");
-		// output("Success? $success");
+		// \Vzed\debug("Uri - $uri");
+		// \Vzed\debug("Regex - $regex");
+		// \Vzed\debug("Success? $success");
 		// Fail if it doesn't match
 		if (!$success) return false;
 	

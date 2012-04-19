@@ -2,7 +2,6 @@
 namespace Vzed;
 
 const DEBUG = true;
-require_once "Loader.php";
 require_once "Exception.php";
 
 class Object {

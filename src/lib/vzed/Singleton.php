@@ -1,9 +1,9 @@
 <?php 
 namespace Vzed;
 
-class Singleton extends Object {
+abstract class Singleton extends Object {
 	
-	private static $_instance;
+	private static $_instances = array();
 	
 	
 	/**
@@ -11,7 +11,6 @@ class Singleton extends Object {
 	 * @throws Exception
 	 */
 	private static function init() {
-		$class	= get_called_class();
 		if (self::$_instance !== null) {
 			throw new Exception("Singleton $class already instanted");
 		}
@@ -24,12 +23,25 @@ class Singleton extends Object {
 	/**
 	 * Getter for shared singleton instance
 	 */
-	public static function instance() {
-		if (self::$_instance == null) {
-			self::init();
+	final public static function instance() {
+		$class	= get_called_class();
+		if (!isset(self::$_instances[$class])) {
+			self::$_instances[$class]	= new $class;
 		}
 		
-		return self::$_instance;
+		return self::$_instances[$class];
+	}
+	
+	/**
+	 * Singleton objects should not be cloned.
+	 *
+	 * @return void
+	 */
+	final private function __clone() {}
+	
+	final protected function get_called_class() {
+		$backtrace = debug_backtrace();
+		return get_class($backtrace[2]['object']);
 	}
 	
 }

@@ -27,13 +27,13 @@ class Resource {
 		}
 		
 		$this->_setName($resource);
-		$this->_pushRoute(new Match("/$resource", array('controller' => $resource, 		'action' => 'index', 	'on' => self::GET)));
-		$this->_pushRoute(new Match("/$resource/new", array('controller' => $resource, 	'action' => 'new', 		'on' => self::GET)));
-		$this->_pushRoute(new Match("/$resource", array('controller' => $resource, 		'action' => 'create', 	'on' => self::POST)));
-		$this->_pushRoute(new Match("/$resource/:id", array('controller' => $resource, 	'action' => 'show', 	'on' => self::GET)));
-		$this->_pushRoute(new Match("/$resource/:id/edit", array('controller' => $resource, 'action' => 'edit',	'on' => self::GET)));
-		$this->_pushRoute(new Match("/$resource/:id", array('controller' => $resource, 	'action' => 'update', 	'on' => self::PUT)));
-		$this->_pushRoute(new Match("/$resource/:id", array('controller' => $resource, 	'action' => 'destroy', 	'on' => self::DELETE)));
+		$this->_pushRoute(new Match(array("/$resource" => "$resource#index", 	'on' => self::GET)));
+		$this->_pushRoute(new Match(array("/$resource/new" => "$resource#new", 	'on' => self::GET)));
+		$this->_pushRoute(new Match(array("/$resource" => "$resource#create", 	'on' => self::POST)));
+		$this->_pushRoute(new Match(array("/$resource/:id" => "$resource#show", 'on' => self::GET)));
+		$this->_pushRoute(new Match(array("/$resource/:id/edit" => "$resource#edit",	'on' => self::GET)));
+		$this->_pushRoute(new Match(array("/$resource/:id" => "$resource#update", 		'on' => self::PUT)));
+		$this->_pushRoute(new Match(array("/$resource/:id" => "$resource#destroy", 		'on' => self::DELETE)));
 	}
 	
 	public function match(\Vzed\Request $request) {

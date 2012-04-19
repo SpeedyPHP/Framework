@@ -13,10 +13,29 @@ class Config extends Singleton {
 	protected $_db = array();
 	
 	/**
-	* Current environment
-	* @var string
-	*/
+	 * Current environment
+	 * @var string
+	 */
 	protected $_environment;
+	
+	/**
+	 * Paths
+	 * @var array
+	 */
+	protected $_paths	= array(
+		'controllers'	=> array(),
+		'helpers'		=> array(),
+		'models'		=> array(),
+		'views'			=> array()
+	);
+	
+	/**
+	* List of view renders
+	* @var array
+	*/
+	protected $_renders	= array(
+		'php'	=> 'vzed.view.php'
+	);
 	
 	
 	
@@ -26,11 +45,56 @@ class Config extends Singleton {
 			throw new CException("Database configuration could not be found");
 		}
 		
-		$db	= yaml_parse_file($dbYamlPath);
+		$this->setDb(yaml_parse_file($dbYamlPath));
 	}
 	
+	/**
+	 * Getter for renderer
+	 * @return array
+	 */
+	public function renderers() {
+		return $this->_renders;
+	}
+	
+	/**
+	 * Add a renderer to the stack
+	 * @param string $format
+	 * @param string $namespace
+	 * @return \Vzed\Config
+	 */
+	public function addRenderer($format, $namespace) {
+		$this->_renders[$format]	= $namespace;
+		return $this;
+	}
+	
+	/**
+	 * Setter for environment
+	 * @param string $env
+	 * @return \Vzed\Config
+	 */
 	protected function setEnvironment($env) {
+		$this->_environment	= $env;
+		return $this;
+	}
+	
+	/**
+	 * Getter for environment
+	 * @return string
+	 */
+	public function environment() {
+		if (!$this->_environment) {
+			$this->_environment = (isset($_ENV['VZED_ENVIRONMENT'])) ? $_ENV['VZED_ENVIRONMENT'] : 'development';
+		}
 		
+		return $this->_environment;
+	}
+	
+	/**
+	 * Alias for environment method
+	 * @return string
+	 */
+	public function env() {
+		return $this->environment();
 	}
 	
 	/**
@@ -48,8 +112,8 @@ class Config extends Singleton {
 	 * @param string $setup
 	 * @return array
 	 */
-	public function db($setup = null) {
-		return (is_string($setup)) ? $this->_db[$setup] : $this->_db;
+	public function db($env = null) {
+		return ($env) ? $this->_db[$env] : $this->_db;
 	}
 	
 	/**
@@ -72,5 +136,20 @@ class Config extends Singleton {
 		$string .= "://{$username}:{$password}@{$host}/{$database}";
 		return $string;
 	}
+	
+	/**
+	 * Returns array of all db configs as string
+	 * @return array
+	 */
+	public function dbStrings() {
+		$connections	= array();
+		foreach ($this->db() as $type => $conf) {
+			$connections[$type]	= $this->dbString($type);
+		}
+		
+		return $connections;
+	}
+	
+	
 }
 ?>

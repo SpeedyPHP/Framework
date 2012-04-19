@@ -10,8 +10,11 @@ namespace Vzed;
 const DS 	= DIRECTORY_SEPARATOR;
 
 require_once "Object.php";
+require_once "utility/Inflector.php";
+require_once "loader/Exception.php";
 
 use \Vzed\Utility\Inflector;
+use \Vzed\Loader\Exception;
 
 class Loader extends Object {
 	
@@ -29,6 +32,12 @@ class Loader extends Object {
 	private $_loaded = array();
 	
 	/**
+	 * Path aliases
+	 * @var array
+	 */
+	private $_aliases;
+	
+	/**
 	 * 
 	 * Holds shared instance
 	 * @var Loader
@@ -36,9 +45,16 @@ class Loader extends Object {
 	private static $_self = null;
 	
 	
+	
+	
+	/**
+	 * Initializer for the singleton
+	 * @throws \Vzed\Loader\Exception
+	 * @return \Vzed\Loader
+	 */
 	public static function init() {
 		if (self::$_self !== null) {
-			// TODO: throw exception
+			throw new Exception('Reattempting to init a singleton');
 		}
 		
 		return new Loader();
@@ -64,6 +80,46 @@ class Loader extends Object {
 	}
 	
 	/**
+	 * Setter for aliases
+	 * @param array $aliases
+	 * @return \Vzed\Loader
+	 */
+	public function setAliases(array $aliases) {
+		$this->_aliases	= $aliases;
+		return $this;
+	}
+	
+	/**
+	 * Alias an existing namespace
+	 * @param string $alias
+	 * @param string $namespace
+	 * @return \Vzed\Loader
+	 */
+	public function addAlias($alias, $namespace) {
+		if ($this->hasNamespace($namespace)) return $this;
+		
+		$this->_aliases[$alias]	= $namespace;
+		return $this;
+	}
+	
+	/**
+	 * Check if an alias exists
+	 * @param string $alias
+	 * @return boolean
+	 */
+	private function hasAlias($alias) {
+		return !empty($this->_aliases[$alias]);
+	}
+	
+	/**
+	 * Return alias if it exists
+	 * @param string $alias
+	 */
+	private function alias($alias) {
+		return ($this->hasAlias($alias)) ? $this->_aliases[$alias] : null;
+	}
+	
+	/**
 	 * Returns namespaces array
 	 * @return array
 	 */
@@ -75,16 +131,38 @@ class Loader extends Object {
 	 * Registers namespace
 	 * @param string namespace
 	 * @param string path
+	 * @throws \Vzed\Loader\Exception
 	 * @return boolean
 	 */
 	public function registerNamespace($namespace, $path) {
 		if ($this->hasNamespace($namespace)) {
-			// TODO: throw exception
-			return false;
+			throw new Exception('Namespace already exists');
 		}	
 		
 		$this->_namespaces[$namespace] = $path;
 		return true;
+	}
+	
+	/**
+	 * Pushes a path to the namespace
+	 * @param string $namespace
+	 * @param string $path
+	 * @return \Vzed\Loader
+	 */
+	public function pushPathToNamespace($namespace, $path) {
+		// Create the namespace if it doesn't exist
+		if (!$this->hasNamespace($namespace)) {
+			$this->registerNamespace($namespace, array($path));
+			return $this;
+		}
+		
+		// Move the namespace into an array if its not already
+		if (!is_array($this->_namespace[$namespace])) {
+			$this->_namespace[$namespace]	= array( $this->path($namespace) );
+		}
+		
+		$this->_namespace[$namespace][]	= $path;
+		return $this;
 	}
 	
 	/**
@@ -101,7 +179,9 @@ class Loader extends Object {
 	 * @param $namespace
 	 * @return string of path
 	 */
-	public function getPath($namespace) {
+	public function path($namespace) {
+		if ($this->hasAlias($namespace)) return $this->path($this->alias($namespace));
+		
 		return ($this->hasNamespace($namespace)) ? $this->_namespaces[$namespace] : null;
 	}
 	
@@ -117,6 +197,7 @@ class Loader extends Object {
 	/**
 	 * Loads the file
 	 * @param $path
+	 * @throws \Vzed\Loader\Exception
 	 * @return boolean
 	 */
 	private function load($path) {
@@ -127,8 +208,7 @@ class Loader extends Object {
 			return true;
 		}
 		
-		// TODO: Raise exception
-		return false;
+		throw new Exception('Unknown error in load');
 	}	
 	
 	/**
@@ -141,41 +221,79 @@ class Loader extends Object {
 		if ($this->loaded($namespace)) return true;
 		
 		$path	= $this->toPath($namespace);
-		if (file_exists($path)) {
-			if ($this->load($path)) {
-				return true;
-			} else {
-				return false;
-			}
+		if ($this->load($path)) {
+			return true;
+		} else {
+			return false;
 		}
 		
 		return false;
 	}
 	
+	/**
+	 * Gets the path for a namespace
+	 * @param string $namespace
+	 * @throws Exception
+	 */
 	public function toPath($namespace) {
 		// Explode the $namespace and to build path
 		$aPath 		= explode('.', $namespace);
-		$namespace 	= array_shift($aPath);
+		$firstSpace = array_shift($aPath);
+		$secondSpace= array_shift($aPath);
+		$relNamespace	= $firstSpace . '.' . $secondSpace;
 		
-		if (!$this->hasNamespace($namespace)) {
-			$namespace	= $namespace . '.' . array_shift($aPath);
-			if (!$this->hasNamespace($namespace)) {
-				throw new Exception('No namespace for ' . $namespace);
+		if (!$this->hasNamespace($relNamespace)) {
+			array_unshift($aPath, $secondSpace);
+			$relNamespace	= $firstSpace;
+			
+			if (!$this->hasNamespace($relNamespace)) {
+				throw new Exception('No namespace for ' . $relNamespace);
 			}
 		}
 		
 		$aClass	= array();
-		foreach ($aPath as $val) {
-			$aClass[] = ucfirst($val);
+		$total	= count($aPath) - 1;
+		foreach ($aPath as $index => $val) {
+			if ($index < $total) {
+				$aClass[]	= Inflector::underscore($val);
+			} else {
+				$aClass[]	= Inflector::camelize($val);
+			}
+		}
+		// Attempt to find and load the file return result
+		$pathTo = $this->path($relNamespace);
+		
+		// if the $pathTo is an array then loop all potential
+		// paths to find the correct one. Otherwise check
+		// if the file exists and return it
+		if (is_array($pathTo)) {
+			foreach ($pathTo as $path) {
+				$fullPath	= $path . DS . implode(DS, $aClass) . '.php';
+				
+				if (!file_exists($fullPath)) {
+					continue;
+				}
+				
+				return $fullPath;
+			} 
+			
+			throw new Exception("No path found for $namespace for path " . implode(':', $pathTo));
+		} else {
+			$fullPath	= $pathTo . DS . implode(DS, $aClass) . '.php';
+
+			if (!file_exists($fullPath)) {
+				throw new Exception("No path found for $namespace for path " . $pathTo);
+			}
 		}
 		
-		// Attempt to find and load the file return result
-		$pathTo = $this->getPath($namespace);
-		//$path	= $pathTo . DS . implode(DS, $aPath) . '.php';
-		return $pathTo . DS . implode(DS, $aClass) . '.php';
+		return $fullPath;
 	}
 	
-	
+	/**
+	 * Converts a class to namespace
+	 * @param string $class
+	 * @return string
+	 */
 	public function toNamespace($class) {
 		if (!strpos($class, '\\')) return false;
 		
@@ -193,9 +311,27 @@ class Loader extends Object {
 		return $namespace . '.' . implode('.', $classArr);
 	}
 	
+	/**
+	 * Converts a namespace to a class
+	 * @param string $namepace
+	 * @return string
+	 */
+	public function toClass($namespace) {
+		$namespaceArr	= explode('.', $namespace);
+		foreach ($namespaceArr as &$value) {
+			$value	= Inflector::camelize($value);
+		}
+		
+		return '\\' . implode('\\', $namespaceArr);
+	}
+	
 }
 
 function import($classPath, $vars = null) {
+	// Ignore some paths that are already loaded
+	if ($classPath == 'vzed.object') return;
+	if ($classPath == 'vzed.utility.inflector') return;
+	if ($classPath == 'vzed.loader.exception') return;
 	$loader = Loader::instance();
 	
 	return $loader->import($classPath);
@@ -209,3 +345,13 @@ function autoload($className) {
 }
 
 \spl_autoload_register('Vzed\autoload', false);
+
+function debug($obj) {
+	echo "<pre>";
+	if (is_array($obj)) {
+		print_r($obj);
+	} else {
+		var_dump($obj);
+	}
+	echo "</pre>";
+}

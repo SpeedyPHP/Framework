@@ -5,9 +5,11 @@ import('vzed.object');
 import('vzed.request');
 import('vzed.response');
 import('vzed.utility.logger');
-import('vzed.view');
 
 use \Vzed\Utility\Logger;
+use \Vzed\Utility\Inflector;
+use \Vzed\Config;
+use \Vzed\Http\Exception as HttpException;
 use \Vzed\View;
 
 class Controller extends Object {
@@ -74,6 +76,10 @@ class Controller extends Object {
 		$this->{$action}();
 		
 		$this->__runFilter('after');
+		
+		if (!$this->isRendered()) {
+			$this->render();
+		}
 		
 	}
 	
@@ -196,10 +202,29 @@ class Controller extends Object {
 	 * Render the page
 	 * @param string $path
 	 */
-	protected function render($path = null) {
-		$options	= array( 'layout' => $this->layout() );
-		$view	= new View($this, $options);
-		$view->render($path);
+	protected function render($path = null, $options = array()) {
+		$options	= array_merge(array( 
+			'layout' => $this->layout() 
+		), $options);
+		$controller	= Inflector::underscore($this->param('controller'));
+		$ext		= strtolower($this->param('ext'));
+		if (!$path) $path	= $controller . DS . Inflector::underscore($this->param('action'));
+		
+		if (strpos($path, '/') === false) {
+			$relPath	= $controller . DS . $path;
+		} else {
+			$relPath	= $path;
+		}
+		
+		$rendered = View::instance()->render($relPath, $options, $this->tplVars(), $this->getData(), $ext);
+		
+		if (!$rendered) {
+			$controller	= Inflector::underscore($this->param('controller'));
+			$action		= Inflector::underscore($this->param('action'));
+			throw new HttpException("No view found for $controller#$action");
+		} else {
+			$this->rendered();
+		}
 	} 
 	
 	/**
@@ -207,7 +232,7 @@ class Controller extends Object {
 	 * @return boolean
 	 */
 	private function isRendered() {
-		return $this->_rendered;
+		return $this->__rendered;
 	}
 	
 	/**

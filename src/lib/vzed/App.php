@@ -37,6 +37,12 @@ class App extends Object {
 	 */
 	protected $_config;
 	
+	/**
+	 * Orm bootstrap
+	 * @var string
+	 */
+	protected $_orm;
+	
 	
 	
 	
@@ -90,13 +96,33 @@ class App extends Object {
 		$this->setNs(Inflector::underscore($this->name()));
 		
 		$loader = Loader::instance();
-		$loader->registerNamespace($this->ns(), APP_PATH);
 		$loader->registerNamespace("{$this->ns()}.config", CONFIG_PATH);
-		$loader->registerNamespace('active_record', VZED_PATH . DS . 'activerecord');
+		$loader->registerNamespace("{$this->ns()}.controllers", array(APP_PATH . DS . 'controllers'));
+		$loader->registerNamespace("{$this->ns()}.models", 		array(APP_PATH . DS . 'models'));
+		$loader->registerNamespace("{$this->ns()}.helpers", 	array(APP_PATH . DS . 'helpers'));
+		$loader->registerNamespace("{$this->ns()}.views", 		array(APP_PATH . DS . 'views'));
+		$loader->registerNamespace($this->ns(), APP_PATH);
 		
-		$config	= $this->config();
+		$loader->setAliases(array(
+			'views'			=> "{$this->ns()}.views",
+			'helpers'		=> "{$this->ns()}.helpers",
+			'controllers'	=> "{$this->ns()}.controllers",
+			'models'		=> "{$this->ns()}.models",
+		));
+		
+		$config		= $this->config();
+		$ormClass	= $loader->toClass($this->orm());
+		$ormClass::setup($config);
 		
 		self::_setInstance($this);
+	}
+	
+	/**
+	 * Getter for orm
+	 * @return string of namespace for orm bootstrap
+	 */
+	public function orm() {
+		return $this->_orm;
 	}
 	
 	/**
@@ -226,5 +252,7 @@ class App extends Object {
 	}
 	
 }
+
+
 
 ?>

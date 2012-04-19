@@ -12,6 +12,11 @@ use \Vzed\Router\Routes\Match;
 use \Vzed\Object;
 
 abstract class Draw extends Object {
+	const GET	= "GET";
+	const POST	= "POST";
+	const PUT	= "PUT";
+	const DELETE= "DELETE";
+	
 	
 	/**
 	 * Holds all route instances
@@ -60,10 +65,17 @@ abstract class Draw extends Object {
 	 * @return $this
 	 */
 	public function resources($name, array $options = null) {
-		$resource	= new Resource($name, $options);
+		$this->pushRoute(new Match(array("/$name" => "$name#index", 	'on' => self::GET)));
+		$this->pushRoute(new Match(array("/$name/new" => "$name#new", 	'on' => self::GET)));
+		$this->pushRoute(new Match(array("/$name" => "$name#create", 	'on' => self::POST)));
+		$this->pushRoute(new Match(array("/$name/:id" => "$name#show", 'on' => self::GET)));
+		$this->pushRoute(new Match(array("/$name/:id/edit" => "$name#edit",	'on' => self::GET)));
+		$this->pushRoute(new Match(array("/$name/:id" => "$name#update", 		'on' => self::PUT)));
+		$this->pushRoute(new Match(array("/$name/:id" => "$name#destroy", 		'on' => self::DELETE)));
+		/*$resource	= new Resource($name, $options);
 		foreach ($resource->getRoutes() as $route) {
 			$this->pushRoute($route);
-		}
+		}*/
 		
 		return $this;
 	}

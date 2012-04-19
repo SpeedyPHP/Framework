@@ -2,157 +2,53 @@
 namespace Vzed;
 
 use \Vzed\Loader;
+use \Vzed\Config;
+use \Vzed\Utility\Inflector;
+use \Vzed\Http\Exception as HttpException;
+use \Vzed\Singleton;
 
-class View {
-	
-	/**
-	 * Reference to controller
-	 * @var \Vzed\Controller
-	 */
-	private $_controller;
-	
-	/**
-	 * Path to the template
-	 * @var string
-	 */
-	private $_templatePath;
-	
-	/**
-	 * Options for template
-	 * @var array
-	 */
-	private $_options;
+class View extends Singleton {
 	
 	/**
 	 * Template variables
 	 * @var array
 	 */
-	private $_tplVars;
-	
-	
-	/**
-	 * View renderer
-	 * @param \Vzed\Controller $controller
-	 */
-	public function __construct(\Vzed\Controller &$controller, $options = array()) {
-		$this
-			->setController($controller)
-			->setOptions($options)
-			->setTplVars($this->controller()->tplVars());
-	}
-	
-	/**
-	 * Setter for template vars
-	 * @param array $tplVars
-	 * @return \Vzed\View
-	 */
-	protected function setTplVars(array $tplVars) {
-		$this->_tplVars	= $tplVars;
-		return $this;
-	}
-	
-	/**
-	 * Getter for template variables
-	 * @return array
-	 */
-	protected function tplVars() {
-		return $this->_tplVars;
-	}
-	
-	/**
-	 * Setter for template variables
-	 * @param string $name
-	 * @param mixed $value
-	 * @return \Vzed\View
-	 */
-	protected function set($name, $value) {
-		$this->_tplVars[$name]	= $value;
-		return $this;
-	}
-	
-	/**
-	 * Getter for options
-	 * @return array options
-	 */
-	protected function options() {
-		return $this->_options;
-	}
-	
-	/**
-	 * Setter options
-	 * @param array $options
-	 */
-	protected function setOptions($options) {
-		$this->_options	= $options;
-		return $this;
-	}
-	
-	/**
-	 * Setter for controller
-	 * @param unknown_type $controller
-	 */
-	private function setController(&$controller) {
-		$this->_controller =& $controller;
-		return $this;
-	}
-	
-	/**
-	 * Getter for the controller
-	 * @return \Vzed\Controller
-	 */
-	protected function controller() {
-		return $this->_controller;
-	}
+	protected $_vars;
 	
 	/**
 	 * Render the template
 	 * @param string $template
 	 */
-	public function render($template = null) {
-		$ns	= App::instance()->ns();
-		$options	= $this->options();
-		if (!$path) $path = $this->controller()->param('action');
+	public function render($file, $options, $vars = array(), $data = array(), $ext = 'html') {
+		$viewPaths	= Loader::instance()->path('views');
+		$renderers	= Config::instance()->renderers();
 		
-		if (strpos($path, '/')) {
-			$path	= str_replace('/', '.', $path);
-			$path	= "{$ns}.views.{$path}";
-		} else {
-			$controller	= $this->controller()->param('controller');
-			$path	= "{$ns}.views.{$controller}.$path";
-		}
-		
-		if (!file_exists(Loader::instance()->toPath($path))) {
-			// TODO: No view found
-		}
-		
-		if ($options['layout']) {
-			$vars	= $this->tplVars();
-			$layout	= $options['layout'];
-			$layout	= "{$ns}.views.layouts.{$layout}";
-			$layoutPath	= Loader::instance()->toPath($layout); 
-			$content_for_layout	= $this->renderToString($path);
-			
-			if (!file_exists($layoutPath)) {
-				// TODO: No layout found
+		foreach ($renderers as $type => $renderer) {			
+			foreach ($viewPaths as $path) {
+				$fullPath	= $path . DS . $file . ".{$type}.{$ext}";
+				
+				if (!file_exists($fullPath)) {
+					continue;
+				}
+				
+				$class	= Loader::instance()->toClass($renderer);
+				$obj	= new $class($fullPath, $options);
+				$obj->setVars($vars)->setData($data)->render();
+				return true;
 			}
-			
-			include_once $layoutPath;
-		} else {
-			\Vzed\import($path);
 		}
 		
-		// TODO: Throw unknown error exception
+		return false;
 	}
 	
 	/**
-	 * Renders the template to a string
-	 * @param string $template path to template
+	 * Find renderer from fileNmae
+	 * @param string $fileName
 	 * @return string
 	 */
-	public function renderToString($template) {
-		ob_start();
-		\Vzed\import($template);
-		return ob_get_clean();
+	public function renderer($fileName) {
+		$fileNameArr	= explode('.', $fileName);
+		return $fileNameArr[1];
 	}
 	
 }
