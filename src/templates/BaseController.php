@@ -3,9 +3,7 @@ return <<<EOF
 <?php
 namespace {$namespace}\Controllers;
 
-\Vzed\import('{$lcNamespace}.controller.application');
-
-use \{$namespace}\Application;
+use \{$namespace}\Controllers\Application;
 
 class {$controller} extends Application {
 

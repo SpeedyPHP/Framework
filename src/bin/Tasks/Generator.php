@@ -14,7 +14,8 @@ class Generator extends Vzed\Task {
 	
 	private $_generators = array(
 		'test' => 'generateTest',
-		'controller' => 'generateController'
+		'controller' => 'generateController',
+		'model'	=> 'generateModel'
 	);
 	
 	private $_variables = array();
@@ -102,6 +103,33 @@ EOF;
 		fwrite($fh, $content);
 		fclose($fh);
 		output("Saved the file");
+	}
+	
+	public function generateModel() {
+		if (!APP_LOADED) {
+			output('Must be in the application directory');
+			return 1;
+		}
+		
+		$app		= App::instance();
+		$name		= $this->getData(1);
+		$nameArray	= $this->_cleanName($name);
+		$name		= array_pop($nameArray);
+		
+		if (count($nameArray)) {
+			$this->_recurseMkdir($nameArray, array(
+				self::MODELS_DIR,
+			));
+		}
+		
+		$this->set('namespace', $app->name());
+		$this->set('model',		$name);
+		$template	= $this->getTemplate('models' . DS . 'ActiveRecord.php');
+		
+		output("Create {$name}.php");
+		$name	= (count($nameArray)) ? implode(DS, $nameArray) . DS . $name : $name;
+		$path	= APP_PATH . DS . self::MODELS_DIR . DS . $name . '.php';
+		file_put_contents($path, $template);
 	}
 	
 	/**

@@ -99,6 +99,7 @@ EOF;
 			'helpers'		=> 'app' . DS . 'helpers',
 			'models'		=> 'app' . DS . 'models',
 			'views'			=> 'app' . DS . 'views',
+			'layouts'		=> 'app' . DS . 'views' . DS . 'layouts',
 			'config'		=> 'config',
 			'environments'	=> 'config' . DS . 'environments',
 			'db'	=> 'db',
@@ -124,6 +125,9 @@ EOF;
 			),
 			'controllers' => array(
 				'Application.php'	=> 'AppController.php'
+			),
+			'layouts'	=> array(
+				'application.php'	=> 'views' . DS . 'layout.php'
 			)
 		);
 		

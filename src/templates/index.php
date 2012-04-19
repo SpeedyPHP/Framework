@@ -14,7 +14,7 @@ if (!getenv('VZED_PATH')) trigger_error("Could not find library path for Vectori
 defined('VZED_PATH') or define('VZED_PATH', getenv('VZED_PATH'));
 
 if (function_exists('ini_set') && 
-	ini_set('include_path', VZED_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
+	ini_set('include_path', VZED_PATH . DS . 'vzed' . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
 	define('CORE_PATH', null);
 } else {
 	define('CORE_PATH', ROOT . DS);

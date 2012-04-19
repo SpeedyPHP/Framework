@@ -12,7 +12,7 @@ class Server extends Vzed\Task {
 		$docroot= $curDir . DS . 'public';
 		$index	= $docroot . DS . 'index.php';
 		 
-		$cmd	= "{$php} -S {$host}:{$port} -t";
+		$cmd	= "{$php} -S {$host}:{$port} -t {$docroot}";
 		output("Starting PHP Server");
 		output("Listening http://{$host}:{$port}");
 		exec($cmd);
