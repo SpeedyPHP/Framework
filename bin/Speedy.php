@@ -1,7 +1,7 @@
 <?php
-Vzed\import('vzed.task');
+Speedy\import('speedy.task');
 
-class Vzed extends Vzed\Task {
+class Speedy extends Speedy\Task {
 	
 	private $_tasks = array();
 	
@@ -18,7 +18,7 @@ EOF;
 	public function main() {
 		$out = <<<EOF
 ------------------------------------------------
---------------- Vectorized PHP -----------------
+------------------ SpeedyPHP -------------------
 ------------------------------------------------	
 EOF;
 		output($out);
@@ -100,7 +100,7 @@ function fecho($str) {
 }
 
 if (php_sapi_name() == 'cli') {
-	$self = new Vzed($argv);
+	$self = new Speedy($argv);
 
 	$return = $self->main();
 

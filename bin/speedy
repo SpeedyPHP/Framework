@@ -4,8 +4,8 @@
 defined("DS") or define("DS", DIRECTORY_SEPARATOR);
 
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App
-defined('VZED_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
-define("VECTOR_PATH", VZED_PATH . DS . "vzed" . DS);
+defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
+define("VECTOR_PATH", LIB_PATH . DS . "vzed" . DS);
 define("VECTOR_TEMPLATES", dirname(dirname(__FILE__)) . DS . "templates" . DS);
 define("VECTOR_CLI", dirname(__FILE__));
 
@@ -31,4 +31,4 @@ if (class_exists('App')) {
     define("APP_LOADED", false);
 }
 
-require_once "Vzed.php";
+require_once "Speedy.php";
