@@ -1,7 +1,7 @@
 <?php
 /**
  * 
- * Class loader for the Vectorized PHP Framework
+ * Class loader for the SpeedyPHP Framework
  * @author Zachary Quintana
  *
  */
