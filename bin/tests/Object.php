@@ -1,15 +1,15 @@
 <?php
-require_once VECTOR_PATH . "Loader.php";
-\Vzed\import('vzed.test');
+require_once SPEEDY_PATH . "Loader.php";
+import('speedy.test');
 
-class Object extends \Vzed\Test {
+class Object extends \Speedy\Test {
 	
 	private $_object;
 	
 	public function setup() {
-		\Vzed\import('vzed.object');
+		\Speedy\import('speedy.object');
 		
-		$this->_object = new \Vzed\Object(); 
+		$this->_object = new \Speedy\Object(); 
 	}
 	
 	public function test() {

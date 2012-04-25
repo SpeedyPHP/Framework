@@ -1,14 +1,14 @@
 <?php
-require_once VECTOR_PATH . "Loader.php";
+require_once SPEEDY_PATH . "Loader.php";
 
-Vzed\import('vzed.test');
-Vzed\import('vzed.router.routes.resource'); // import the class
-Vzed\import('vzed.request');
+import('speedy.test');
+import('speedy.router.routes.resource'); // import the class
+import('speedy.request');
 
-use Vzed\Router\Routes\Resource;
-use Vzed\Request;
+use Speedy\Router\Routes\Resource;
+use Speedy\Request;
 
-class RouteResource extends \Vzed\Test {
+class RouteResource extends \Speedy\Test {
 	
 	private $_instance;
 	

@@ -4,10 +4,10 @@ return <<<EOF
 require_once('Loader.php');
 require_once('Routes.php');
 
-\Vzed\import('vzed.app');
-use \Vzed\Loader;
+import('vzed.app');
+use \Speedy\Loader;
 
-class App extends \Vzed\App {
+class App extends \Speedy\App {
 
 	protected \$_name = "{$namespace}";
 

@@ -1,6 +1,6 @@
 <?php 
 
-class Server extends Vzed\Task {
+class Server extends Speedy\Task {
 	
 	public $alias = "s";
 	

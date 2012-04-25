@@ -3,10 +3,10 @@ return <<<EOF
 <?php
 namespace $namespace\Config;
 
-\Vzed\import('vzed.router.draw');
-use \Vzed\Router\Draw as VzedDraw;
+import('speedy.router.draw');
+use \Speedy\Router\Draw as SpeedyDraw;
 
-class Routes extends VzedDraw {
+class Routes extends SpeedyDraw {
 
 	public function draw() {
 	

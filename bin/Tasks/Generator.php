@@ -1,6 +1,6 @@
 <?php 
 
-class Generator extends Vzed\Task {
+class Generator extends Speedy\Task {
 	
 	const CONTROLLERS_DIR	= "controllers";
 	
@@ -29,7 +29,7 @@ class Generator extends Vzed\Task {
 		$help = <<<EOF
 Generator kit. Use without command for help or with -h option.
 usage:
-	    vzed generator [command]	
+	    speedy generator [command]	
 		
 Commands:
 test		-- Generators test
@@ -92,7 +92,7 @@ EOF;
 		
 		$content= $this->_testTemplate(array('className' => $class));
 		// TODO: fix later to user current project directory
-		$file	= VECTOR_CLI . DS . 'tests' . DS . $class . ".php";
+		$file	= SPEEDY_CLI . DS . 'tests' . DS . $class . ".php";
 		if (file_exists($file)) {
 			output("File already exists for {$class}.php");
 			return 1;
@@ -245,7 +245,7 @@ EOF;
 	public function getTemplate($tpl) {
 		extract($this->variables());
 	
-		$content	= include VECTOR_TEMPLATES . $tpl;
+		$content	= include SPEEDY_TEMPLATES . $tpl;
 		return $content;
 	}
 	
@@ -268,12 +268,12 @@ EOF;
 		
 		return <<<TPL
 <?php
-require_once VECTOR_PATH . "Loader.php";
+require_once SPEEDY_PATH . "Loader.php";
 
-\Vzed\import('vzed.test');				// import the test subclass
-// \Vzed\import('vzed.object');			// import the class
+\Speedy\import('speedy.test');				// import the test subclass
+// \Speedy\import('speedy.object');			// import the class
 
-class $className extends \Vzed\Test {
+class $className extends \Speedy\Test {
 	
 	private \$_instance;
 	

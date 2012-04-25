@@ -1,6 +1,6 @@
 <?php 
 
-class NewTask extends Vzed\Task {
+class NewTask extends Speedy\Task {
 
 	public $alias = "new";
 	
@@ -17,7 +17,7 @@ class NewTask extends Vzed\Task {
 		$help = <<<EOF
 Task to build a new project.
 usage:
-	    vzed new /path/to/project	
+	    speedy new /path/to/project	
 		
 Commands:
 test		-- Generators test
@@ -88,7 +88,7 @@ EOF;
 	public function getTemplate($tpl) {
 		extract($this->variables());
 		
-		$content	= include VECTOR_TEMPLATES . $tpl;
+		$content	= include SPEEDY_TEMPLATES . $tpl;
 		return $content;
 	}
 	

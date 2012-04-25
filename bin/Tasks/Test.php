@@ -1,12 +1,12 @@
 <?php 
 
-class Test extends Vzed\Task {
+class Test extends Speedy\Task {
 	
 	public function help() {
 		$help = <<<EOF
 Test harness kit. 
 usage:
-    vzed test [classname]
+    speedy test [classname]
 		
 EOF;
 		output($help);
@@ -15,7 +15,7 @@ EOF;
 	public function defaultTask() {
 		$class = ucfirst($this->getData(0));
 		$fileName = $class . ".php";
-		$filePath = VECTOR_CLI . DS . "tests" . DS . $fileName;
+		$filePath = SPEEDY_CLI . DS . "tests" . DS . $fileName;
 		
 		if (!file_exists($filePath)) {
 			return $this->error(1);

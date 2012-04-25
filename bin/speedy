@@ -5,19 +5,19 @@ defined("DS") or define("DS", DIRECTORY_SEPARATOR);
 
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App
 defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
-define("VECTOR_PATH", LIB_PATH . DS . "vzed" . DS);
-define("VECTOR_TEMPLATES", dirname(dirname(__FILE__)) . DS . "templates" . DS);
-define("VECTOR_CLI", dirname(__FILE__));
+define("SPEEDY_PATH", LIB_PATH . DS . "speedy" . DS);
+define("SPEEDY_TEMPLATES", dirname(dirname(__FILE__)) . DS . "tpls" . DS);
+define("SPEEDY_CLI", dirname(__FILE__));
 
 define("APP_ROOT", getcwd());
 define("CONFIG_PATH", APP_ROOT . DS . 'config');
 define("APP_PATH", APP_ROOT . DS . 'app');
 defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
 
-require_once VECTOR_PATH . 'Loader.php';
+require_once SPEEDY_PATH . 'Loader.php';
 
 if (function_exists('ini_set')) {
-	ini_set('include_path', VECTOR_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'));
+	ini_set('include_path', SPEEDY_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'));
 }
 
 $pathToApp	= CONFIG_PATH . DS . 'App.php';

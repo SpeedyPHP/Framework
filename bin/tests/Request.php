@@ -1,13 +1,13 @@
 <?php
-require_once VECTOR_PATH . "Loader.php";
-\Vzed\import('vzed.test');
+require_once SPEEDY_PATH . "Loader.php";
+import('speedy.test');
 
-class Request extends \Vzed\Test {
+class Request extends \Speedy\Test {
 	
 	private $_object;
 	
 	public function setup() {
-		\Vzed\import('vzed.request');
+		\Speedy\import('speedy.request');
 		
 		// OVERRIDE $_SERVER to imitate server
 		$_SERVER["REQUEST_METHOD"] 	= 'GET';
@@ -21,7 +21,7 @@ class Request extends \Vzed\Test {
 		$_REQUEST["PHPSESSID"]		= "d318f4894469c17090540c972a4398fb";
 		
 		output("Constructing Request");
-		$this->_object = new \Vzed\Request(); 
+		$this->_object = new \Speedy\Request(); 
 	}
 	
 	public function test() {

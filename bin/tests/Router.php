@@ -1,16 +1,16 @@
 <?php
-require_once VECTOR_PATH . "Loader.php";
+require_once SPEEDY_PATH . "Loader.php";
 
-\Vzed\import('vzed.test');				// import the test subclass
-\Vzed\import('vzed.router');			// import the class
-\Vzed\import('vzed.router.draw');
-\Vzed\import('vzed.request');
+import('speedy.test');				// import the test subclass
+import('speedy.router');			// import the class
+import('speedy.router.draw');
+import('speedy.request');
 
-use \Vzed\Router\Draw as VzedDraw;
-use \Vzed\Router as VzedRouter;
-use \Vzed\Request;
+use \Speedy\Router\Draw as SpeedyDraw;
+use \Speedy\Router as SpeedyRouter;
+use \Speedy\Request;
 
-class Router extends \Vzed\Test {
+class Router extends \Speedy\Test {
 	
 	private $_instance;
 	
@@ -27,7 +27,7 @@ class Router extends \Vzed\Test {
 		$_REQUEST["PHPSESSID"]		= "d318f4894469c17090540c972a4398fb";
 		$_REQUEST["url"]			= "/";
 		
-		$this->_router = VzedRouter::instance();
+		$this->_router = SpeedyRouter::instance();
 	}
 	
 	public function test() {
@@ -45,7 +45,7 @@ class Router extends \Vzed\Test {
 	
 }
 
-class Routes extends VzedDraw {
+class Routes extends SpeedyDraw {
 
 	public function draw() {
 

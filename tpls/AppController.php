@@ -3,9 +3,7 @@ return <<<EOF
 <?php
 namespace {$namespace}\Controllers;
 
-\Vzed\import('vzed.controller');
-
-use \Vzed\Controller;
+use \Speedy\Controller;
 
 class Application extends Controller {
 
