@@ -1,5 +1,5 @@
 <?php
-Speedy\import('speedy.task');
+import('speedy.task');
 
 class Speedy extends Speedy\Task {
 	
@@ -44,7 +44,7 @@ EOF;
 	 */
 	private function _loadApp() {
 		$app	= App::instance();
-		output("Loaded {$app->name()} from path " . APP_CONFIG);
+		output("Loaded {$app->name()} from path " . CONFIG_PATH);
 	}
 	
 	private function _loadTasks() {

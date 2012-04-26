@@ -103,7 +103,7 @@ EOF;
 			'config'		=> 'config',
 			'environments'	=> 'config' . DS . 'environments',
 			'db'	=> 'db',
-			'migrate'	=> 'migrate',
+			'migrate'	=> 'db' . DS . 'migrate',
 			'lib'	=> 'lib',
 			'tmp'	=> 'tmp',
 			'log'	=> 'tmp' . DS . 'log',
@@ -121,7 +121,8 @@ EOF;
 				'Routes.php'=> 'Routes.php'
 			),
 			'public'	=> array(
-				'index.php'	=> 'index.php'
+				'index.php'	=> 'index.php',
+				'defines.php' => 'defines.php'
 			),
 			'controllers' => array(
 				'Application.php'	=> 'AppController.php'

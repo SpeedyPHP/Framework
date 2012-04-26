@@ -1,4 +1,5 @@
 <?php 
+use \Speedy\Utility\Inflector;
 
 class Generator extends Speedy\Task {
 	
@@ -10,12 +11,15 @@ class Generator extends Speedy\Task {
 	
 	const VIEWS_DIR			= "views";
 	
+	const MIGRATION_DIR		= "migrate";
+	
 	public $alias = "g";
 	
 	private $_generators = array(
 		'test' => 'generateTest',
 		'controller' => 'generateController',
-		'model'	=> 'generateModel'
+		'model'	=> 'generateModel',
+		'migration'	=> 'generateMigration'
 	);
 	
 	private $_variables = array();
@@ -167,6 +171,41 @@ EOF;
 		output("Create {$name}.php");
 		$path	= APP_PATH . DS . self::CONTROLLERS_DIR . DS . implode(DS, $nameArray) . DS . $name . '.php';
 		file_put_contents($path, $template);
+	}
+	
+	/**
+	 * Task to generate a migration
+	 */
+	public function generateMigration() {
+		if (!APP_LOADED) {
+			output('Must be in the application directory');
+			return 1;
+		}
+		
+		$name	= Inflector::underscore($this->getData(1));
+		$count	= count($this->getData());
+		if (preg_match("/^create_table_([\w]+)/", $name, $matches)) {
+			$table	= $matches[1];
+			$actions	= '$this->create_table("' . $table . '", function() {' . "\n";
+			
+			for ($i = 2; $i < $count; $i++) {
+				$columnDef	= $this->getData($i);
+				$def	= explode(':', $columnDef);
+				$actions	.= "\t\t\t" . '$this->' . $def[1] . '("' . $def[0] .'");' . "\n";
+			}
+			
+			$actions 	.= "\n\t\t\t" . '$this->timestamps();' . "\n";
+			$actions	.= "\t\t});";
+		}
+		
+		$this->set('name', Inflector::camelize($name));
+		$this->set('actions', $actions);
+		$file	= @date('YmdHis') . '_' . $name . '.php';
+		$content= $this->getTemplate('Migration.php');
+		
+		output("Create {$file}");
+		$path	= APP_ROOT . DS . 'db' . DS . self::MIGRATION_DIR . DS . $file;
+		file_put_contents($path, $content);
 	}
 	
 	/**

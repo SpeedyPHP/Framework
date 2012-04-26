@@ -4,9 +4,9 @@ namespace Speedy\Orm;
 use \Speedy\Orm\Base;
 use \Speedy\Loader;
 
-Loader::instance()->registerNamespace('active_record', SPEEDY_PATH . DS . 'active_record');
-\Speedy\import('active_record.utils');
-\Speedy\import('active_record.exceptions');
+Loader::instance()->registerNamespace('active_record', getenv('ACTIVE_RECORD_PATH'));
+import('active_record.utils');
+import('active_record.exceptions');
 
 class ActiveRecord extends Base {
 
