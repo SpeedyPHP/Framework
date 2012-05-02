@@ -2,6 +2,7 @@
 namespace Speedy\View;
 
 use Speedy\Object;
+use Speedy\View;
 
 abstract class Base extends Object {
 
@@ -29,13 +30,23 @@ abstract class Base extends Object {
 	 */
 	protected $_vars;
 	
+	/**
+	 * Content for yields
+	 * @var array
+	 */
+	protected $_yields = array();
+	
+	protected $_mixins	= array(
+		'speedy.view.helpers.html'
+	);
+	
 	
 	/**
 	 * View renderer
 	 * @param string $path
 	 * @param array $options optional
 	 */
-	public function __construct($path, $options = array()) {
+	public function __construct($path = null, $options = array()) {
 		$this->setPath($path)
 			->setOptions($options);
 	}
@@ -53,7 +64,7 @@ abstract class Base extends Object {
 	 * @param string $path
 	 * @return \Speedy\View\Base
 	 */
-	protected function setPath($path) {
+	public function setPath($path) {
 		$this->_path	= $path;
 		return $this;
 	}
@@ -99,7 +110,7 @@ abstract class Base extends Object {
 	 * Setter options
 	 * @param array $options
 	 */
-	protected function setOptions($options) {
+	public function setOptions($options) {
 		$this->_options	= $options;
 		return $this;
 	}
@@ -110,7 +121,7 @@ abstract class Base extends Object {
 	 * @param mixed $value
 	 * @return \Speedy\View\Base
 	 */
-	protected function setOption($name, $value) {
+	public function setOption($name, $value) {
 		$this->_options[$name]	= $value;
 		return $this;
 	}
@@ -139,17 +150,33 @@ abstract class Base extends Object {
 	abstract public function render($path = null);
 	
 	/**
-	* Renders the template to a string
-	* @param string $template optional path to template
-	* @param string $renderer optional
-	* @return string
-	*/
+	 * Renders the template to a string
+	 * @param string $template optional path to template
+	 * @param string $renderer optional
+	 * @return string
+	 */
 	public function toString($template = null) {
 		$this->setOption('layout', null);
 		
 		ob_start();
 		$this->render($template);
 		return ob_get_clean();
+	}
+	
+	/**
+	 * Getter for a yield
+	 * @param string $name
+	 */
+	public function yield($name = "__main__") {
+		echo \Speedy\View::instance()->yield($name);
+	}
+	
+	public function contentFor($name, $closure) {
+		ob_start();
+		$closure();
+		$content = ob_get_clean();
+		View::instance()->setYield($name, $content);
+		return;
 	}
 	
 }

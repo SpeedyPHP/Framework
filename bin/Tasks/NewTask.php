@@ -120,6 +120,11 @@ EOF;
 				'App.php' => 'App.php',
 				'Routes.php'=> 'Routes.php'
 			),
+			'environments'	=> array(
+				'development.php'	=> 'configuration' . DS . 'development.php',
+				'production.php'	=> 'configuration' . DS . 'production.php',
+				'test.php'	=> 'configuration' . DS . 'test.php'
+			),
 			'public'	=> array(
 				'index.php'	=> 'index.php',
 				'defines.php' => 'defines.php'

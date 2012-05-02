@@ -1,7 +1,7 @@
 <?php
 namespace Speedy;
 
-const DEBUG = true;
+const DEBUG = false;
 require_once "Exception.php";
 
 class Object {
@@ -32,6 +32,8 @@ class Object {
 	protected $_data = array();
 	
 	
+	
+	
 	/**
 	 * Checks if mixins already loaded
 	 * @return boolean
@@ -53,6 +55,10 @@ class Object {
 	 * @return mixin instance
 	 */
 	private function _getMixin($mixin) {
+		if (empty($this->_mixinObjs) && !$this->_loadedMixins()) {
+			$this->_loadMixins();
+		}
+		
 		return ($this->_hasMixin($mixin)) ? $this->_mixinObjs[$mixin] : null;
 	}
 	
@@ -61,6 +67,10 @@ class Object {
 	 * @return array of mixin instances
 	 */
 	private function _getMixins() {
+		if (empty($this->_mixinObjs) && !$this->_loadedMixins()) {
+			$this->_loadMixins();
+		}
+	
 		return $this->_mixinObjs;
 	}
 	
@@ -72,7 +82,12 @@ class Object {
 		if ($this->_loadedMixins()) return $this;
 		
 		foreach ($this->_mixins as $mixin => $options) {
-			$class 		= import($mixin);
+			if (is_int($mixin)) {
+				$mixin = $options;
+			}
+			
+			import($mixin);
+			$class	= \Speedy\Loader::toClass($mixin);
 			if (!$class) {
 				continue;
 			}
@@ -122,7 +137,7 @@ class Object {
 	 */
 	protected function _callMixin($name, $args) {
 		foreach ($this->_getMixins() as $instance) {
-			if (method_exists($instance, $name)) {
+			if ($instance->respondsTo($name)) {
 				return call_user_func_array(array($instance, $name), $args);
 			}
 		}
@@ -256,5 +271,9 @@ class Object {
 		unset($current[$keys[$i]]);
 		
 		return $this;
+	}
+	
+	public function respondsTo($method) {
+		return method_exists($this, $method);
 	}
 }

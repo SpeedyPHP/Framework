@@ -74,7 +74,7 @@ namespace Speedy {
 		}
 		
 		public function __construct() {
-			$this->registerNamespace('speedy', $_ENV['VZED_PATH'] . DS . 'speedy');
+			$this->registerNamespace('speedy', $_ENV['SPEEDY_PATH'] . DS . 'speedy');
 			
 			return $this;
 		}

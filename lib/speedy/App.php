@@ -135,12 +135,16 @@ class App extends Object {
 		return $this;
 	}
 	
-	public function config() {
+	/**
+	 * Getter for config object or config value
+	 * @param string $name (optional)
+	 */
+	public function config($name = null) {
 		if (!$this->_config) {
 			$this->setConfig(Config::instance());
 		}
 		
-		return $this->_config;
+		return ($name === null) ? $this->_config : $this->config()->getData($name);
 	}
 	
 	/**
@@ -171,6 +175,11 @@ class App extends Object {
 	 * @return $this;
 	 */
 	public function bootstrap() {
+		$envConfigPath	= CONFIG_PATH . DS . 'environments' . DS . SPEEDY_ENV . '.php';
+		if (file_exists($envConfigPath)) {
+			require_once $envConfigPath;
+		}
+		
 		$methods = $this->bootstrapMethods();
 		foreach ($methods as $method) {
 			$this->{$method}();
@@ -249,6 +258,14 @@ class App extends Object {
 	public static function request() {
 		$self	= self::instance();
 		return $self->_request();
+	}
+	
+	/**
+	 * Setter for configurations
+	 * @param string $name
+	 */
+	protected function configure($closure) {
+		return $this->config()->setup($closure);
 	}
 	
 }

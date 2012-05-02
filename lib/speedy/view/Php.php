@@ -24,10 +24,10 @@ class Php extends Base {
 	
 		if ($options['layout']) {
 			$layout	= 'layouts' . DS . $options['layout'];
-			$vars['content_for_layout']	= $this->toString($path);
+			View::instance()->setYield('__main__', $this->toString($path));
 				
 			unset($options['layout']);
-			View::instance()->render($layout, $options, $vars, $this->getData());
+			View::instance()->render($layout, $options);
 		} else {
 			extract($vars);
 			include_once $path;

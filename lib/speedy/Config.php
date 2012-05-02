@@ -150,6 +150,20 @@ class Config extends Singleton {
 		return $connections;
 	}
 	
+	public function set($name, $value) {
+		return $this->setData($name, $value);
+	}
 	
+	public function get($name) {
+		return $this->getData($name);
+	}
+
+	/**
+	 * Run setups on this configure
+	 * @param closure $closure
+	 */
+	public function setup($closure) {
+		return $closure();
+	}
 }
 ?>

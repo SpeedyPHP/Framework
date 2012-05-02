@@ -6,12 +6,6 @@ import('speedy.router.routes.route');
 class Match extends Route {
 	
 	/**
-	 * Array of available tokens for route
-	 * @var array
-	 */
-	private $_tokens	= array();
-	
-	/**
 	 * Url match router
 	 * @param string $format
 	 * @param array $options
@@ -30,6 +24,10 @@ class Match extends Route {
 			$params['action']		= array_shift($action);
 		}
 		unset($params[$firstKey]);
+		
+		if ($params['name']) {
+			$this->setName($params['name']);
+		}
 		
 		$this->_setFormat($format);
 		$this->_setOptions($params);

@@ -23,15 +23,15 @@ group('db', function() {
 						'`version` varchar(255) NOT NULL);';
 			$connection->query($sql);
 			
-			$indexSql	= "CREATE UNIQUE INDEX `unique_schema_migrations` ON `schema_migrations` (`version`)";
+			$sql	= "CREATE UNIQUE INDEX `unique_schema_migrations` ON `schema_migrations` (`version`)";
 			$connection->query($sql);
-			$connection->commit();
 			
+			$connection->commit();
 			output("Database seeded");
 		} catch (\Exception $e) {
 			$connection->rollback();
-			output("Unknown error occured while seeding the database");
-			throw $e;
+			output();
+			output($e);
 		}
 	});
 	
@@ -56,16 +56,15 @@ group('db', function() {
 				continue;
 			}
 			
-			if (!$migrated) {
-				output("===================================================");
-			}
-			output("========== Starting Migration for $class ==========");
+			output("===================================================");
+			output("Starting Migration for $class");
+			output("===================================================");
 			output();
 			
 			$obj->up();
 			$log	= $obj->log();
 			foreach ($log as $l) {
-				output("\t\t$l");
+				output($l);
 			}
 			
 			$migrated = true;
@@ -79,7 +78,41 @@ group('db', function() {
 	
 	desc('rollback one migration');
 	task('rollback', function() {
+		import('active_record.migration');
 		
+		$last	= \ActiveRecord\SchemaMigration::last();
+		$glob	= ROOT . DS . 'db' . DS . 'migrate' . DS . $last->version . '*.php';
+		$rollback	= false;
+		
+		foreach (glob($glob) as $migration) {
+			require_once $migration;
+			
+			$info	= pathinfo($migration);
+			$file	= $info['filename'];
+			$fileArr= explode('_', $file);
+			$version= array_shift($fileArr);
+			$class	= Inflector::camelize(implode('_', $fileArr));
+			
+			$obj	= new $class(\ActiveRecord\Connection::instance());
+			if (!$obj->migrated()) {
+				continue;
+			}
+			
+			output('================== Rolling Back ===================');
+			output();
+			$obj->down();
+			$log	= $obj->log();
+			foreach ($log as $l) {
+				output($l);
+			}
+				
+			$rollback = true;
+		}
+		
+		if ($rollback) {
+			output();
+			output("=============== Rollback Completed ================");
+		}
 	});
 });
 

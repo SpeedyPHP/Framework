@@ -216,7 +216,10 @@ class Controller extends Object {
 			$relPath	= $path;
 		}
 		
-		$rendered = View::instance()->render($relPath, $options, $this->tplVars(), $this->getData(), $ext);
+		$rendered = View::instance()
+				->setVars($this->tplVars())
+				->setData($this->getData())
+				->render($relPath, $options, $ext);
 		
 		if (!$rendered) {
 			$controller	= Inflector::underscore($this->param('controller'));

@@ -1,7 +1,7 @@
 <?php 
 return <<<EOF
 <?php
-
+defined('SPEEDY_ENV')  or define("SPEEDY_ENV", (getenv("SPEEDY_ENV")) ? getenv('SPEEDY_ENV') : 'development');
 defined('DS') or define('DS', DIRECTORY_SEPARATOR); 			// Alias directory separator as DS
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App
 defined('PUBLIC') or define('PUBLIC', dirname(__FILE__));		// Define path to the public directory

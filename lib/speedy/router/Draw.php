@@ -10,6 +10,7 @@ use \Speedy\Router;
 use \Speedy\Router\Routes\Resource;
 use \Speedy\Router\Routes\Match;
 use \Speedy\Object;
+use \Speedy\Utility\Inflector;
 
 abstract class Draw extends Object {
 	const GET	= "GET";
@@ -65,11 +66,31 @@ abstract class Draw extends Object {
 	 * @return $this
 	 */
 	public function resources($name, array $options = null) {
-		$this->pushRoute(new Match(array("/$name" => "$name#index", 	'on' => self::GET)));
-		$this->pushRoute(new Match(array("/$name/new" => "$name#new", 	'on' => self::GET)));
-		$this->pushRoute(new Match(array("/$name" => "$name#create", 	'on' => self::POST)));
-		$this->pushRoute(new Match(array("/$name/:id" => "$name#show", 'on' => self::GET)));
-		$this->pushRoute(new Match(array("/$name/:id/edit" => "$name#edit",	'on' => self::GET)));
+		$member	= Inflector::singularize($name);
+		$this->pushRoute(new Match(array(
+			"/$name" => "$name#index", 	
+			'on' => self::GET,
+			'name'	=> "{$name}_path"
+		)));
+		$this->pushRoute(new Match(array(
+			"/$name/new" => "$name#new", 	
+			'on' => self::GET,
+			'name'	=> "new_{$name}_path"
+		)));
+		$this->pushRoute(new Match(array(
+			"/$name" => "$name#create", 	
+			'on' => self::POST
+		)));
+		$this->pushRoute(new Match(array(
+			"/$name/:id" => "$name#show", 
+			'on' => self::GET,
+			'name'	=> "{$member}_path"
+		)));
+		$this->pushRoute(new Match(array(
+			"/$name/:id/edit" => "$name#edit",	
+			'on' => self::GET,
+			'name'	=> "edit_{$member}_path"
+		)));
 		$this->pushRoute(new Match(array("/$name/:id" => "$name#update", 		'on' => self::PUT)));
 		$this->pushRoute(new Match(array("/$name/:id" => "$name#destroy", 		'on' => self::DELETE)));
 		/*$resource	= new Resource($name, $options);
