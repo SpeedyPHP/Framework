@@ -4,12 +4,14 @@ return <<<EOF
 require_once('Loader.php');
 require_once('Routes.php');
 
-import('vzed.app');
+import('speedy.app');
 use \Speedy\Loader;
 
 class App extends \Speedy\App {
 
 	protected \$_name = "{$namespace}";
+	
+	protected \$_orm	= "speedy.orm.active_record";
 
 
 	protected function initApp() {
