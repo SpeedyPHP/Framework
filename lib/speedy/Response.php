@@ -6,6 +6,10 @@ import('speedy.object');
 class Response extends Object {
 
 	private $_headers	= array();
+
+	private $_headersPrinted	= false;
+	
+	public $body;
 	
 	
 	public function __construct() {
@@ -31,6 +35,8 @@ class Response extends Object {
 	 * @return \Speedy\Response
 	 */
 	public function printHeaders() {
+		if ($this->_headersPrinted == true) return $this;
+		
 		$headers	= $this->headers();
 		
 		if (empty($headers)) return $this;
@@ -42,6 +48,7 @@ class Response extends Object {
 			}
 		}
 		
+		$this->_headersPrinted = true;
 		return $this;
 	}
 	
@@ -51,6 +58,24 @@ class Response extends Object {
 	 */
 	public function headers() {
 		return $this->_headers;
+	}
+	
+	public function setBody($content) {
+		$this->body	= $content;
+		return $this;
+	}
+	
+	public function body() {
+		return $this->body;
+	}
+	
+	public function __toString() {
+		$this->printHeaders();
+		return $this->body;
+	}
+	
+	public function to_s() {
+		return $this->__toString();
 	}
 	
 }

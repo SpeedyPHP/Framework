@@ -6,6 +6,7 @@ require_once('Routes.php');
 
 import('speedy.app');
 use \Speedy\Loader;
+use \Speedy\Session;
 
 class App extends \Speedy\App {
 
@@ -15,7 +16,7 @@ class App extends \Speedy\App {
 
 
 	protected function initApp() {
-		
+		Session::start();
 	}
 	
 }

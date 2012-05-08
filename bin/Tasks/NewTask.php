@@ -41,6 +41,10 @@ EOF;
 		output("Create project directory");
 		mkdir($dir);
 		
+		output("Create Phakefile");
+		$phakeContents	= $this->getTemplate("Phakefile.php");
+		file_put_contents($dir . DS . 'Phakefile', $phakeContents);
+		
 		$dir	.= DS;
 		foreach ($this->_requiredPaths() as $type => $subDir) {
 			output("Create $subDir");

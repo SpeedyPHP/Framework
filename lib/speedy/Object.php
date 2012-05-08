@@ -207,7 +207,7 @@ class Object {
 	 * @param name or string path of variable
 	 * @return mixed 
 	 */
-	protected function getData($name = null) {
+	protected function data($name = null) {
 		return $this->__dotAccess($name, $this->_data);
 	}
 	

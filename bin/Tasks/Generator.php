@@ -18,8 +18,14 @@ class Generator extends Speedy\Task {
 	private $_generators = array(
 		'test' => 'generateTest',
 		'controller' => 'generateController',
+		'scaffold_controller' => 'generateScaffoldController',
 		'model'	=> 'generateModel',
 		'migration'	=> 'generateMigration'
+	);
+	
+	private $_scaffoldActions	= array(
+		'index', 'show', 'new', 'edit', 
+		'create', 'update', 'destroy'
 	);
 	
 	private $_variables = array();
@@ -114,6 +120,7 @@ EOF;
 			output('Must be in the application directory');
 			return 1;
 		}
+		$this->generateMigration(true);
 		
 		$app		= App::instance();
 		$name		= $this->getData(1);
@@ -166,17 +173,58 @@ EOF;
 		$this->set('namespace', 	$app->name());
 		$this->set('controller',	$name);
 		$this->set('actions',		'');
-		$template	= $this->getTemplate('BaseController.php');
+		$content	= $this->getTemplate('BaseController.php');
 		
 		output("Create {$name}.php");
 		$path	= APP_PATH . DS . self::CONTROLLERS_DIR . DS . implode(DS, $nameArray) . DS . $name . '.php';
-		file_put_contents($path, $template);
+		file_put_contents($path, $content);
+	}
+	
+	/**
+	* Task generate the scaffold controller
+	*/
+	public function generateScaffoldController() {
+		if (!APP_LOADED) {
+			output('Must be in the application directory');
+			return 1;
+		}
+	
+		$app		= App::instance();
+		$name		= $this->getData(1);
+		$nameArray	= $this->_cleanName($name);
+		$name		= array_pop($nameArray);
+	
+		if (count($nameArray)) {
+			$this->_recurseMkdir($nameArray, array(
+				self::CONTROLLERS_DIR,
+				self::HELPERS_DIR,
+				self::VIEWS_DIR
+			));
+		}
+	
+		//$views		= (count($nameArray)) ? self::VIEWS_DIR . DS .implode(DS, $nameArray) : self::VIEWS_DIR;
+		$viewPath	= $nameArray;
+		$viewPath[]	= strtolower($name);
+	
+		$this->_recurseMkdir($viewPath, self::VIEWS_DIR);
+	
+		$this->set('modelName',		Inflector::singularize($name));
+		$this->set('modelLc',		strtolower(Inflector::singularize($name)));
+		$this->set('modelPlural',	strtolower(Inflector::pluralize($name)));
+		$this->set('namespace', 	$app->name());
+		$this->set('controller',	$name);
+		$this->set('actions',		$this->getScaffoldActions());
+		$content	= $this->getTemplate('BaseController.php');
+	
+		output("Create {$name}.php");
+		$path	= APP_PATH . DS . self::CONTROLLERS_DIR . DS . implode(DS, $nameArray) . DS . $name . '.php';
+		file_put_contents($path, $content);
 	}
 	
 	/**
 	 * Task to generate a migration
 	 */
-	public function generateMigration() {
+	public function generateMigration($create = false) {
 		if (!APP_LOADED) {
 			output('Must be in the application directory');
 			return 1;
@@ -184,8 +232,9 @@ EOF;
 		
 		$name	= Inflector::underscore($this->getData(1));
 		$count	= count($this->getData());
-		if (preg_match("/^create_table_([\w]+)/", $name, $matches)) {
-			$table	= $matches[1];
+		
+		if ($create || preg_match("/^create_table_([\w]+)/", $name, $matches)) {
+			$table	= ($create) ? Inflector::pluralize($name) : Inflector::pluralize($matches[1]);
 			$actions	= '$this->create_table("' . $table . '", function() {' . "\n";
 			
 			for ($i = 2; $i < $count; $i++) {
@@ -275,6 +324,42 @@ EOF;
 	private function set($name, $value) {
 		$this->_variables[$name] = $value;
 		return $this;
+	}
+	
+	/**
+	 * Accessor for scaffoldActions
+	 * @return array
+	 */
+	private function scaffoldActions() {
+		return $this->_scaffoldActions;
+	}
+	
+	/**
+	 * Get content from scaffold actions templates
+	 * @return string
+	 */
+	private function getScaffoldActions($args = array()) {
+		extract($args);
+		
+		$path	= 'controllers' . DS . 'actions';
+		$actions	= '';
+		foreach ($this->scaffoldActions() as $action) {
+			if (isset($only) && !in_array($action, $only)) {
+				continue;
+			}
+			
+			if (isset($except) && in_array($action, $except)) {
+				continue;
+			}
+			
+			if (strlen($actions) > 0) {
+				$actions .= "\n\n";
+			}
+			
+			$actions .= $this->getTemplate($path . DS . $action . '.php');
+		}
+		
+		return $actions;
 	}
 	
 	/**

@@ -4,6 +4,8 @@ namespace Speedy;
 import("speedy.router.exception");
 import('speedy.request');
 
+use \Speedy\Http\Exception as HttpException;
+
 class Router extends Object {
 	/**
 	 * Instance of self
@@ -97,6 +99,11 @@ class Router extends Object {
 				
 				break;
 			}
+		}
+		
+		if ($match === false) {
+			throw new HttpException("No route matches request '{$this->request()->url()}'");
+			
 		}
 		
 		return $this->matchedRoute();

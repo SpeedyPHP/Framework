@@ -17,7 +17,12 @@ class Php extends Base {
 		$options	= $this->options();
 		$path		= ($path) ? $path : $this->path();
 		$vars		= $this->vars();
-	
+	 
+		if ($this->isPartial($path)) {
+			View::instance()->render($path, $options);
+			return;
+		}
+		
 		if (!file_exists($path)) {
 			throw new HttpException('View found not found at ' . $path);
 		}
@@ -28,9 +33,11 @@ class Php extends Base {
 				
 			unset($options['layout']);
 			View::instance()->render($layout, $options);
+			return;
 		} else {
 			extract($vars);
 			include_once $path;
+			return;
 		}
 	}
 	

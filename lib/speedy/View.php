@@ -19,6 +19,8 @@ class View extends Singleton {
 	
 	protected $_renderers	= array();
 	
+	protected $_response;
+	
 	
 	
 	/**
@@ -26,6 +28,8 @@ class View extends Singleton {
 	 * @param string $template
 	 */
 	public function render($file, $options, $ext = 'html') {
+		if (isset($options['json'])) return $this->toJson($options['json']);
+		
 		$viewPaths	= Loader::instance()->path('views');
 		$renderers	= Config::instance()->renderers();
 		
@@ -49,6 +53,24 @@ class View extends Singleton {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Setter for response
+	 * @param \Speedy\Response $response
+	 * @return \Speedy\View
+	 */
+	public function setResponse(\Speedy\Response &$response) {
+		$this->_response =& $response;
+		return $this;
+	}
+	
+	/**
+	 * Getter for response
+	 * @return \Speedy\Response
+	 */
+	public function &response() {
+		return $this->response;
 	}
 	
 	/**
@@ -120,6 +142,22 @@ class View extends Singleton {
 	public function setVars(array $vars) {
 		$this->_vars	= $vars;
 		return $this;
+	}
+	
+	/**
+	 * Convert mixed value into json representation
+	 * and set headers for reponse
+	 * @param mixed $mixed
+	 * @return string json representation
+	 */
+	protected function toJson($mixed) {
+		$this->response()
+			->setHeader('Cache-Control', 'no-cache, must-revalidate')
+			->setHeader('Expires', date('r'))
+			->setHeader('Content-Type', 'application/json');
+	
+		echo json_encode($mixed);
+		return true;
 	}
 	
 	/**

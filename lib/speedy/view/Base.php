@@ -5,7 +5,7 @@ use Speedy\Object;
 use Speedy\View;
 
 abstract class Base extends Object {
-
+	
 	/**
 	* Reference to controller
 	* @var \Speedy\Controller
@@ -37,7 +37,8 @@ abstract class Base extends Object {
 	protected $_yields = array();
 	
 	protected $_mixins	= array(
-		'speedy.view.helpers.html'
+		'speedy.view.helpers.html',
+		'speedy.view.helpers.inflector'
 	);
 	
 	
@@ -160,7 +161,9 @@ abstract class Base extends Object {
 		
 		ob_start();
 		$this->render($template);
-		return ob_get_clean();
+		$content	= ob_get_clean();
+		ob_end_flush();
+		return $content;
 	}
 	
 	/**
@@ -175,8 +178,18 @@ abstract class Base extends Object {
 		ob_start();
 		$closure();
 		$content = ob_get_clean();
+		ob_end_flush();
+		
 		View::instance()->setYield($name, $content);
 		return;
+	}
+	
+	public function isPartial($path) {
+		return (preg_match("#/?_(\w)*/#i", $path, $matches)) ? true : false;
+	}
+	
+	public function toPath($name) {
+		return (strpos($name, '/')) ? str_replace('/', DS, $name) : $name; 
 	}
 	
 }

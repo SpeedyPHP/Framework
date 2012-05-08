@@ -25,6 +25,8 @@ class Form extends Object {
 		$classArr	= array_slice($classArr, 2);
 		
 		$this->setName(array_pop($classArr));
+		$this->{$this->name()}	= $model;
+		
 		$actionPath	= Inflector::pluralize($this->name());
 		if (count($classArr)) {
 			while ($name = array_pop($classArr)) {

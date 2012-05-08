@@ -1,15 +1,15 @@
 <?php 
 return <<<EOF
 	/**
-	 * POST /posts
+	 * PUT /posts/1
 	 */
-	public function create() {
-		\$this->{$modelLc}	= new {$modelName}(\$this->params('{$modelLc}'));
+	public function update() {
+		\$this->{$modelLc}	= {$modelName}::find(\$this->params('id'));
 		
 		\$this->respondTo(function(\$format) {
-			if (\$this->{$modelLc}->save()) {
+			if (\$this->{$modelLc}->update_attributes(\$this->params('{$modelLc}')) {
 				\$format->html = function() {
-					\$this->redirectTo(\$this->{$modelLc}, array("notice" => "{$modelName} was successfully created."));
+					\$this->redirectTo(\$this->{$modelLc}, array("notice" => "{$modelName} was successfully updated."));
 				};
 				\$format->json = function() {
 					\$this->render(array( 'json' => \$this->{$modelLc} ));

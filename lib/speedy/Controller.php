@@ -11,6 +11,7 @@ use \Speedy\Utility\Inflector;
 use \Speedy\Config;
 use \Speedy\Http\Exception as HttpException;
 use \Speedy\View;
+use \Speedy\Session;
 
 class Controller extends Object {
 	
@@ -50,6 +51,12 @@ class Controller extends Object {
 	 */
 	protected $_tplVars	= array();
 	
+	/**
+	 * Closures for object renderers
+	 * @var Speedy\Object
+	 */
+	protected $_format	= new Object();
+	
 	
 	
 	/**
@@ -71,12 +78,13 @@ class Controller extends Object {
 	 */
 	public function __run($action) {
 		
-		$this->__runFilter('before');
+		$this->__runFilter('before_filter');
 		
 		$this->{$action}();
 		
-		$this->__runFilter('after');
+		$this->__runFilter('after_filter');
 		
+		$this->__beforeRender();
 		if (!$this->isRendered()) {
 			$this->render();
 		}
@@ -87,9 +95,7 @@ class Controller extends Object {
 	 * Call the before filters
 	 * @return void
 	 */
-	private function __runFilter($filter) {
-		$filter	= $filter . "Filter";
-		
+	private function __runFilter($filter) {		
 		if (empty($this->{$filter})) {
 			return;
 		}
@@ -177,24 +183,19 @@ class Controller extends Object {
 	 * Getter for response
 	 * @return \Speedy\Response
 	 */
-	protected function response() {
+	protected function &response() {
 		return $this->_response;
 	}
 	
 	protected function respondTo($callback)	{
-		$format = $this->param('ext');
-		if (empty($format)) $format	= 'html';
-		
-		$this->response()->printHeaders();
-		$return	= $callback($format);
-		
-		if ($this->isRendered()) return;
-		
-		if (is_string($return)) {
-			echo $return;
-			$this->rendered();
-		} else {
-			$this->render($this->param('action'));
+		$callback($this->format());
+	}
+	
+	private function __beforeRender() {
+		$ext		= strtolower($this->param('ext'));
+		if ($this->format()->{$ext} && $this->format()->{$ext} instanceof Closure) {
+			$closure = $this->format()->{$ext};
+			$closure();
 		}
 	}
 	
@@ -202,7 +203,13 @@ class Controller extends Object {
 	 * Render the page
 	 * @param string $path
 	 */
-	protected function render($path = null, $options = array()) {
+	protected function render() {
+		$args	= func_get_args();
+		$path	= (is_string($args[0])) ? array_shift($args) : null;
+		$options= (is_array($args[0])) ? array_shift($args) : array();
+		
+		if ($this->isRendered()) return;
+		
 		$options	= array_merge(array( 
 			'layout' => $this->layout() 
 		), $options);
@@ -216,10 +223,15 @@ class Controller extends Object {
 			$relPath	= $path;
 		}
 		
+		ob_start();
 		$rendered = View::instance()
-				->setVars($this->tplVars())
-				->setData($this->getData())
-				->render($relPath, $options, $ext);
+			->setResponse($this->response())
+			->setVars($this->tplVars())
+			->setData($this->getData())
+			->render($relPath, $options, $ext);
+		
+		$this->response()->setBody(ob_get_contents());
+		ob_end_flush();
 		
 		if (!$rendered) {
 			$controller	= Inflector::underscore($this->param('controller'));
@@ -229,6 +241,14 @@ class Controller extends Object {
 			$this->rendered();
 		}
 	} 
+	
+	/**
+	 * Accessor for format prop
+	 * @return Object
+	 */
+	protected function &format() {
+		return $this->_format;
+	}
 	
 	/**
 	 * Check if the current action is rendered
@@ -283,19 +303,49 @@ class Controller extends Object {
 	}
 	
 	/**
-	 * Convert mixed value into json representation 
-	 * and set headers for reponse
-	 * @param mixed $mixed
-	 * @return string json representation
+	 * 302 Redirect 
 	 */
-	protected function toJson($mixed) {
-		$this->response()
-			->setHeader('Cache-Control', 'no-cache, must-revalidate')
-			->setHeader('Expires', date('r'))
-			->setHeader('Content-Type', 'application/json');
+	public function redirectTo($location, $options = array()) {
+		if (is_array($location)) {
+			$sLocation	= '';
+			while ($part = array_shift($location)) {
+				if (strlen($sLocation) > 0) {
+					$sLocation	.= '/';
+				}
+				
+				if (is_object($location)) {
+					$sLocation	.= $this->modelToPath($location);
+				} elseif (is_string($location)) {
+					$sLocation	.= $location;
+				} 
+			}
+			
+			$location	= $sLocation;
+		} elseif (is_object($location)) {
+			$location	= $this->modelToPath($location);
+		}
 		
-		return json_encode($mixed);
+		if (isset($options['notice'])) {
+			Session::instance()->write('notice', $options['notice']);
+		} 
+		
+		if (isset($options['status'])) {
+			Session::instance()->write('error', $options['status']);
+		}
+		
+		$this->response()
+			->setHeader("Location: /$location");
+		
 	}
+	
+	/**
+ 	 * Convert a model to a location string
+	 */
+	private function modelToPath($model) {
+		$class	= get_class($location);
+		return Inflector::singularize(strtolower($class)) . "/{$location->id}";
+	}
+
 }
 
 ?>
