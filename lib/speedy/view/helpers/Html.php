@@ -8,6 +8,7 @@ use \Speedy\View\Helpers\Form;
 use \Speedy\Router;
 use \Speedy\Router\Draw;
 use \Speedy\Utility\Inflector;
+use \Speedy\Utility\Links;
 use \App;
 
 class Html extends Base {
@@ -17,12 +18,13 @@ class Html extends Base {
 		'img'
 	);
 	
-	private $_routePaths	= array();
+	protected $_linksHelper;
+	
 	
 	
 	
 	public function __construct() {
-		$this->loadRoutes();
+		$this->setLinksHelper(\Speedy\Utility\Links::instance());
 	}
 	
 	/**
@@ -30,18 +32,10 @@ class Html extends Base {
 	 * @param string $text
 	 * @param string $path
 	 * @param array $attributes
+	 * @return void
 	 */
 	public function linkTo($text, $path, $attributes = array()) {
-		$short_links	= App::instance()->config()->get('short_links');
-		if (!$short_links && strpos($path, '/') === 0) {
-			$path	= substr($path, 1);
-		}
-		
 		if (is_string($path)) {
-			if (!$short_links) {
-				$path	= "/index.php?url=$path";
-			}
-			
 			$attributes['href']	= $path;
 		}
 			
@@ -49,17 +43,23 @@ class Html extends Base {
 		return $this->element('a', $text, $attributes);
 	}
 	
+	/**
+	 * Bind a model to a form
+	 * @param mixed $model
+	 * @param array $attrs
+	 * @param closure $closure
+	 */
 	public function formFor($model, $attrs = null, $closure) {
 		if (!$attrs) $attrs	= array();
 		
-		if (!isset($model->id))
+		if (empty($model->id))
 			$attrs['method']	= Draw::POST;
 		else 
 			$attrs['method']	= Draw::PUT;
 		
 		$form	= new Form($model, $this);
-		
 		$attrs['action']	= $form->path();
+		
 		ob_start();
 		$closure($form);
 		$content	= ob_get_clean();
@@ -72,6 +72,7 @@ class Html extends Base {
 	 * @param string $action
 	 * @param array $attrs
 	 * @param closure $closure
+	 * @return void
 	 */
 	public function formTag($action, $attrs = null, $closure) {
 		// TODO: Fix by removing the action parameter
@@ -91,6 +92,7 @@ class Html extends Base {
 	 * @param string $text
 	 * @param array $attrs
 	 * @throws Exception
+	 * @return void
 	 */
 	public function textAreaTag($name, $text, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -116,6 +118,7 @@ class Html extends Base {
 	 * Email field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function emailField($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -132,6 +135,7 @@ class Html extends Base {
 	 * Url field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function urlField($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -148,6 +152,7 @@ class Html extends Base {
 	 * Telephone field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function telephoneField($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -164,6 +169,7 @@ class Html extends Base {
 	 * Search field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function searchField($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -180,6 +186,7 @@ class Html extends Base {
 	 * Hidden field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function hiddenFieldTag($name, $value, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -197,6 +204,7 @@ class Html extends Base {
 	 * Password field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function passwordFieldTag($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -213,6 +221,7 @@ class Html extends Base {
 	 * Text field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function textFieldTag($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -229,6 +238,7 @@ class Html extends Base {
 	 * Radio button field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function radioButtonTag($name, $value, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -246,6 +256,7 @@ class Html extends Base {
 	 * Checkbox field helper
 	 * @param string $name
 	 * @param array $attrs
+	 * @return void
 	 */
 	public function checkBoxTag($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -263,16 +274,28 @@ class Html extends Base {
 	 * Label tag helper
 	 * @param string $input
 	 * @param string $label
+	 * @return void
 	 */
 	public function labelTag($input, $label = null) {
 		return $this->element('label', $label, array( 'for' => $this->toId($input) ));
 	}
 	
 	/**
+	 * Submit form helper
+	 * 
+	 * @param string $label
+	 * @return void
+	 */
+	public function submit($label = 'Submit') {
+		return $this->element('input', null, array( 'type' => 'submit', 'value' => $label ));
+	} 
+	
+	/**
 	 * Generates html element that requires closing tag
 	 * @param string $tag
 	 * @param string $text
 	 * @param array $attributes
+	 * @return void
 	 */
 	public function element($tag, $text = '', $attributes = array()) {
 		$html	= "<$tag";
@@ -290,6 +313,33 @@ class Html extends Base {
 		}
 		
 		echo $html;
+		return;
+	}
+	
+	public function toLabel($string) {
+		if (strpos($string, '.') === false) return Inflector::titleize($string);
+		
+		return Inflector::titleize(str_replace('.', '_', $string));
+	}
+	
+	public function __call($name, $args) {
+		if ($this->linksHelper()->hasRoutePath($name)) {
+			return $this->linksHelper()->__pathToLink($name, $args);
+		}
+	}
+	
+	public function respondsTo($method) {
+		if ($this->linksHelper()->hasRoutePath($method)) return true;
+		
+		return parent::respondsTo($method);
+	}
+	
+	public function linksHelper() {
+		if (!$this->_linksHelper) {
+			$this->_linksHelper	= Links::instance();
+		}
+		
+		return $this->_linksHelper;
 	}
 	
 	/**
@@ -298,88 +348,6 @@ class Html extends Base {
 	 */
 	protected function selfClosing($el) {
 		return isset($this->_selfClosing[strtolower($el)]); 
-	}
-	
-	/**
-	 * Loads all the route paths
-	 */
-	private function loadRoutes() {
-		$routes	= Router::instance()->routes();
-		
-		foreach ($routes as $route) {
-			$name	= $route->name();
-			if (!$name) {
-				continue;
-			}
-			
-			$this->pushRoutePath($name, array(
-				'format'	=> $route->format(),
-				'tokens'	=> $route->token()
-			));
-		}
-	}
-	
-	/**
-	 * Push named helper into path
-	 * @param string $name
-	 * @return \Speedy\View\Helpers\Html
-	 */
-	private function pushRoutePath($name, $format) {
-		if (isset($this->_routePaths[$name])) return $this;
-		$this->_routePaths[$name]	= $format;
-		
-		return $this;
-	}
-	
-	/**
-	 * Checks if the path is available
-	 * @param string $name
-	 * @return boolean
-	 */
-	public function hasRoutePath($name) {
-		return isset($this->_routePaths[$name]);
-	}
-	
-	/**
-	 * Getter for route path
-	 * @param string $name
-	 * @return mixed 
-	 */
-	public function routePath($name) {
-		return ($this->hasRoutePath($name)) ? $this->_routePaths[$name] : null;
-	}
-	
-	public function __call($name, $args) {
-		if ($this->hasRoutePath($name)) {
-			return $this->__pathToLink($name, $args);
-		}
-	}
-	
-	public function respondsTo($name) {
-		if ($this->hasRoutePath($name)) return true;
-		
-		return method_exists($this, $name);
-	}
-	
-	private function __pathToLink($name, $args) {
-		$path	= $this->routePath($name);
-		extract($path);
-			
-		if (count($args) < count($tokens)) {
-			throw new Exception('No route matches ' . $format);
-		}
-			
-		foreach ($tokens as $token) {
-			$format	= str_replace(":{$token}", array_shift($args), $format);
-		}
-			
-		if (!empty($args)) {
-			while($param = array_shift($args)) {
-				$format .= "/{$param}";
-			}		
-		}
-		
-		return $format;
 	}
 	
 	/**
@@ -410,10 +378,14 @@ class Html extends Base {
 		return str_replace('.', '_', $string);
 	}
 	
-	private function toLabel($string) {
-		if (strpos($string, '.') === false) return Inflector::titleize($string);
-		
-		return Inflector::titleize(str_replace('.', '_', $string));
-	} 
+	/**
+	 * Setter for links helper
+	 * @param \Speedy\Utility\Links $helper
+	 * @return \Speedy\View\Helpers\Html
+	 */
+	private function setLinksHelper(\Speedy\Utility\Links $helper) {
+		$this->_linksHelper	= $helper;
+		return $this;
+	}
 }
 ?>

@@ -71,28 +71,28 @@ class Request extends Object {
 	 * Getter for method
 	 */
 	public function method() {
-		return $this->getData("REQUEST_METHOD");
+		return $this->data("REQUEST_METHOD");
 	}
 	
 	/**
 	 * Getter for host
 	 */
 	public function host() {
-		return $this->getData('HTTP_HOST');
+		return $this->data('HTTP_HOST');
 	}
 	
 	/**
 	 * Getter for Query String
 	 */
 	public function queryString() {
-		return $this->getData('QUERY_STRING');
+		return $this->data('QUERY_STRING');
 	}
 	
 	/**
 	 * Getter for URI
 	 */
 	public function uri() {
-		return $this->getData('REQUEST_URI');
+		return $this->data('REQUEST_URI');
 	}
 	
 	/**

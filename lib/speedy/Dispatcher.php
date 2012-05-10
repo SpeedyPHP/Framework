@@ -51,7 +51,7 @@ class Dispatcher extends Object {
 			exit;
 		}
 		
-		$router->request()->setParam('request', $route);
+		$router->request()->addParams($route);
 		$controllerObj	= new $fullName($router->request(), $response);
 		if (!method_exists($controllerObj, $action)) {
 			// TODO: Error action not found in controller

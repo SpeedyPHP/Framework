@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-
 defined("DS") or define("DS", DIRECTORY_SEPARATOR);
 
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App

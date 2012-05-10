@@ -3,7 +3,7 @@ return <<<EOF
 	/**
 	 * GET /posts/new
 	 */
-	public function new() {
+	public function _new() {
 		\$this->{$modelLc}	= new {$modelName}();
 		
 		\$this->respondTo(function(\$format) {

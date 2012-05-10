@@ -57,6 +57,14 @@ class Config extends Singleton {
 	}
 	
 	/**
+	 * Returns renderer for builder
+	 * @param string $builder
+	 */
+	public function renderer($builder) {
+		return (isset($this->_renders[$builder])) ? $this->_renders[$builder] : null;
+	}
+	
+	/**
 	 * Add a renderer to the stack
 	 * @param string $format
 	 * @param string $namespace
@@ -155,7 +163,7 @@ class Config extends Singleton {
 	}
 	
 	public function get($name) {
-		return $this->getData($name);
+		return $this->data($name);
 	}
 
 	/**

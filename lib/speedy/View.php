@@ -5,6 +5,7 @@ use \Speedy\Loader;
 use \Speedy\Config;
 use \Speedy\Utility\Inflector;
 use \Speedy\Http\Exception as HttpException;
+use \Speedy\View\Exception as ViewException;
 use \Speedy\Singleton;
 
 class View extends Singleton {
@@ -21,6 +22,8 @@ class View extends Singleton {
 	
 	protected $_response;
 	
+	protected $_params;
+	
 	
 	
 	/**
@@ -33,7 +36,7 @@ class View extends Singleton {
 		$viewPaths	= Loader::instance()->path('views');
 		$renderers	= Config::instance()->renderers();
 		
-		foreach ($renderers as $type => $renderer) {			
+		/*foreach ($renderers as $type => $renderer) {			
 			foreach ($viewPaths as $path) {
 				$fullPath	= $path . DS . $file . ".{$type}.{$ext}";
 				
@@ -46,9 +49,68 @@ class View extends Singleton {
 					->setPath($fullPath)
 					->setOptions($options)
 					->setVars($this->vars())
-					->setData($this->getData())
+					->setData($this->data())
 					->render();
 				return true;
+			}
+		}*/
+		$fullPath	= $this->findFile($file, $ext);  
+		if (!$fullPath) {
+			throw new ViewException("No view found for $file using builder => '$ext'");
+		}
+		
+		$renderer 	= $this->builder($fullPath); 
+		if (!$renderer) return false; // TODO: Throw exception
+		
+		$rendererObj= $this->renderer($renderer, $options);
+		$rendererObj
+			->setPath($fullPath)
+			->setOptions($options)
+			->setVars($this->vars())
+			->setData($this->data())
+			->render(); 
+		
+		return true;
+	}
+	
+	/**
+	 * Figure out the builder
+	 * @param string $filePath
+	 * @return string
+	 */
+	public function builder($filePath) {
+		if (!file_exists($filePath)) return null;
+		
+		$fileInfo	= pathinfo($filePath);
+		$filename	= $fileInfo['filename']; 
+		$filenameArr= explode('.', $filename);
+		
+		if (count($filenameArr) < 1) return null;
+		$builder	= array_pop($filenameArr); 
+		 
+		return Config::instance()->renderer($builder);
+	}
+	
+	/**
+	 * Locate the full file path
+	 * @param string $file
+	 * @return mixed string fullpath/false on failure
+	 */
+	public function findFile($file, $ext = 'html') {
+		if (strpos($file, '/') === false) {
+			
+		}
+		
+		$viewPaths	= Loader::instance()->path('views');
+		$renderers	= Config::instance()->renderers();
+		
+		foreach ($renderers as $type => $renderer) {
+			foreach ($viewPaths as $path) {
+				$fullPath	= $path . DS . $file . ".{$type}.{$ext}";
+		
+				if (file_exists($fullPath)) {
+					return $fullPath;
+				}
 			}
 		}
 		
@@ -74,38 +136,20 @@ class View extends Singleton {
 	}
 	
 	/**
-	 * Check if renderer exists in stack
-	 * @param string $name
-	 * @return boolean
+	 * Setter for params
+	 * @param array $params
 	 */
-	private function hasRenderer($name) {
-		return isset($this->_renderers[$name]);
-	}
-	
-	/**
-	 * Accessor for renderer
-	 * @param string $name
-	 * @param array $options (optional)
-	 * @return \Speedy\View\Base
-	 */
-	public function renderer($name) {
-		if (!$this->hasRenderer($name)) {
-			$class	= Loader::instance()->toClass($name);
-			$this->setRenderer($name, new $class());
-		}
-		
-		return $this->_renderers[$name];
-	}
-	
-	/**
-	 * Setter for renderers
-	 * @param string $name
-	 * @param \Speedy\View\Base $renderer
-	 * @return \Speedy\View
-	 */
-	protected function setRenderer($name, $renderer) {
-		$this->_renderers[$name]	= $renderer;
+	public function setParams($params) {
+		$this->params	= $params;
 		return $this;
+	}
+	
+	/**
+	 * Accessor for params
+	 * @return array
+	 */
+	public function params() {
+		return $this->params;
 	}
 	
 	/**
@@ -141,6 +185,44 @@ class View extends Singleton {
 	 */
 	public function setVars(array $vars) {
 		$this->_vars	= $vars;
+		return $this;
+	}
+	
+	/**
+	 * Accessor for renderer
+	 * @param string $name
+	 * @param array $options (optional)
+	 * @return \Speedy\View\Base
+	 */
+	public function renderer($name) {
+		if (!$this->hasRenderer($name)) {
+			$class	= Loader::instance()->toClass($name);
+			$obj	= new $class();
+			$obj->setParams($this->params());
+			
+			$this->setRenderer($name, $obj);
+		}
+		
+		return $this->_renderers[$name];
+	}
+	
+	/**
+	 * Check if renderer exists in stack
+	 * @param string $name
+	 * @return boolean
+	 */
+	private function hasRenderer($name) {
+		return isset($this->_renderers[$name]);
+	}
+	
+	/**
+	 * Setter for renderers
+	 * @param string $name
+	 * @param \Speedy\View\Base $renderer
+	 * @return \Speedy\View
+	 */
+	protected function setRenderer($name, $renderer) {
+		$this->_renderers[$name]	= $renderer;
 		return $this;
 	}
 	

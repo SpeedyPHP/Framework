@@ -1,6 +1,5 @@
 <?php 
 return <<<EOF
-<?php
 	/** 
 	 * DELETE /posts/1
 	 */
@@ -12,6 +11,5 @@ return <<<EOF
 			\$format->html = function() { \$this->redirectTo(\$this->{$modelPlural}_url()); };
 		});
 	}
-?>
 EOF;
 ?>

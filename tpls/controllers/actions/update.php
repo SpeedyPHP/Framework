@@ -7,7 +7,7 @@ return <<<EOF
 		\$this->{$modelLc}	= {$modelName}::find(\$this->params('id'));
 		
 		\$this->respondTo(function(\$format) {
-			if (\$this->{$modelLc}->update_attributes(\$this->params('{$modelLc}')) {
+			if (\$this->{$modelLc}->update_attributes(\$this->params('{$modelLc}'))) {
 				\$format->html = function() {
 					\$this->redirectTo(\$this->{$modelLc}, array("notice" => "{$modelName} was successfully updated."));
 				};

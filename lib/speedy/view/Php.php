@@ -18,8 +18,8 @@ class Php extends Base {
 		$path		= ($path) ? $path : $this->path();
 		$vars		= $this->vars();
 	 
-		if ($this->isPartial($path)) {
-			View::instance()->render($path, $options);
+		if (($partialPath = $this->isPartial($path)) !== false) {
+			View::instance()->render($partialPath, $options);
 			return;
 		}
 		

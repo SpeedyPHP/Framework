@@ -41,6 +41,8 @@ abstract class Base extends Object {
 		'speedy.view.helpers.inflector'
 	);
 	
+	public $params;
+	
 	
 	/**
 	 * View renderer
@@ -53,11 +55,65 @@ abstract class Base extends Object {
 	}
 	
 	/**
-	 * Getter for templatePath
+	 * Renders a template
+	 * @param $path optional
+	 */
+	abstract public function render($path = null);
+	
+	/**
+	 * Renders the template to a string
+	 * @param string $template optional path to template
+	 * @param string $renderer optional
 	 * @return string
 	 */
-	protected function path() {
-		return $this->_path;
+	public function toString($template = null) {
+		$this->setOption('layout', null);
+		
+		ob_start();
+		$this->render($template);
+		$content	= ob_get_contents();
+		ob_end_clean();
+		return $content;
+	}
+	
+	/**
+	 * Getter for a yield
+	 * @param string $name
+	 */
+	public function yield($name = "__main__") {
+		echo \Speedy\View::instance()->yield($name);
+	}
+	
+	public function contentFor($name, $closure) {
+		ob_start();
+		$closure();
+		$content = ob_get_contents();
+		ob_end_clean();
+		
+		View::instance()->setYield($name, $content);
+		return;
+	}
+	
+	public function isPartial($path) {
+		if (preg_match("#/?_(\w)*/#i", $path, $matches)) return $path;
+		if (strpos($path, '/') === false && strpos($path, '_') !== 0) {
+			$path	= $this->param('controller') . "/_" . $path;
+		} 
+		
+		return (View::instance()->findFile($path)) ? $path : false;
+	}
+	
+	public function toPath($name) {
+		return (strpos($name, '/')) ? str_replace('/', DS, $name) : $name; 
+	}
+	
+	public function setParams(&$params) {
+		$this->params	=& $params;
+		return $this;
+	}
+	
+	public function param($name) {
+		return $this->__dotAccess($name, $this->params);
 	}
 	
 	/**
@@ -77,25 +133,6 @@ abstract class Base extends Object {
 	 */
 	public function setVars(array $vars) {
 		$this->_vars	= $vars;
-		return $this;
-	}
-	
-	/**
-	 * Getter for template variables
-	 * @return array
-	 */
-	protected function vars() {
-		return $this->_vars;
-	}
-	
-	/**
-	 * Setter for template variables
-	 * @param string $name
-	 * @param mixed $value
-	 * @return \Speedy\View
-	 */
-	protected function set($name, $value) {
-		$this->_vars[$name]	= $value;
 		return $this;
 	}
 	
@@ -128,6 +165,33 @@ abstract class Base extends Object {
 	}
 	
 	/**
+	 * Getter for templatePath
+	 * @return string
+	 */
+	protected function path() {
+		return $this->_path;
+	}
+	
+	/**
+	 * Getter for template variables
+	 * @return array
+	 */
+	protected function vars() {
+		return $this->_vars;
+	}
+	
+	/**
+	 * Setter for template variables
+	 * @param string $name
+	 * @param mixed $value
+	 * @return \Speedy\View
+	 */
+	protected function set($name, $value) {
+		$this->_vars[$name]	= $value;
+		return $this;
+	}
+	
+	/**
 	 * Setter for controller
 	 * @param unknown_type $controller
 	 */
@@ -142,54 +206,6 @@ abstract class Base extends Object {
 	 */
 	protected function controller() {
 		return $this->_controller;
-	}
-	
-	/**
-	 * Renders a template
-	 * @param $path optional
-	 */
-	abstract public function render($path = null);
-	
-	/**
-	 * Renders the template to a string
-	 * @param string $template optional path to template
-	 * @param string $renderer optional
-	 * @return string
-	 */
-	public function toString($template = null) {
-		$this->setOption('layout', null);
-		
-		ob_start();
-		$this->render($template);
-		$content	= ob_get_clean();
-		ob_end_flush();
-		return $content;
-	}
-	
-	/**
-	 * Getter for a yield
-	 * @param string $name
-	 */
-	public function yield($name = "__main__") {
-		echo \Speedy\View::instance()->yield($name);
-	}
-	
-	public function contentFor($name, $closure) {
-		ob_start();
-		$closure();
-		$content = ob_get_clean();
-		ob_end_flush();
-		
-		View::instance()->setYield($name, $content);
-		return;
-	}
-	
-	public function isPartial($path) {
-		return (preg_match("#/?_(\w)*/#i", $path, $matches)) ? true : false;
-	}
-	
-	public function toPath($name) {
-		return (strpos($name, '/')) ? str_replace('/', DS, $name) : $name; 
 	}
 	
 }

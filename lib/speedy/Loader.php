@@ -220,7 +220,7 @@ namespace Speedy {
 			// Check if already loaded
 			if ($this->loaded($namespace)) return true;
 			
-			$path	= $this->toPath($namespace);
+			$path	= $this->toPath($namespace); 
 			if ($this->load($path)) {
 				return true;
 			} else {

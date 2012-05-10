@@ -51,30 +51,6 @@ class Object {
 	}
 	
 	/**
-	 * Gets a mixin
-	 * @return mixin instance
-	 */
-	private function _getMixin($mixin) {
-		if (empty($this->_mixinObjs) && !$this->_loadedMixins()) {
-			$this->_loadMixins();
-		}
-		
-		return ($this->_hasMixin($mixin)) ? $this->_mixinObjs[$mixin] : null;
-	}
-	
-	/**
-	 * Gets all mixins
-	 * @return array of mixin instances
-	 */
-	private function _getMixins() {
-		if (empty($this->_mixinObjs) && !$this->_loadedMixins()) {
-			$this->_loadMixins();
-		}
-	
-		return $this->_mixinObjs;
-	}
-	
-	/**
 	 * loads mixins
 	 * @return $this
 	 */
@@ -102,42 +78,12 @@ class Object {
 	}
 	
 	/**
-	 * Magic methods for magic getters, setters, and methods
-	 */
-	public function __call($name, $args) {
-		if (DEBUG) {
-			print_r($name);
-			print "\n";
-		}
-		
-		if (!$this->_loadedMixins()) {
-			$this->_loadMixins();
-		}
-		
-		preg_match_all('/((?:^|[A-Z])[a-z]+)/', $name, $nameParts);
-		$nameParts	= $nameParts[0];
-		$verb		= array_shift($nameParts);
-		$path		= strtolower(implode(self::VS, $nameParts));
-		switch($verb) {
-			case "has":
-				return $this->hasData($path);
-			case "set":
-				array_unshift($args, $path);
-				return call_user_func_array(array($this, 'setData'), $args);
-			case "get":
-				return $this->getData($path);
-			default:
-				return $this->_callMixin($name, $args);
-		}
-	}
-	
-	/**
 	 * Attempts to call a mixin
 	 * 
 	 */
 	protected function _callMixin($name, $args) {
 		foreach ($this->_getMixins() as $instance) {
-			if ($instance->respondsTo($name)) {
+			if ($instance instanceof \Speedy\Object && $instance->respondsTo($name)) {
 				return call_user_func_array(array($instance, $name), $args);
 			}
 		}
@@ -244,7 +190,31 @@ class Object {
 	 * @return boolean
 	 */
 	protected function hasData($name) {
-		return ($this->getData($name)) ? true : false;
+		return ($this->data($name)) ? true : false;
+	}
+	
+	/**
+	 * Gets a mixin
+	 * @return mixin instance
+	 */
+	private function _getMixin($mixin) {
+		if (empty($this->_mixinObjs) && !$this->_loadedMixins()) {
+			$this->_loadMixins();
+		}
+		
+		return ($this->_hasMixin($mixin)) ? $this->_mixinObjs[$mixin] : null;
+	}
+	
+	/**
+	 * Gets all mixins
+	 * @return array of mixin instances
+	 */
+	private function _getMixins() {
+		if (empty($this->_mixinObjs) && !$this->_loadedMixins()) {
+			$this->_loadMixins();
+		}
+	
+		return $this->_mixinObjs;
 	}
 	
 	public function __set($name, $value) {
@@ -252,7 +222,7 @@ class Object {
 	}
 	
 	public function __get($name) {
-		return ($this->hasData($name)) ? $this->getData($name) : null;
+		return ($this->hasData($name)) ? $this->data($name) : null;
 	}
 	
 	public function __isset($name) {
@@ -275,5 +245,35 @@ class Object {
 	
 	public function respondsTo($method) {
 		return method_exists($this, $method);
+	}
+	
+	/**
+	 * Magic methods for magic getters, setters, and methods
+	 */
+	public function __call($name, $args) {
+		if (DEBUG) {
+			print_r($name);
+			print "\n";
+		}
+		
+		if (!$this->_loadedMixins()) {
+			$this->_loadMixins();
+		}
+		
+		preg_match_all('/((?:^|[A-Z])[a-z]+)/', $name, $nameParts);
+		$nameParts	= $nameParts[0];
+		$verb		= array_shift($nameParts);
+		$path		= strtolower(implode(self::VS, $nameParts));
+		switch($verb) {
+			case "has":
+				return $this->hasData($path);
+			case "set":
+				array_unshift($args, $path);
+				return call_user_func_array(array($this, 'setData'), $args);
+			case "get":
+				return $this->data($path);
+			default:
+				return $this->_callMixin($name, $args);
+		}
 	}
 }

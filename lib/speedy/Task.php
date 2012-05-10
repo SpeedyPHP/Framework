@@ -38,7 +38,7 @@ class Task extends Object {
 	}
 	
 	public function run() {
-		$command = $this->getData(1) . "Task";
+		$command = $this->data(1) . "Task";
 		
 		if (!$command) {
 			$this->help();

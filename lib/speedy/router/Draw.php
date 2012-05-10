@@ -73,9 +73,9 @@ abstract class Draw extends Object {
 			'name'	=> "{$name}_path"
 		)));
 		$this->pushRoute(new Match(array(
-			"/$name/new" => "$name#new", 	
+			"/$name/new" => "$name#_new", 	
 			'on' => self::GET,
-			'name'	=> "new_{$name}_path"
+			'name'	=> "new_{$member}_path"
 		)));
 		$this->pushRoute(new Match(array(
 			"/$name" => "$name#create", 	

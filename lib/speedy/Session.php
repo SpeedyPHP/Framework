@@ -8,7 +8,7 @@ class Session extends Singleton {
 	
 	static function start($name = 'App', $limit = 0, $path = '/', $domain = null, $secure = null) {
 		// This implementation borrowed from http://thinkvitamin.com/code/how-to-create-bulletproof-sessions/
-		session_name($name . '_Session');
+		//session_name($name . '_Session');
 		
 		$domain = isset($domain) ? $domain : isset($_SERVER['SERVER_NAME']);
 		
@@ -18,13 +18,13 @@ class Session extends Singleton {
 		session_start();
 		
 		$self	= self::instance();
-		$self->addData($_SERVER);
-
-		if (!isset($self->data('ip_address'))) {
+		$self->addData($_SESSION);
+	
+		if (!$self->has('ip_address')) {
 			$self->setData('ip_address', $_SERVER['REMOTE_ADDR']);
 		}
-		
-		if (!isset($self->data('user_agent'))) {
+
+		if (!$self->has('user_agent')) {
 			$self->setData('user_agent', $_SERVER['HTTP_USER_AGENT']);
 		}
 	}	
@@ -48,7 +48,25 @@ class Session extends Singleton {
 	}
 	
 	public function __destruct() {
-		$_SESSION	= self::instance()->data();
+		// $_SESSION	= self::instance()->data();
+	}
+	
+	public function has($name) {
+		return $this->hasData($name);
+	}
+	
+	protected function addData(&$data) {
+		if (empty($this->_data) && is_array($data)) {
+			$this->_data =& $data;
+		} elseif (is_array($data)) {
+			foreach ($data as $key => $value) {
+				$this->_data[$key]	= $value;
+			}
+		} else {
+			$this->_data[]	= $data;
+		}
+	
+		return $this;
 	}
 	
 }

@@ -31,7 +31,7 @@ EOF;
 			return 0;
 		}
 		
-		$taskName = $this->getData(0);
+		$taskName = $this->data(0);
 		if (!$this->hasTask($taskName)) return -1;
 		
 		$task = $this->getTask($taskName);
@@ -49,14 +49,13 @@ EOF;
 	
 	private function _loadTasks() {
 		$directories = array(dirname(__FILE__) . DS . "Tasks");
-		
+		$data = $this->data();
+		if ($data) array_shift($data);
+
 		foreach ($directories as $dir) {
 			if (!is_dir($dir)) continue;
 			
-			if ($dh = opendir($dir)) {
-				$data = $this->getData();
-				if ($data) array_shift($data);
-				
+			/*if ($dh = opendir($dir)) {				
 				while (($file = readdir($dh)) !== false) {
 					if (!preg_match("/^([\w_]+)\.php$/i", $file, $matches)) continue;
 					
@@ -70,6 +69,17 @@ EOF;
 				}
 				
 				closedir($dh);
+			}*/
+			
+			foreach (glob($dir . DS . '*.php') as $file) {
+				require_once $file;
+				$info	= pathinfo($file);
+				$class 	= $info['filename'];
+					
+				$obj = new $class();
+				$obj->setData($data);
+					
+				$this->_addTask(($obj->alias) ? $obj->alias : strtolower($class), $obj);
 			}
 		}
 	}

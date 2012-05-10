@@ -39,11 +39,12 @@ class Generator extends Speedy\Task {
 		$help = <<<EOF
 Generator kit. Use without command for help or with -h option.
 usage:
-	    speedy generator [command]	
+	    speedy g [command]	
 		
 Commands:
-test		-- Generators test
-controller	-- Generate controller
+test			-- Generators test
+controller		-- Generate controller
+scaffold_controller	-- Generate scaffold controller and views
 EOF;
 		output($help);
 	}
@@ -78,7 +79,7 @@ EOF;
 	 * Self explainatory
 	 */
 	public function defaultTask() {
-		$command	= $this->getData(0);
+		$command	= $this->data(0); 
 		
 		if (!$this->hasGenerator($command)) {
 			$this->help();
@@ -97,7 +98,7 @@ EOF;
 	}
 	
 	public function generateTest() {
-		$class = $this->getData(1);
+		$class = $this->data(1);
 		output("Generating test harness for: $class");
 		
 		$content= $this->_testTemplate(array('className' => $class));
@@ -123,7 +124,7 @@ EOF;
 		$this->generateMigration(true);
 		
 		$app		= App::instance();
-		$name		= $this->getData(1);
+		$name		= $this->data(1);
 		$nameArray	= $this->_cleanName($name);
 		$name		= array_pop($nameArray);
 		
@@ -153,7 +154,7 @@ EOF;
 		}
 		
 		$app		= App::instance();
-		$name		= $this->getData(1);
+		$name		= $this->data(1);
 		$nameArray	= $this->_cleanName($name);
 		$name		= array_pop($nameArray);
 		
@@ -190,7 +191,7 @@ EOF;
 		}
 	
 		$app		= App::instance();
-		$name		= $this->getData(1);
+		$name		= $this->data(1);
 		$nameArray	= $this->_cleanName($name);
 		$name		= array_pop($nameArray);
 	
@@ -207,18 +208,63 @@ EOF;
 		$viewPath[]	= strtolower($name);
 	
 		$this->_recurseMkdir($viewPath, self::VIEWS_DIR);
+		
+		$modelLc	= strtolower(Inflector::singularize($name));
 	
+		$class	= "\\{$app->name()}\\Models\\" . Inflector::singularize($name);
+		$fields = '';
+		$headerColumns	= '';
+		$bodyColumns	= '';
+		foreach ($class::table()->columns as $column) {
+			if (strlen($actions) > 0) {
+				$actions .= "\n\r";
+				$headerColumns	.= "\n\r";
+				$bodyColumns	.= "\n\r";
+			}
+			
+			$fields .= $this->_fieldsTpl($column->name);
+			$headerColumns	.= $this->_headerColumn(Inflector::titleize($column->name));
+			$bodyColumns	.= $this->_bodyColumn($modelLc, $column->name);
+		}
+		
 		$this->set('modelName',		Inflector::singularize($name));
-		$this->set('modelLc',		strtolower(Inflector::singularize($name)));
+		$this->set('modelLc',		$modelLc);
 		$this->set('modelPlural',	strtolower(Inflector::pluralize($name)));
 		$this->set('namespace', 	$app->name());
 		$this->set('controller',	$name);
 		$this->set('actions',		$this->getScaffoldActions());
+		$this->set('fields',		$fields);
+		$this->set('headerColumns',	$headerColumns);
+		$this->set('bodyColumns',	$bodyColumns);
+		$this->set('columns',		$class::table()->columns);
 		$content	= $this->getTemplate('BaseController.php');
 	
-		output("Create {$name}.php");
 		$path	= APP_PATH . DS . self::CONTROLLERS_DIR . DS . implode(DS, $nameArray) . DS . $name . '.php';
-		file_put_contents($path, $content);
+		if (!file_exists($path)) {
+			output("Create {$name}.php");
+			file_put_contents($path, $content);
+		}
+		else
+			output("Skipping {$name}.php");
+		
+		$viewPath	= APP_PATH . DS . self::VIEWS_DIR . DS;
+		$viewPath	.= (count($nameArray) > 0) ? implode(DS, $nameArray) . DS . $name : $name;
+
+		$viewTplsPath	= "views" . DS . 'scaffold';
+		$views	= array('edit', '_form', 'index', 'new', 'show');
+		
+		output();
+		output('Creating views');
+		foreach ($views as $view) {
+			$toPath	= $viewPath . DS . "{$view}.php.html";
+			if (file_exists($toPath)) {
+				output("Skipping {$view}.php.html");
+				continue;
+			}
+			
+			output("Create {$view}.php.html");
+			file_put_contents($toPath, $this->getTemplate($viewTplsPath . DS . $view . '.php'));
+		}
 	}
 	
 	/**
@@ -230,15 +276,15 @@ EOF;
 			return 1;
 		}
 		
-		$name	= Inflector::underscore($this->getData(1));
-		$count	= count($this->getData());
+		$name	= Inflector::underscore($this->data(1));
+		$count	= count($this->data());
 		
 		if ($create || preg_match("/^create_table_([\w]+)/", $name, $matches)) {
 			$table	= ($create) ? Inflector::pluralize($name) : Inflector::pluralize($matches[1]);
 			$actions	= '$this->create_table("' . $table . '", function() {' . "\n";
 			
 			for ($i = 2; $i < $count; $i++) {
-				$columnDef	= $this->getData($i);
+				$columnDef	= $this->data($i);
 				$def	= explode(':', $columnDef);
 				$actions	.= "\t\t\t" . '$this->' . $def[1] . '("' . $def[0] .'");' . "\n";
 			}
@@ -255,6 +301,25 @@ EOF;
 		output("Create {$file}");
 		$path	= APP_ROOT . DS . 'db' . DS . self::MIGRATION_DIR . DS . $file;
 		file_put_contents($path, $content);
+	}
+	
+	/**
+	 * Get template from file 
+	 * @param string $tpl
+	 */
+	public function getTemplate($tpl) {
+		extract($this->variables());
+	
+		$content	= include SPEEDY_TEMPLATES . $tpl;
+		return $content;
+	}
+	
+	/**
+	 * Get all variables
+	 * @return array 
+	 */
+	public function variables() {
+		return $this->_variables;
 	}
 	
 	/**
@@ -362,23 +427,25 @@ EOF;
 		return $actions;
 	}
 	
-	/**
-	 * Get template from file 
-	 * @param string $tpl
-	 */
-	public function getTemplate($tpl) {
-		extract($this->variables());
-	
-		$content	= include SPEEDY_TEMPLATES . $tpl;
-		return $content;
+	private function _headerColumn($column) {
+		return <<<TPL
+		<th>$column</th>
+TPL;
 	}
 	
-	/**
-	 * Get all variables
-	 * @return array 
-	 */
-	public function variables() {
-		return $this->_variables;
+	private function _bodyColumn($modelLc, $column) {
+		return <<<TPL
+				<td><?php echo \${$modelLc}->{$column}; ?></td>	
+TPL;
+	}
+	
+	private function _fieldsTpl($column) {
+		return <<<TPL
+	<div class="field">
+		<?php \$f->label("{$column}"); ?>
+		<?php \$f->textField("{$column}"); ?>
+	</div>
+TPL;
 	}
 	
 	/**

@@ -144,7 +144,7 @@ class App extends Object {
 			$this->setConfig(Config::instance());
 		}
 		
-		return ($name === null) ? $this->_config : $this->config()->getData($name);
+		return ($name === null) ? $this->_config : $this->config()->data($name);
 	}
 	
 	/**

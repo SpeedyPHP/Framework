@@ -3,7 +3,7 @@ namespace Speedy;
 
 use \Speedy\Object
 
-class Collection extends Object implements Iterator, ArrayAccess {
+class Collection extends Object implements Iterator, ArrayAccess, Countable, Serializeable {
 	
 	private $_position	= 0;
 	
@@ -11,8 +11,9 @@ class Collection extends Object implements Iterator, ArrayAccess {
 	
 	
 	
-	public function __construct(array $collection) {
+	public function __construct(array $collection = array()) {
 		$this->setCollection($collection)->setPosition(0);
+		return;
 	}
 	
 	public function current() {
@@ -25,10 +26,12 @@ class Collection extends Object implements Iterator, ArrayAccess {
 	
 	public function next() {
 		++$this->_position;
+		return;
 	}
 	
 	public function rewind() {
 		$this->setPosition(0);
+		return;
 	}
 	
 	public function valid() {
@@ -57,6 +60,7 @@ class Collection extends Object implements Iterator, ArrayAccess {
 		} else {
 			$this->set($offset, $value);
 		}
+		return;
 	}
 	
 	public function offsetUnset($offset) {
@@ -67,6 +71,14 @@ class Collection extends Object implements Iterator, ArrayAccess {
 		foreach ($this as &$value) {
 			$closure($value);
 		}
+		return;
+	}
+	
+	public function each_key($closure) {
+		foreach ($this as $key => &$value) {
+			$closure($key, $value);
+		}
+		return;
 	}
 	
 	public function set($key, $value) {
@@ -77,6 +89,19 @@ class Collection extends Object implements Iterator, ArrayAccess {
 	public function push($value) {
 		$this->_collection[]	= $value;
 		return $this;
+	}
+	
+	public function count() {
+		return count($this->_collection);
+	}
+	
+	public function serialize() {
+		return serialize($this->collection());
+	}
+	
+	public function unserialize($serial) {
+		$this->setCollection(unserialize($serial));
+		return;
 	}
 
 	protected function setCollection($collection) {

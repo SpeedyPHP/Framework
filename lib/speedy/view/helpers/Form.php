@@ -2,8 +2,7 @@
 namespace Speedy\View\Helpers;
 
 use \Speedy\View\Helpers\Html;
-use \Speedy\Utility\Inflector;
-use \Speedy\Object
+use \Speedy\Object;
 
 class Form extends Object {
 	
@@ -27,7 +26,7 @@ class Form extends Object {
 		$this->setName(array_pop($classArr));
 		$this->{$this->name()}	= $model;
 		
-		$actionPath	= Inflector::pluralize($this->name());
+		$actionPath	= \Speedy\Utility\Inflector::pluralize($this->name());
 		if (count($classArr)) {
 			while ($name = array_pop($classArr)) {
 				$actionPath = "{$name}_{$actionPath}";
@@ -118,8 +117,8 @@ class Form extends Object {
 	 * @param string $name
 	 * @param array $attrs
 	 */
-	public function label($name, $labe = null) {
-		return $this->helper()->label($this->formatName($name), ($label) ? $label : $this->toLabel($name));
+	public function label($name, $label = null) {
+		return $this->helper()->labelTag($this->formatName($name), ($label !== null) ? $label : $this->helper()->toLabel($name));
 	}
 	
 	/**
@@ -132,11 +131,18 @@ class Form extends Object {
 	}
 	
 	/**
-	 * Format name for field
+	 * Magic method for when method is missing
 	 * @param string $name
+	 * @param array $args
+	 * @throws \Exception
+	 * @return mixed
 	 */
-	private function formatName($name) {
-		return $this->name() . '.' . $name;
+	public function __call($name, $args) {
+		if (method_exists($this->helper(), $name)) {
+			return call_user_func_array(array($this->helper(), $name), $args);
+		}
+	
+		throw new \Exception("No method exists " . get_class($this) . "#$name");
 	}
 	
 	/**
@@ -148,21 +154,37 @@ class Form extends Object {
 	}
 	
 	/**
-	 * Setter for name
-	 * @param string $name
-	 * @return \Speedy\View\Helpers\Form
-	 */
-	protected function setName($name) {
-		$this->_name = $name;
-		return $this;
-	}
-	
-	/**
 	 * Getter for path
 	 * @return string
 	 */
 	public function path() {
 		return $this->_path;
+	}
+	
+	/**
+	 * Getter for helper
+	 * @return \Speedy\View\Helpers\Html
+	 */
+	public function helper() {
+		return $this->_helper;
+	}
+	
+	/**
+	 * Format name for field
+	 * @param string $name
+	 */
+	private function formatName($name) {
+		return $this->name() . '.' . $name;
+	}
+	
+	/**
+	 * Setter for name
+	 * @param string $name
+	 * @return \Speedy\View\Helpers\Form
+	 */
+	protected function setName($name) {
+		$this->_name = strtolower($name);
+		return $this;
 	}
 	
 	/**
@@ -176,14 +198,6 @@ class Form extends Object {
 	}
 	
 	/**
-	 * Getter for helper
-	 * @return \Speedy\View\Helpers\Html
-	 */
-	public function helper() {
-		return $this->_helper;
-	}
-	
-	/**
 	 * Setter for helper
 	 * @param \Speedy\View\Helpers\Html $helper
 	 * @return \Speedy\View\Helpers\Form
@@ -191,14 +205,6 @@ class Form extends Object {
 	protected function setHelper(\Speedy\View\Helpers\Html &$helper) {
 		$this->_helper =& $helper;
 		return $this;
-	}
-	
-	public function __class($name, $args) {
-		if (method_exists($this->helper(), $name)) {
-			return call_user_func_array(array($this->helper(), $name), $args);
-		}
-		
-		throw new \Exception("No method exists " . get_class($this) . "#$name");
 	}
 	
 }

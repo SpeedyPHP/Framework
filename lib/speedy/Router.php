@@ -84,9 +84,8 @@ class Router extends Object {
 		if ($route = $this->matchedRoute()) return $route; 
 		
 		$match	= false;
-		$routes	= $this->routes();
+		$routes	= $this->routes(); 
 		$request= $this->request();
-		reset($routes);
 		
 		foreach ($routes as $route) {
 			if ($match) {

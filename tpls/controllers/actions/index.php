@@ -10,7 +10,7 @@ return <<<EOF
 			\$format->html; // Render per usual
 			\$format->json	= function() {
 				\$this->render(array( 'json' => \$this->{$modelPlural} ));
-			}
+			};
 		});
 	}
 EOF;
