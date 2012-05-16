@@ -110,11 +110,12 @@ class App extends Object {
 			'models'		=> "{$this->ns()}.models",
 		));
 		
-		$config		= $this->config();
-		$ormClass	= $loader->toClass($this->orm());
-		$ormClass::setup($config);
-		
 		self::_setInstance($this);
+		
+		$envConfigPath	= CONFIG_PATH . DS . 'environments' . DS . SPEEDY_ENV . '.php';
+		if (file_exists($envConfigPath)) {
+			require_once $envConfigPath;
+		}
 	}
 	
 	/**
@@ -174,12 +175,7 @@ class App extends Object {
 	 * Bootstrap all application
 	 * @return $this;
 	 */
-	public function bootstrap() {
-		$envConfigPath	= CONFIG_PATH . DS . 'environments' . DS . SPEEDY_ENV . '.php';
-		if (file_exists($envConfigPath)) {
-			require_once $envConfigPath;
-		}
-		
+	public function bootstrap() {	
 		$methods = $this->bootstrapMethods();
 		foreach ($methods as $method) {
 			$this->{$method}();

@@ -15,7 +15,12 @@ class Html extends Base {
 	
 	private $_selfClosing	= array(
 		'input',
-		'img'
+		'img',
+		'link'
+	);
+	
+	private $_jsShorts	= array(
+		'jquery' => 'http://code.jquery.com/jquery-1.7.2.min.js'
 	);
 	
 	protected $_linksHelper;
@@ -38,6 +43,23 @@ class Html extends Base {
 		if (is_string($path)) {
 			$attributes['href']	= $path;
 		}
+		
+		$data	= array();
+		if (isset($attributes['confirm'])) {
+			$data['confirm']= $attributes['confirm'];
+			unset($attributes['confirm']); 
+		}
+		
+		if (isset($attributes['method'])) {
+			$data['method']	= $attributes['method'];
+			unset($attributes['method']);
+		}
+		
+		if (isset($attributes['data']) && is_array($attributes['data'])) {
+			$attributes['data']	= array_merge($attributes['data'], $data);
+		} else {
+			$attributes['data']	= $data;
+		}
 			
 		
 		return $this->element('a', $text, $attributes);
@@ -52,15 +74,21 @@ class Html extends Base {
 	public function formFor($model, $attrs = null, $closure) {
 		if (!$attrs) $attrs	= array();
 		
-		if (empty($model->id))
-			$attrs['method']	= Draw::POST;
-		else 
-			$attrs['method']	= Draw::PUT;
-		
+	
+		$attrs['method']	= Draw::POST;
 		$form	= new Form($model, $this);
-		$attrs['action']	= $form->path();
+		if (!isset($attrs['action']))
+			$attrs['action']	= $form->path();
+		
+		if (is_array($model)) {
+			$model	= array_pop($model);
+		}
 		
 		ob_start();
+		if ($model->id) {
+			$form->hidden('id');
+			$this->hiddenFieldTag('_method', Draw::PUT);
+		}
 		$closure($form);
 		$content	= ob_get_clean();
 		
@@ -185,13 +213,14 @@ class Html extends Base {
 	/**
 	 * Hidden field helper
 	 * @param string $name
+	 * @param string $value
 	 * @param array $attrs
 	 * @return void
 	 */
 	public function hiddenFieldTag($name, $value, $attrs = array()) {
-		if (!isset($attrs['id'])) {
+		/*if (!isset($attrs['id'])) {
 			$attrs['id']	= $this->toId($name);
-		}
+		}*/
 	
 		$attrs['name']	= $this->toName($name);
 		$attrs['type']	= 'hidden';
@@ -291,28 +320,54 @@ class Html extends Base {
 	} 
 	
 	/**
+	 * Javascript element builder
+	 * @param string $file
+	 * @return void
+	 */
+	public function javascript($file, $attributes = array()) {
+		$attrs	= array( 'type' => 'text/javascript' );
+		
+		if ($this->hasJsShort($file)) 
+			$attrs['src']	= $this->jsShort($file);
+		else $attrs['src']	= $file;
+		
+		return $this->element('script', '', array_merge($attrs, $attributes), true);
+	}
+	
+	/**
+	 * Stylesheet element builder
+	 * @param string $file
+	 * @param array $attributes (optional)
+	 * @return void
+	 */
+	public function stylesheet($file, $attributes = array()) {
+		$attributes['rel']	= 'stylesheet';
+		$attributes['href']	= $file;
+		
+		return $this->element('link', '', $attributes, true);
+	}
+	
+	/**
 	 * Generates html element that requires closing tag
 	 * @param string $tag
 	 * @param string $text
 	 * @param array $attributes
 	 * @return void
 	 */
-	public function element($tag, $text = '', $attributes = array()) {
+	public function element($tag, $text = '', $attributes = array(), $nl = false) {
 		$html	= "<$tag";
 		
 		if (count($attributes) > 0) {
-			foreach ($attributes as $name => $value) {
-				$html .= ' ' . $name . '="' . $value . '"';
-			}
+			$html .= $this->buildAttributes($attributes);
 		}
 		
 		if ($this->selfClosing($tag)) {
 			$html	.= " />";
 		} else {
-			$html	.= ">\n$text\n</$tag>";
+			$html	.= ">$text</$tag>";
 		}
 		
-		echo $html;
+		echo ($nl) ? $html . "\n" : $html;
 		return;
 	}
 	
@@ -348,6 +403,51 @@ class Html extends Base {
 	 */
 	protected function selfClosing($el) {
 		return isset($this->_selfClosing[strtolower($el)]); 
+	}
+	
+	/**
+	 * Getter for js url
+	 * @param string $name
+	 * @return string
+	 */
+	protected function jsShort($name) {
+		return $this->_jsShorts[$name];
+	}
+	
+	/**
+	 * Build attributes from array
+	 * @param array $attributes
+	 * @param string $key (optional)
+	 * @return string
+	 */
+	protected function buildAttributes($attributes, $key = null) {
+		$html	= '';
+		if (count($attributes) < 1) {
+			return $html;
+		} 
+		
+		foreach ($attributes as $name => $value) {
+			if ($key) {
+				$name	= "{$key}-{$name}";
+			}
+				
+			if (is_array($value)) {
+				$html .= $this->buildAttributes($value, $name);
+			} else {
+				$html .= ' ' . $name . '="' . $value . '"';
+			}
+		}
+		
+		return $html;
+	}
+	
+	/**
+	 * Checks if js short available
+	 * @param string $name
+	 * @return boolean
+	 */
+	private function hasJsShort($name) {
+		return isset($this->_jsShorts[$name]);
 	}
 	
 	/**

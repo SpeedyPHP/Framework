@@ -318,7 +318,7 @@ class Controller extends Object {
 		$options	= array_merge(array( 
 			'layout' => $this->layout() 
 		), $options);
-		$controller	= Inflector::underscore($this->params('controller'));
+		$controller	= $this->params('controller');
 		$action		= Inflector::underscore($this->params('action'));
 		$ext		= strtolower($this->params('ext'));
 		

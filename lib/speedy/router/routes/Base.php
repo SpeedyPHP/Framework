@@ -1,7 +1,7 @@
 <?php 
 namespace Speedy\Router\Routes;
 
-abstract class Route {
+abstract class Base {
 	
 	protected $_params = array();
 	
@@ -58,7 +58,7 @@ abstract class Route {
 	 * Returns route for request
 	 * @param Speedy\Request $request
 	 */
-	abstract public function getRoute();
+	abstract public function route();
 	
 	/**
 	 * Getter for name
@@ -69,13 +69,15 @@ abstract class Route {
 	}
 	
 	/**
-	 * Setter for name
-	 * @param string $name
-	 * @return \Speedy\Router\Routes\Route
+	 * Getter for pattern
+	 * @return string
 	 */
-	protected function setName($name) {
-		$this->_name	= $name;
-		return $this;
+	public function pattern() {
+		if ($this->_pattern == null) {
+			$this->processFormat();
+		}
+		
+		return $this->_pattern;
 	}
 	
 	/**
@@ -93,7 +95,7 @@ abstract class Route {
 	 * Getter for request
 	 * @return \Speedy\Request
 	 */
-	public function getRequest() {
+	public function request() {
 		if (!$this->_request) {
 			throw new Exception("Request not set in route");
 		}
@@ -102,18 +104,9 @@ abstract class Route {
 	}
 	
 	/**
-	* Setter for options
-	* @param array $options
-	*/
-	protected function _setOptions($options) {
-		$this->_options = $options;
-		return $this;
-	}
-	
-	/**
 	 * Getter for options property
 	 */
-	public function getOptions() {
+	public function options() {
 		return (is_array($this->_options)) ? $this->_options : array();
 	}
 	
@@ -121,17 +114,8 @@ abstract class Route {
 	 * Getter for a specific options
 	 * @param int/string $name
 	 */
-	public function getOption($name) {
+	public function option($name) {
 		return (!empty($this->_options[$name])) ? $this->_options[$name] : null;
-	}
-	
-	/**
-	 * Setter for format
-	 * @param string $format
-	 */
-	protected function _setFormat($format) {
-		$this->_format	= $format;
-		return $this;
 	}
 	
 	/**
@@ -142,11 +126,51 @@ abstract class Route {
 	}
 	
 	/**
+	 * Getter for params
+	 * @return array params
+	 */
+	public function params() {
+		return $this->_params;
+	}
+	
+	/**
+	 * Getter for greedy
+	 * @return boolean
+	 */
+	public function greedy() {
+		return $this->_greedy;
+	}
+	
+	/**
+	 * Getter for greedy
+	 * @return mixed
+	 */
+	public function token($index = null) {
+		if ($this->_tokens == null) {
+			$this->processFormat();
+		}
+		
+		return ($index === null) ? $this->_tokens : $this->_tokens[$index];
+	}
+	
+	/**
+	 * Add param
+	 * @param string $key
+	 * @param mixed $value
+	 * @return \Speedy\Router\Routes\Base
+	 */
+	protected function addParam($key, $value) {
+		$this->_params[$key]	= $value;
+		return $this;
+	}
+	
+	/**
 	 * Compiles format for route checking
 	 * @param string $uri
+	 * @return boolean
 	 */
-	protected function _compile($request) {
-		$on	= $this->getOption('on');
+	protected function compile($request) {
+		$on	= $this->option('on');
 		if ($on && strtolower($on) != strtolower($request->method())) return false; 
 		
 		// Find matches
@@ -177,17 +201,37 @@ abstract class Route {
 			$params['passed'] = explode('/', $passed);
 		}
 	
-		$this->_setParams(array_merge($params, $this->getOptions()));
+		$this->setParams(array_merge($params, $this->options()));
 	
 		return true;
 	}
 	
 	/**
-	 * Getter for params
-	 * @return array params
+	 * Setter for name
+	 * @param string $name
+	 * @return \Speedy\Router\Routes\Route
 	 */
-	public function getParams() {
-		return $this->_params;
+	protected function setName($name) {
+		$this->_name	= $name;
+		return $this;
+	}
+	
+	/**
+	* Setter for options
+	* @param array $options
+	*/
+	protected function setOptions($options) {
+		$this->_options = $options;
+		return $this;
+	}
+	
+	/**
+	 * Setter for format
+	 * @param string $format
+	 */
+	protected function setFormat($format) {
+		$this->_format	= $format;
+		return $this;
 	}
 	
 	/**
@@ -195,7 +239,7 @@ abstract class Route {
 	 * @param array $params
 	 * @return Speedy\Router\Routes\Route
 	 */
-	protected function _setParams(array $params) {
+	protected function setParams(array $params) {
 		unset($params['on']);
 		asort($params);
 		
@@ -215,32 +259,22 @@ abstract class Route {
 	}
 	
 	/**
-	 * Getter for greedy
-	 * @return boolean
-	 */
-	public function greedy() {
-		return $this->_greedy;
-	}
-	
-	/**
-	 * Getter for greedy
-	 * @return mixed
-	 */
-	public function token($index = null) {
-		if ($this->_tokens == null) {
-			$this->processFormat();
-		}
-		
-		return ($index === null) ? $this->_tokens : $this->_tokens[$index];
-	}
-	
-	/**
 	 * Setter for tokens
 	 * @param array $tokens
 	 * @return Match
 	 */
 	protected function setTokens(array $token) {
 		$this->_tokens	= $token;
+		return $this;
+	}
+	
+	/**
+	 * Setter for pattern
+	 * @param string $pattern
+	 * @return \Speedy\Router\Routes\Route
+	 */
+	protected function setPattern($pattern) {
+		$this->_pattern	= $pattern;
 		return $this;
 	}
 	
@@ -280,28 +314,6 @@ abstract class Route {
 		
 		$this->setTokens($tokens)->setPattern($regex);
 		return $this;
-	}
-	
-	/**
-	 * Setter for pattern
-	 * @param string $pattern
-	 * @return \Speedy\Router\Routes\Route
-	 */
-	protected function setPattern($pattern) {
-		$this->_pattern	= $pattern;
-		return $this;
-	}
-	
-	/**
-	 * Getter for pattern
-	 * @return string
-	 */
-	public function pattern() {
-		if ($this->_pattern == null) {
-			$this->processFormat();
-		}
-		
-		return $this->_pattern;
 	}
 	
 }

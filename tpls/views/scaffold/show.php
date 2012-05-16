@@ -11,7 +11,7 @@ foreach ($columns as $column) {
 	$tpl	.= <<<TPL
 <p>
 	<b>{$title}</b>
-	<?php echo \${$modelLc}->{$column->name}; ?>
+	<?php echo \$this->{$modelLc}->{$column->name}; ?>
 </p>
 TPL;
 	$tpl	.= "\n";
@@ -20,7 +20,7 @@ TPL;
 $tpl	.=	"\r";
 $tpl	.= <<<TPL
 <?php echo \$this->linkTo('Edit', \$this->edit_{$modelLc}_path(\$this->{$modelLc}->id)); ?>
-<?php echo \$this->linkTo('Back', \$this->{$modelPlural}_path()); ?>
+<?php echo \$this->linkTo('Back', \$this->{$modelPlural}_url()); ?>
 TPL;
 
 return $tpl;

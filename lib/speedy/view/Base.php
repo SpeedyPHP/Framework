@@ -38,7 +38,8 @@ abstract class Base extends Object {
 	
 	protected $_mixins	= array(
 		'speedy.view.helpers.html',
-		'speedy.view.helpers.inflector'
+		'speedy.view.helpers.inflector',
+		'speedy.view.helpers.sql_log'
 	);
 	
 	public $params;
@@ -81,7 +82,7 @@ abstract class Base extends Object {
 	 * @param string $name
 	 */
 	public function yield($name = "__main__") {
-		echo \Speedy\View::instance()->yield($name);
+		echo "\n" . \Speedy\View::instance()->yield($name) . "\n";
 	}
 	
 	public function contentFor($name, $closure) {

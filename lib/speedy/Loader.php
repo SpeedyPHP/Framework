@@ -237,18 +237,18 @@ namespace Speedy {
 		 */
 		public function toPath($namespace) {
 			// Explode the $namespace and to build path
-			$aPath 		= explode('.', $namespace);
+			$aPath 		= explode('.', $namespace); 
 			$firstSpace = array_shift($aPath);
 			$secondSpace= array_shift($aPath);
-			$relNamespace	= $firstSpace . '.' . $secondSpace;
+			$relNamespace	= $firstSpace . '.' . $secondSpace; 
 			
 			if (!$this->hasNamespace($relNamespace)) {
 				array_unshift($aPath, $secondSpace);
-				$relNamespace	= $firstSpace;
+				$relNamespace2	= $firstSpace; 
 				
-				if (!$this->hasNamespace($relNamespace)) {
+				if (!$this->hasNamespace($relNamespace2)) {
 					throw new Exception('No namespace for ' . $relNamespace);
-				}
+				} else $relNamespace = $relNamespace2;
 			}
 			
 			$aClass	= array();
@@ -342,7 +342,7 @@ namespace {
 		if ($classPath == 'speedy.object') return;
 		if ($classPath == 'speedy.utility.inflector') return;
 		if ($classPath == 'speedy.loader.exception') return;
-		$loader = \Speedy\Loader::instance();
+		$loader = \Speedy\Loader::instance(); 
 		
 		return $loader->import($classPath);
 	}

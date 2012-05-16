@@ -74,7 +74,8 @@ class Links extends Singleton {
 		}
 			
 		foreach ($tokens as $token) {
-			$format	= str_replace(":{$token}", array_shift($args), $format);
+			$value	= array_shift($args);
+			$format	= str_replace(":{$token}", (is_object($value)) ? $value->id : $value, $format);
 		}
 			
 		if (!empty($args)) {

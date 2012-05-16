@@ -7,8 +7,10 @@ class Request extends Object {
 	
 	
 	public function __construct() {
+		$params	= $_GET;
+		$params = array_merge($params, $_POST);
+		$this->addParams($params);
 		$this->addData($_SERVER);
-		$this->addParams($_REQUEST);
 		
 		$this->parseUri();
 	}
@@ -44,7 +46,7 @@ class Request extends Object {
 	 * @return mixed
 	 */
 	public function param($name) {
-		return (isset($this->_params[$name])) ? $this->_params[$name] : null;
+		return $this->__dotAccess($name, $this->_params);
 	}
 	
 	/**
@@ -64,7 +66,7 @@ class Request extends Object {
 	 * @return boolean
 	 */
 	public function hasParam($name) {
-		return (isset($this->_params[$name])) ? true : false;
+		return $this->__dotIsset($name, $this->_params);
 	}
 	
 	/**
@@ -117,9 +119,22 @@ class Request extends Object {
 			$this->setParam('ext', $lastParts[1]);
 			$this->setParam('url', str_replace('.' . $lastParts[1], '', $url));
 		}
-		
 		$this->setParam('request', ($url !== '/') ? $urlParts : array());
 		
+		if ($this->hasParam('_method')) {
+			$this->setMethod($this->param('_method'));
+		}
+		
+		return $this;
+	}
+	
+	/**
+	 * Setter for method
+	 * @param string $method
+	 * @return \Speedy\Request
+	 */
+	private function setMethod($method) {
+		$this->setData('REQUEST_METHOD', strtoupper($method));
 		return $this;
 	}
 }

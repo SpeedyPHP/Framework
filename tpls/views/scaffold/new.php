@@ -4,6 +4,6 @@ return <<<TPL
 
 <?php \$this->render('form'); ?>
 
-<?php \$this->linkTo('Back', \$this->{$modelPlural}_path()); ?>
+<?php \$this->linkTo('Back', \$this->{$modelPlural}_url()); ?>
 TPL;
 ?>

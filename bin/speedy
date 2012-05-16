@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 defined("DS") or define("DS", DIRECTORY_SEPARATOR);
-
+defined('SPEEDY_ENV')  or define("SPEEDY_ENV", (getenv("SPEEDY_ENV")) ? getenv('SPEEDY_ENV') : 'development');
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App
 defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
 define("SPEEDY_PATH", LIB_PATH . DS . "speedy" . DS);
@@ -24,6 +24,7 @@ if (file_exists($pathToApp)) {
 	include $pathToApp;
 }
 
+App::instance();
 if (class_exists('App')) {
 	define("APP_LOADED", true);
 } else {

@@ -2,7 +2,7 @@
 $tpl	= <<<EOF
 <?php \$this->formFor(\$this->{$modelLc}, null, function(\$f) { ?>
 
-	<?php if (\$this->{$modelLc}->errors->count()): ?>
+	<?php if (\$this->{$modelLc}->errors && \$this->{$modelLc}->errors->count()): ?>
 		<div id="error_explanation">
 			<?php element('h2', "{\$this->pluralize(\$this->{$modelLc}, 'error')} prohibited this {$modelLc} from beign saved:"); ?>
 		</div>

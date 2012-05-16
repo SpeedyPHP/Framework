@@ -67,7 +67,7 @@ class Router extends Object {
 	 * Adds route to router
 	 * @param Speedy\Route $route
 	 */
-	public function addRoute(\Speedy\Router\Routes\Route $route) {
+	public function addRoute(\Speedy\Router\Routes\Base $route) {
 		$this->_routes[] = $route;
 		return $this;
 	}
@@ -94,14 +94,14 @@ class Router extends Object {
 			
 			if ($route->match($request)) {
 				$match = true; 
-				$this->_setMatchedRoute($route->getRoute());
+				$this->_setMatchedRoute($route->route());
 				
 				break;
 			}
 		}
 		
 		if ($match === false) {
-			throw new HttpException("No route matches request '{$this->request()->url()}'");
+			throw new HttpException("No route matches request '{$this->request()->url()}' for {$this->request()->method()}");
 			
 		}
 		

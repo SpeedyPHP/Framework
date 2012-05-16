@@ -138,7 +138,7 @@ EOF;
 				'Application.php'	=> 'AppController.php'
 			),
 			'layouts'	=> array(
-				'application.php'	=> 'views' . DS . 'layout.php'
+				'application.php.html'	=> 'views' . DS . 'layout.php'
 			)
 		);
 		

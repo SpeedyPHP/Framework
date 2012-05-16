@@ -1,9 +1,9 @@
 <?php 
 namespace Speedy\Router\Routes;
 
-import('speedy.router.routes.route');
+import('speedy.router.routes.base');
 
-class Match extends Route {
+class Match extends Base {
 	
 	/**
 	 * Url match router
@@ -14,7 +14,7 @@ class Match extends Route {
 		reset($params); 
 		
 		$firstKey	= key($params); 
-		$to		= $params[$firstKey]; 
+		$to			= $params[$firstKey]; 
 		if (is_int($firstKey)) {
 			$format	= $to;
 		} elseif (is_string($firstKey) && strpos($to, '#')) {
@@ -29,8 +29,8 @@ class Match extends Route {
 			$this->setName($params['name']);
 		}
 		
-		$this->_setFormat($format);
-		$this->_setOptions($params);
+		$this->setFormat($format);
+		$this->setOptions($params);
 	}
 	
 	public function match(\Speedy\Request $request) {
@@ -38,11 +38,11 @@ class Match extends Route {
 		$controller	= $request[0];
 	
 		return ($controller == $this->getName()) ? true : false;*/
-		return $this->_compile($request);
+		return $this->compile($request);
 	}
 	
-	public function getRoute() {
-		return $this->getParams();
+	public function route() {
+		return $this->params();
 	}
 	
 }

@@ -93,6 +93,11 @@ class Object {
 		return null;
 	}
 	
+	protected function __dotIsset($name, &$array) {
+		$value	= $this->__dotAccess($name, $array);
+		return isset($value);
+	}
+	
 	/**
 	 * Get data from array by dot accessor string
 	 * @param string $name

@@ -6,7 +6,7 @@ return <<<EOF
 	<title>{$namespace}</title>
 </head>
 <body>
-	<?php echo \$content_for_layout; ?>
+	<?php \$this->yield(); ?>
 </body>
 </html>
 EOF;

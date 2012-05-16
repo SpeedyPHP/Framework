@@ -10,7 +10,7 @@ TPL;
 
 $tpl	.= "\n";
 foreach($columns as $column) {
-	$tpl	.= "\t\t<th>" . Inflector::titleize($column->name) . "<th>\n";
+	$tpl	.= "\t\t<th>" . Inflector::titleize($column->name) . "</th>\n";
 }
 $tpl	.= <<<TPL
 		<th></th>
@@ -29,7 +29,7 @@ foreach ($columns as $column) {
 $tpl	.= <<<TPL
 			<td><?php \$this->linkTo('Show', \$this->{$modelLc}_path(\${$modelLc}->id)); ?></td>
 			<td><?php \$this->linkTo('Edit', \$this->edit_{$modelLc}_path(\${$modelLc}->id)); ?></td>
-			<td><?php \$this->linkTo('Destroy', \$this->{$modelLc}_path(\${$modelLc}->id)); ?></td>
+			<td><?php \$this->linkTo('Destroy', \$this->{$modelLc}_path(\${$modelLc}->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete' )); ?></td>
 		</tr>
 	<?php }); ?>
 </table>

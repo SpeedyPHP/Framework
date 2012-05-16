@@ -17,7 +17,15 @@ class Form extends Object {
 	
 	
 	public function __construct($model, \Speedy\View\Helpers\Html &$helper) {
+		$basepath	= '';
+		if (is_array($model)) {
+			$basepathArr	= $model;
+			$model		= array_pop($basepathArr);
+			$basepath	= implode('_', $basepathArr) . '_';
+		}
+		
 		$this->setHelper($helper);
+		$this->setModel($model);
 		
 		$class	= get_class($model);
 		$classArr	= explode('\\', $class);
@@ -26,15 +34,25 @@ class Form extends Object {
 		$this->setName(array_pop($classArr));
 		$this->{$this->name()}	= $model;
 		
-		$actionPath	= \Speedy\Utility\Inflector::pluralize($this->name());
+		if ($model->id) {
+			$actionPath	= $this->name();
+		} else {
+			$actionPath	= \Speedy\Utility\Inflector::pluralize($this->name());
+		}
+		
 		if (count($classArr)) {
 			while ($name = array_pop($classArr)) {
 				$actionPath = "{$name}_{$actionPath}";
 			}
 		}
-		$actionPath	= "{$actionPath}_path";
 		
-		$this->setPath($this->helper()->{$actionPath}());
+		if ($model->id) {
+			$actionPath	= "{$basepath}{$actionPath}_path";
+			$this->setPath($this->helper()->{$actionPath}($model->id));
+		} else {
+			$actionPath	= "{$basepath}{$actionPath}_url";
+			$this->setPath($this->helper()->{$actionPath}());
+		}
 	}
 	
 	/**
@@ -43,8 +61,8 @@ class Form extends Object {
 	 * @param string $content
 	 * @param array $attrs
 	 */
-	public function textArea($name, $content, $attrs = array()) {
-		return $this->helper()->textAreaTag($this->formatName($name), $content, $attrs);
+	public function textArea($name, $attrs = array()) {
+		return $this->helper()->textAreaTag($this->formatName($name), $this->model()->{$name}, $attrs);
 	}
 	
 	/**
@@ -53,6 +71,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function email($name, $attrs = array()) {
+		$attrs['value']	= $this->model()->{$name};
 		return $this->helper()->emailField($this->formatName($name), $attrs);
 	}
 	
@@ -62,6 +81,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function url($name, $attrs = array()) {
+		$attrs['value']	= $this->model()->{$name};
 		return $this->helper()->urlField($this->formatName($name), $attrs);
 	}
 	
@@ -71,6 +91,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function telephone($name, $attrs = array()) {
+		$attrs['value']	= $this->model()->{$name};
 		return $this->helper()->telephoneField($this->formatName($name), $attrs);
 	}
 	
@@ -80,7 +101,8 @@ class Form extends Object {
 	 * @param string $value
 	 * @param array $attrs
 	 */
-	public function hidden($name, $value, $attrs = array()) {
+	public function hidden($name, $value = null, $attrs = array()) {
+		$value	= ($value) ? $value : $this->model()->{$name};
 		return $this->helper()->hiddenFieldTag($this->formatName($name), $value, $attrs);
 	}
 	
@@ -90,6 +112,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function password($name, $attrs = array()) {
+		$attrs['value']	= $this->model()->{$name};
 		return $this->helper()->passwordField($this->formatName($name), $attrs);
 	}
 	
@@ -109,6 +132,9 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function checkBox($name, $attrs = array()) {
+		if (isset($this->model()->{$name})) {
+			$attrs['checked']	= 'checked';
+		}
 		return $this->helper()->checkBoxTag($this->formatName($name), $attrs);
 	}
 	
@@ -127,6 +153,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function textField($name, $attrs = array()) {
+		$attrs['value']	= $this->model()->{$name};
 		return $this->helper()->textFieldTag($this->formatName($name), $attrs);
 	}
 	
@@ -205,6 +232,24 @@ class Form extends Object {
 	protected function setHelper(\Speedy\View\Helpers\Html &$helper) {
 		$this->_helper =& $helper;
 		return $this;
+	}
+	
+	/**
+	 * Setter for model
+	 * @param mixed $model
+	 * @return \Speedy\View\Helpers\Form
+	 */
+	protected function setModel($model) {
+		$this->_model	= $model;
+		return $this;
+	}
+	
+	/**
+	 * Getter for model
+	 * @return mixed
+	 */
+	protected function model() {
+		return $this->_model;
 	}
 	
 }

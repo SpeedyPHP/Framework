@@ -3,8 +3,8 @@ namespace Speedy\Router;
 
 import('speedy.router');
 import('speedy.router.routes.match');
-import('speedy.router.routes.route');
-import('speedy.router.routes.resource');
+import('speedy.router.routes.base');
+//import('speedy.router.routes.resource');
 
 use \Speedy\Router;
 use \Speedy\Router\Routes\Resource;
@@ -31,24 +31,17 @@ abstract class Draw extends Object {
 	 */
 	private $_router 	= null;
 	
+	/**
+	 * Holds the current namespace
+	 * @var array
+	 */
+	private $_currentNamespace;
+	
+	
 	
 	
 	public function __construct() {
-		$this->_setRouter(Router::instance());
-	}
-	
-	/**
-	 * Gets called on init and draws all routes
-	 */
-	abstract protected function draw();
-	
-	/**
-	 * Sets the router
-	 * @param \Speedy\Router $router
-	 */
-	protected function _setRouter(\Speedy\Router &$router) {
-		$this->_router =& $router;
-		return $this;
+		$this->setRouter(Router::instance());
 	}
 	
 	/**
@@ -60,43 +53,66 @@ abstract class Draw extends Object {
 	}
 	
 	/**
+	 * Gets called on init and draws all routes
+	 */
+	abstract protected function draw();
+	
+	/**
+	 * Sets the router
+	 * @param \Speedy\Router $router
+	 */
+	protected function setRouter(\Speedy\Router &$router) {
+		$this->_router =& $router;
+		return $this;
+	}
+	
+	/**
 	 * Adds resource routes
 	 * @param string $name
 	 * @param array $options
 	 * @return $this
 	 */
-	public function resources($name, array $options = null) {
-		$member	= Inflector::singularize($name);
+	protected function resources($name, array $options = null, $closure = null) {
+		$member	= $this->buildHelper($name, true);
+		$col	= $this->buildHelper($name);
+		$base	= $this->buildBase($name);
+		$controller	= $this->buildController($name); 
+		
 		$this->pushRoute(new Match(array(
-			"/$name" => "$name#index", 	
+			"$base" => "$controller#index", 	
 			'on' => self::GET,
-			'name'	=> "{$name}_path"
+			'name'	=> "{$col}_url"
 		)));
 		$this->pushRoute(new Match(array(
-			"/$name/new" => "$name#_new", 	
+			"$base/new" => "$controller#_new", 	
 			'on' => self::GET,
 			'name'	=> "new_{$member}_path"
 		)));
 		$this->pushRoute(new Match(array(
-			"/$name" => "$name#create", 	
+			"$base" => "$controller#create", 	
 			'on' => self::POST
 		)));
 		$this->pushRoute(new Match(array(
-			"/$name/:id" => "$name#show", 
+			"$base/:id" => "$controller#show", 
 			'on' => self::GET,
 			'name'	=> "{$member}_path"
 		)));
 		$this->pushRoute(new Match(array(
-			"/$name/:id/edit" => "$name#edit",	
+			"$base/:id/edit" => "$controller#edit",	
 			'on' => self::GET,
 			'name'	=> "edit_{$member}_path"
 		)));
-		$this->pushRoute(new Match(array("/$name/:id" => "$name#update", 		'on' => self::PUT)));
-		$this->pushRoute(new Match(array("/$name/:id" => "$name#destroy", 		'on' => self::DELETE)));
+		$this->pushRoute(new Match(array("$base/:id" => "$controller#update", 		'on' => self::PUT)));
+		$this->pushRoute(new Match(array("$base/:id" => "$controller#destroy", 		'on' => self::DELETE)));
 		/*$resource	= new Resource($name, $options);
 		foreach ($resource->getRoutes() as $route) {
 			$this->pushRoute($route);
 		}*/
+		
+		if ($closure) {
+			$singular	= Inflector::singularize($name);
+			$this->_namespace("$base/:{$singular}_id", $closure);
+		}
 		
 		return $this;
 	}
@@ -107,7 +123,7 @@ abstract class Draw extends Object {
 	 * @param array $options
 	 * @return $this
 	 */
-	public function match(array $options = null) {
+	protected function match(array $options = null) {
 		return $this->pushRoute(new Match($options));
 	}
 	
@@ -115,7 +131,7 @@ abstract class Draw extends Object {
 	 * Push route into router stack
 	 * @param \Speedy\Router\Routes\Route $route
 	 */
-	protected function pushRoute(\Speedy\Router\Routes\Route $route) {
+	protected function pushRoute(\Speedy\Router\Routes\Base $route) {
 		$this->router()->addRoute($route);
 		return $this;
 	}
@@ -128,6 +144,101 @@ abstract class Draw extends Object {
 		$params	= array_merge(array('/' => $toString), $params);
 		return $this->pushRoute(new Match($params));
 	} 
+	
+	/**
+	 * Set a namespaced route
+	 * @param string $ns
+	 * @param closure $closure
+	 * @return void
+	 */
+	protected function _namespace($ns, $closure) {
+		$this->setCurrentNamespace($ns);
+		$closure();
+		$this->resetCurrentNamespace();
+		return;
+	}
+	
+	/**
+	 * Setter for current namespace
+	 * @param string $ns
+	 * @return \Speedy\Router\Draw
+	 */
+	protected function setCurrentNamespace($ns) {
+		if (is_array($this->currentNamespace)) 
+			$this->_currentNamespace[]	= $ns;
+		else
+			$this->_currentNamespace	= array($ns);
+
+		return $this;
+	}
+	
+	/**
+	 * Reset the current namespace
+	 * @return \Speedy\Router\Draw
+	 */
+	protected function resetCurrentNamespace() {
+		$this->_currentNamespace	= null;
+		return $this;
+	}
+	
+	/**
+	 * Return string of current namespace
+	 * @return string or null if no namespace defined
+	 */
+	protected function currentNamespace($delim = '/', $clean = false) {
+		$array = $this->_currentNamespace;
+		if ($clean && $array) {
+			array_walk($array, function(&$val, $key) {
+				if (strpos($val, '/') === false) {
+					return;
+				}
+				
+				$v	= explode('/', $val);
+				$val= array_shift($v);
+				return;
+			});
+		}
+		
+		return ($array) ? implode($delim, $array) : null;
+	}
+	
+	/**
+	 * Build the absolute uri from relative uri
+	 * @param string $uri
+	 * @return string
+	 */
+	protected function buildBase($uri) {
+		$return = '/';
+		$ns		= $this->currentNamespace();
+		if ($ns) 
+			$return .= $ns . '/';
+		
+		return $return . $uri;
+	}
+	
+	protected function buildController($name) {
+		$return = '';
+		$ns		= $this->currentNamespace('/', true);
+		if ($ns)
+			$return	.= $ns . '/';
+		
+		return $return . $name;
+	}
+	
+	protected function buildHelper($name, $member = false) {
+		$return	= '';
+		$ns		= $this->currentNamespace('_', true);
+		if ($ns)
+			$return .= $ns . '_';
+		
+		if ($member) 
+			$return	.= Inflector::singularize(strtolower($name));
+		else 
+			$return .= $name;
+		
+		return $return;
+	}
+
 }
 
 ?>
