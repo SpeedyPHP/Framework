@@ -33,8 +33,8 @@ class View extends Singleton {
 	public function render($file, $options, $ext = 'html') {
 		if (isset($options['json'])) return $this->toJson($options['json']);
 		
-		$viewPaths	= Loader::instance()->path('views');
-		$renderers	= Config::instance()->renderers();
+		// $viewPaths	= Loader::instance()->path('views');
+		// $renderers	= Config::instance()->renderers();
 		
 		/*foreach ($renderers as $type => $renderer) {			
 			foreach ($viewPaths as $path) {

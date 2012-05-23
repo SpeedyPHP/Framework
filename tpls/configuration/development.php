@@ -1,7 +1,7 @@
 <?php 
 return <<<EOF
 <?php
-App::instance()->configure(function() {
+App::instance()->configure(function(\$conf) {
 
 	// Turn on short links
 	// \$this->set('short_links', true);
@@ -22,6 +22,7 @@ App::instance()->configure(function() {
 		\$conf->set_default_connection('development');
 	});
 	
+	\$conf->addRenderer('php', 'speedy.view.php');
 });
 ?>
 EOF;

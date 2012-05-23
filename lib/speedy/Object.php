@@ -56,10 +56,18 @@ class Object {
 	 */
 	protected function _loadMixins() {
 		if ($this->_loadedMixins()) return $this;
+		if ($this->respondsTo('__loadMixins')) {
+			$this->_mixins	= array_merge($this->_mixins, (array) $this->__loadMixins());
+		}
+		
 		
 		foreach ($this->_mixins as $mixin => $options) {
 			if (is_int($mixin)) {
 				$mixin = $options;
+			}
+			
+			if (isset($this->_mixinObjs[$mixin])) {
+				continue;
 			}
 			
 			import($mixin);

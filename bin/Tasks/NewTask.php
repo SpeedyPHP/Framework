@@ -99,6 +99,7 @@ EOF;
 	private function _requiredPaths() {
 		return array(
 			'app' => 'app',
+			'assets'		=> 'app' . DS . 'assets',
 			'controllers' 	=> 'app' . DS . 'controllers',
 			'helpers'		=> 'app' . DS . 'helpers',
 			'models'		=> 'app' . DS . 'models',

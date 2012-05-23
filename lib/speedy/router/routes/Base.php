@@ -293,10 +293,10 @@ abstract class Base {
 		
 		$tokens	= array();
 		$regex	= "#";
-		$i = 0;
+		$i = 0; 
 		foreach($matches[0] as $match) {
 			if ($i) $regex	.= '/';
-			else $regex .= '^';
+			else $regex .= '^/';
 		
 			// if the part starts with colon then it's a token and add it as such
 			if (preg_match("#^:#", $match)) {

@@ -83,8 +83,8 @@ class Links extends Singleton {
 				$format .= "/{$param}";
 			}
 		}
-	
-		return ($this->shortLinks() && strpos($path, '/') !== 0) ? 
+		
+		return ($this->shortLinks()) ? 
 					$format : "/index.php?url=" . substr($format, 1);
 	}
 	

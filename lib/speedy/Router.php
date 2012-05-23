@@ -5,6 +5,7 @@ import("speedy.router.exception");
 import('speedy.request');
 
 use \Speedy\Http\Exception as HttpException;
+use \Speedy\Asset;
 
 class Router extends Object {
 	/**
@@ -101,6 +102,12 @@ class Router extends Object {
 		}
 		
 		if ($match === false) {
+			$asset	= Asset::instance();
+			if ($asset->has($this->request()->scriptName()) !== false) {
+				$asset->render();
+				exit;
+			}
+			
 			throw new HttpException("No route matches request '{$this->request()->url()}' for {$this->request()->method()}");
 			
 		}

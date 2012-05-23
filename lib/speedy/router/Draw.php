@@ -18,6 +18,9 @@ abstract class Draw extends Object {
 	const PUT	= "PUT";
 	const DELETE= "DELETE";
 	
+	const NS_CLEAN	= 1;
+	const NS_MEMBER	= 2;
+	
 	
 	/**
 	 * Holds all route instances
@@ -110,11 +113,24 @@ abstract class Draw extends Object {
 		}*/
 		
 		if ($closure) {
-			$singular	= Inflector::singularize($name);
-			$this->_namespace("$base/:{$singular}_id", $closure);
+			$this->_namespace($name, $closure);
 		}
 		
 		return $this;
+	}
+	
+	protected function member($method, $action) {
+		$base	= $this->buildBase();
+		
+	}
+	
+	protected function collection($closure) {
+		$closure();
+		return $this;
+	}
+	
+	protected function get($action) {
+		
 	}
 	
 	/**
@@ -164,11 +180,11 @@ abstract class Draw extends Object {
 	 * @return \Speedy\Router\Draw
 	 */
 	protected function setCurrentNamespace($ns) {
-		if (is_array($this->currentNamespace)) 
+		if (is_array($this->_currentNamespace)) 
 			$this->_currentNamespace[]	= $ns;
 		else
 			$this->_currentNamespace	= array($ns);
-
+		
 		return $this;
 	}
 	
@@ -177,7 +193,11 @@ abstract class Draw extends Object {
 	 * @return \Speedy\Router\Draw
 	 */
 	protected function resetCurrentNamespace() {
-		$this->_currentNamespace	= null;
+		if (is_array($this->_currentNamespace))
+			array_pop($this->_currentNamespace);
+		else
+			$this->_currentNamespace	= null;
+		
 		return $this;
 	}
 	
@@ -185,9 +205,11 @@ abstract class Draw extends Object {
 	 * Return string of current namespace
 	 * @return string or null if no namespace defined
 	 */
-	protected function currentNamespace($delim = '/', $clean = false) {
+	protected function currentNamespace($delim = '/', $type = 0) {
 		$array = $this->_currentNamespace;
-		if ($clean && $array) {
+		if (!$array) return null;
+		
+		if ($type == self::NS_CLEAN) {
 			array_walk($array, function(&$val, $key) {
 				if (strpos($val, '/') === false) {
 					return;
@@ -197,9 +219,15 @@ abstract class Draw extends Object {
 				$val= array_shift($v);
 				return;
 			});
+		} elseif ($type == self::NS_MEMBER) {
+			array_walk($array, function(&$val, $key) {
+				$singular	= Inflector::singularize($val);
+				$val	.= "/{$singular}_id";
+				return;
+			});
 		}
 		
-		return ($array) ? implode($delim, $array) : null;
+		return implode($delim, $array);
 	}
 	
 	/**
@@ -207,9 +235,9 @@ abstract class Draw extends Object {
 	 * @param string $uri
 	 * @return string
 	 */
-	protected function buildBase($uri) {
+	protected function buildBase($uri, $member = false) {
 		$return = '/';
-		$ns		= $this->currentNamespace();
+		$ns		= $this->currentNamespace('/', ($member) ? self::NS_MEMBER : 0);
 		if ($ns) 
 			$return .= $ns . '/';
 		
@@ -218,7 +246,7 @@ abstract class Draw extends Object {
 	
 	protected function buildController($name) {
 		$return = '';
-		$ns		= $this->currentNamespace('/', true);
+		$ns		= $this->currentNamespace('/');
 		if ($ns)
 			$return	.= $ns . '/';
 		
@@ -227,7 +255,7 @@ abstract class Draw extends Object {
 	
 	protected function buildHelper($name, $member = false) {
 		$return	= '';
-		$ns		= $this->currentNamespace('_', true);
+		$ns		= $this->currentNamespace('_');
 		if ($ns)
 			$return .= $ns . '_';
 		

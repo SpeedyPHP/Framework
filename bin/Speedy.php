@@ -98,10 +98,6 @@ EOF;
 	
 }
 
-function output($str = "") {
-	fwrite(STDOUT, $str . "\n");
-}
-
 function fecho($str) {
 	if (is_array($str))
 		print_r($str);

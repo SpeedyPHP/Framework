@@ -98,6 +98,13 @@ class Request extends Object {
 	}
 	
 	/**
+	 * Getter for script name
+	 */
+	public function scriptName() {
+		return $this->data('SCRIPT_NAME');
+	}
+	
+	/**
 	 * Getter for url
 	 * @return string
 	 */

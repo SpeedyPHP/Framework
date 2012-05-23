@@ -33,9 +33,7 @@ class Config extends Singleton {
 	* List of view renders
 	* @var array
 	*/
-	protected $_renders	= array(
-		'php'	=> 'speedy.view.php'
-	);
+	protected $_renders	= array();
 	
 	
 	
@@ -76,16 +74,6 @@ class Config extends Singleton {
 	}
 	
 	/**
-	 * Setter for environment
-	 * @param string $env
-	 * @return \Speedy\Config
-	 */
-	protected function setEnvironment($env) {
-		$this->_environment	= $env;
-		return $this;
-	}
-	
-	/**
 	 * Getter for environment
 	 * @return string
 	 */
@@ -103,16 +91,6 @@ class Config extends Singleton {
 	 */
 	public function env() {
 		return $this->environment();
-	}
-	
-	/**
-	 * Setter for database
-	 * @param array $db
-	 * @return \Speedy\Config
-	 */
-	protected function setDb(array $db) {
-		$this->_db	= $db;
-		return $this;
 	}
 	
 	/**
@@ -165,13 +143,26 @@ class Config extends Singleton {
 	public function get($name) {
 		return $this->data($name);
 	}
-
+	
 	/**
-	 * Run setups on this configure
-	 * @param closure $closure
+	 * Setter for environment
+	 * @param string $env
+	 * @return \Speedy\Config
 	 */
-	public function setup($closure) {
-		return $closure();
+	protected function setEnvironment($env) {
+		$this->_environment	= $env;
+		return $this;
 	}
+	
+	/**
+	 * Setter for database
+	 * @param array $db
+	 * @return \Speedy\Config
+	 */
+	protected function setDb(array $db) {
+		$this->_db	= $db;
+		return $this;
+	}
+	
 }
 ?>

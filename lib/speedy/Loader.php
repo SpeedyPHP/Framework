@@ -342,7 +342,7 @@ namespace {
 		if ($classPath == 'speedy.object') return;
 		if ($classPath == 'speedy.utility.inflector') return;
 		if ($classPath == 'speedy.loader.exception') return;
-		$loader = \Speedy\Loader::instance(); 
+		$loader = \Speedy\Loader::instance();
 		
 		return $loader->import($classPath);
 	}
@@ -357,5 +357,15 @@ namespace {
 			var_dump($obj);
 		}
 		echo "</pre>";
+	}
+	
+	function rglob($pattern='*', $flags = 0, $path='')
+	{
+		$paths	= glob($path.'*', GLOB_MARK|GLOB_ONLYDIR|GLOB_NOSORT|GLOB_BRACE);
+		$files	= glob($path.$pattern, $flags);
+		foreach ($paths as $path) {
+			$files	= array_merge($files,rglob($pattern, $flags, $path));
+		}
+		return $files;
 	}
 }

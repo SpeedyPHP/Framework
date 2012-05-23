@@ -85,6 +85,14 @@ class App extends Object {
 	}
 	
 	/**
+	 * Static Getter for request property
+	 */
+	public static function request() {
+		$self	= self::instance();
+		return $self->_request();
+	}
+	
+	/**
 	 * Strap together all resources
 	 */
 	public function __construct() {
@@ -92,6 +100,7 @@ class App extends Object {
 			throw new Exception("Subclass of App needs property \$_name defined.");
 		}
 		
+		output("\nStarting new request");
 		$this->_setRequest(new Request());
 		$this->setNs(Inflector::underscore($this->name()));
 		
@@ -100,14 +109,17 @@ class App extends Object {
 		$loader->registerNamespace("{$this->ns()}.controllers", array(APP_PATH . DS . 'controllers'));
 		$loader->registerNamespace("{$this->ns()}.models", 		array(APP_PATH . DS . 'models'));
 		$loader->registerNamespace("{$this->ns()}.helpers", 	array(APP_PATH . DS . 'helpers'));
+		$loader->registerNamespace("{$this->ns()}.assets", 		array(APP_PATH . DS . 'assets'));
 		$loader->registerNamespace("{$this->ns()}.views", 		array(APP_PATH . DS . 'views'));
 		$loader->registerNamespace($this->ns(), APP_PATH);
+		$loader->registerNamespace('sprockets', getenv('PHP_SPROCKETS_PATH')); 
 		
 		$loader->setAliases(array(
 			'views'			=> "{$this->ns()}.views",
 			'helpers'		=> "{$this->ns()}.helpers",
 			'controllers'	=> "{$this->ns()}.controllers",
 			'models'		=> "{$this->ns()}.models",
+			'assets'		=> "{$this->ns()}.assets",
 		));
 		
 		self::_setInstance($this);
@@ -127,16 +139,6 @@ class App extends Object {
 	}
 	
 	/**
-	 * Setter for config
-	 * @param \Speedy\Config $config
-	 * @return \Speedy\App
-	 */
-	protected function setConfig(\Speedy\Config &$config) {
-		$this->_config =& $config;
-		return $this;
-	}
-	
-	/**
 	 * Getter for config object or config value
 	 * @param string $name (optional)
 	 */
@@ -146,15 +148,6 @@ class App extends Object {
 		}
 		
 		return ($name === null) ? $this->_config : $this->config()->data($name);
-	}
-	
-	/**
-	 * Setter for namespace
-	 * @param string $ns
-	 */
-	protected function setNs($ns) {
-		$this->_ns	= strtolower($ns);
-		return $this;
 	}
 	
 	/**
@@ -194,32 +187,6 @@ class App extends Object {
 	}
 	
 	/**
-	 * Getter for just bootstrap methods
-	 * @return array of bootstrap methods
-	 */
-	private function bootstrapMethods() {
-		$methods = get_class_methods($this);
-		return array_filter($methods, array($this, 'filterMethods'));
-	}
-	
-	/**
-	 * Filter methods array for initMethods only 
-	 * @param array $value
-	 */
-	public function filterMethods($value) {
-		return preg_match("/^init[A-Z]{1,}[\w]+$/", $value);
-	}
-	
-	/**
-	 * Setter for router
-	 * @param \Speedy\Router $router
-	 */
-	private function _setRouter(&$router) {
-		$this->_router	=& $router;
-		return $this;
-	}
-	
-	/**
 	 * Getter for router
 	 * @return \Speedy\Router
 	 */
@@ -232,13 +199,11 @@ class App extends Object {
 	}
 	
 	/**
-	 * Setter for request
-	 * @param \Speedy\Request $request
-	 * @return $this
+	 * Filter methods array for initMethods only 
+	 * @param array $value
 	 */
-	private function _setRequest($request) {
-		$this->_request	= $request;
-		return $this;
+	public function filterMethods($value) {
+		return preg_match("/^init[A-Z]{1,}[\w]+$/", $value);
 	}
 	
 	/**
@@ -249,11 +214,22 @@ class App extends Object {
 	}
 	
 	/**
-	 * Static Getter for request property
+	 * Setter for config
+	 * @param \Speedy\Config $config
+	 * @return \Speedy\App
 	 */
-	public static function request() {
-		$self	= self::instance();
-		return $self->_request();
+	protected function setConfig(\Speedy\Config &$config) {
+		$this->_config =& $config;
+		return $this;
+	}
+	
+	/**
+	 * Setter for namespace
+	 * @param string $ns
+	 */
+	protected function setNs($ns) {
+		$this->_ns	= strtolower($ns);
+		return $this;
 	}
 	
 	/**
@@ -261,7 +237,36 @@ class App extends Object {
 	 * @param string $name
 	 */
 	protected function configure($closure) {
-		return $this->config()->setup($closure);
+		//return $this->config()->setup($closure);
+		return $closure(Config::instance());
+	}
+	
+	/**
+	 * Getter for just bootstrap methods
+	 * @return array of bootstrap methods
+	 */
+	private function bootstrapMethods() {
+		$methods = get_class_methods($this);
+		return array_filter($methods, array($this, 'filterMethods'));
+	}
+	
+	/**
+	 * Setter for router
+	 * @param \Speedy\Router $router
+	 */
+	private function _setRouter(&$router) {
+		$this->_router	=& $router;
+		return $this;
+	}
+	
+	/**
+	 * Setter for request
+	 * @param \Speedy\Request $request
+	 * @return $this
+	 */
+	private function _setRequest($request) {
+		$this->_request	= $request;
+		return $this;
 	}
 	
 }
