@@ -1,0 +1,16 @@
+{
+	"name" : "SpeedyPHP/Framework",
+	"description" : "SpeedyPHP Framework",
+	"keywords" : ["SpeedyPHP", "RAD Framework"],
+	"license": "MIT",
+	"authors": [{
+		"name":"SpeedyPHP Development Team"
+	},{
+		"name":"Zachary Quintana"
+	}],
+	"require": {
+		"php": ">=5.4"
+		"SpeedyPHP/Sprockets" : "dev-master",
+		"SpeedyPHP/ActiveRecord" : "dev-master"
+	}
+}

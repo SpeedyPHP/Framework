@@ -21,6 +21,9 @@ abstract class Draw extends Object {
 	const NS_CLEAN	= 1;
 	const NS_MEMBER	= 2;
 	
+	const TYPE_RESOURCE = 1;
+	const TYPE_NS	= 2;
+	
 	
 	/**
 	 * Holds all route instances
@@ -78,7 +81,7 @@ abstract class Draw extends Object {
 	protected function resources($name, array $options = null, $closure = null) {
 		$member	= $this->buildHelper($name, true);
 		$col	= $this->buildHelper($name);
-		$base	= $this->buildBase($name);
+		$base	= $this->buildBase($name, true);
 		$controller	= $this->buildController($name); 
 		
 		$this->pushRoute(new Match(array(
@@ -113,24 +116,87 @@ abstract class Draw extends Object {
 		}*/
 		
 		if ($closure) {
-			$this->_namespace($name, $closure);
+			$this->_namespace($name, $closure, self::TYPE_RESOURCE);
 		}
 		
 		return $this;
 	}
 	
+	/**
+	 * Add member route for resource
+	 * @param string $method
+	 * @param string $action
+	 * @return object $this
+	 */
 	protected function member($method, $action) {
-		$base	= $this->buildBase();
+		$uri	= $this->buildBase($action, true);
+		$controller	= $this->buildController();
 		
+		return $this->routeFactory($method, $uri, "$controller#$action");
 	}
 	
-	protected function collection($closure) {
-		$closure();
-		return $this;
+	/**
+	 * Add collection route for resource
+	 * @param string $method
+	 * @param string $action
+	 * @return object $this
+	 */
+	protected function collection($method, $action) {
+		$controller	= $this->buildController();
+		$uri	= $this->buildBase($action);
+		
+		return $this->routeFactory($method, $uri, "$controller#$action");
 	}
 	
-	protected function get($action) {
+	/**
+	 * Route factory
+	 * @param string $method
+	 * @param string $action
+	 * @return object $this
+	 */
+	protected function routeFactory($method, $uri, $action) {
+		switch (strtoupper($method)) {
+			case self::POST:
+				return $this->post($uri, $action);
+				break;
+				
+			case self::GET:
+			default:
+				return $this->get($uri, $action);
+				break;
+		}
+	}
+	
+	/**
+	 * Simple get route
+	 * @param string $uri
+	 * @param string $action
+	 * @return object $this
+	 */
+	protected function post($uri, $action) {
+		$defaults= array();
+		$params	= array_merge($defaults, array(
+			$uri	=> $action,
+			'on'	=> self::POST
+		));
+	
+		return $this->match($params);
+	}
+	
+	/**
+	 * Simple get route
+	 * @param string $uri
+	 * @param string $action
+	 * @return object $this
+	 */
+	protected function get($uri, $action) {
+		$defaults= array();
+		$params	= array_merge($defaults, array(
+			$uri	=> $action,
+			'on'	=> self::GET
+		));
 		
+		return $this->match($params);
 	}
 	
 	/**
@@ -167,8 +233,8 @@ abstract class Draw extends Object {
 	 * @param closure $closure
 	 * @return void
 	 */
-	protected function _namespace($ns, $closure) {
-		$this->setCurrentNamespace($ns);
+	protected function _namespace($ns, $closure, $type = self::TYPE_NS) {
+		$this->setCurrentNamespace($ns, $type);
 		$closure();
 		$this->resetCurrentNamespace();
 		return;
@@ -179,11 +245,11 @@ abstract class Draw extends Object {
 	 * @param string $ns
 	 * @return \Speedy\Router\Draw
 	 */
-	protected function setCurrentNamespace($ns) {
+	protected function setCurrentNamespace($ns, $type = self::TYPE_RESOURCE) {
 		if (is_array($this->_currentNamespace)) 
-			$this->_currentNamespace[]	= $ns;
+			$this->_currentNamespace[$ns]	= $type;
 		else
-			$this->_currentNamespace	= array($ns);
+			$this->_currentNamespace	= array($ns => $type);
 		
 		return $this;
 	}
@@ -206,25 +272,17 @@ abstract class Draw extends Object {
 	 * @return string or null if no namespace defined
 	 */
 	protected function currentNamespace($delim = '/', $type = 0) {
-		$array = $this->_currentNamespace;
-		if (!$array) return null;
+		if (!$this->_currentNamespace) return null;
+		$array = array();
 		
-		if ($type == self::NS_CLEAN) {
-			array_walk($array, function(&$val, $key) {
-				if (strpos($val, '/') === false) {
-					return;
-				}
-				
-				$v	= explode('/', $val);
-				$val= array_shift($v);
-				return;
-			});
-		} elseif ($type == self::NS_MEMBER) {
-			array_walk($array, function(&$val, $key) {
-				$singular	= Inflector::singularize($val);
-				$val	.= "/{$singular}_id";
-				return;
-			});
+		foreach ($this->_currentNamespace as $key => $val) {
+			$singular	= Inflector::singularize($key);
+			
+			if ($type == self::NS_MEMBER && $val == self::TYPE_RESOURCE) {
+				$key	.= "/:{$singular}_id";
+			}
+			
+			$array[]	= $key;
 		}
 		
 		return implode($delim, $array);
@@ -244,11 +302,11 @@ abstract class Draw extends Object {
 		return $return . $uri;
 	}
 	
-	protected function buildController($name) {
+	protected function buildController($name = null) {
 		$return = '';
 		$ns		= $this->currentNamespace('/');
 		if ($ns)
-			$return	.= $ns . '/';
+			$return	.= ($name) ? $ns . '/' : $ns;
 		
 		return $return . $name;
 	}
