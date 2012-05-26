@@ -9,7 +9,7 @@ App::instance()->configure(function(\$conf) {
 	date_default_timezone_set('America/Los_Angeles');
 	
 	Loader::instance()->registerNamespace("\{\$this->ns()}.lib", LIB_PATH);
-	Loader::instance()->registerNamespace('active_record', getenv('ACTIVE_RECORD_PATH'));
+	Loader::instance()->registerNamespace('active_record', VENDOR_PATH . DS . "SpeedyPHP" . DS . 'ActiveRecord');
 	import('active_record.utils');
 	import('active_record.exceptions');
 	import('active_record.logger.runtime');

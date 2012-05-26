@@ -3,14 +3,14 @@
 defined("DS") or define("DS", DIRECTORY_SEPARATOR);
 defined('SPEEDY_ENV')  or define("SPEEDY_ENV", (getenv("SPEEDY_ENV")) ? getenv('SPEEDY_ENV') : 'development');
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App
-defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
-define("SPEEDY_PATH", LIB_PATH . DS . "speedy" . DS);
+define("SPEEDY_PATH", (getenv('SPEEDY_PATH')) ? getenv('SPEEDY_PATH') . DS : ROOT . DS);
 define("SPEEDY_TEMPLATES", dirname(dirname(__FILE__)) . DS . "tpls" . DS);
 define("SPEEDY_CLI", dirname(__FILE__));
 
 define("APP_ROOT", getcwd());
 define("CONFIG_PATH", APP_ROOT . DS . 'config');
 define("APP_PATH", APP_ROOT . DS . 'app');
+define('VENDOR_PATH', APP_ROOT . DS . 'vendor');
 defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
 
 require_once SPEEDY_PATH . 'Loader.php';
