@@ -256,13 +256,13 @@ EOF;
 		output();
 		output('Creating views');
 		foreach ($views as $view) {
-			$toPath	= $viewPath . DS . "{$view}.php.html";
+			$toPath	= $viewPath . DS . "{$view}.html.php";
 			if (file_exists($toPath)) {
-				output("Skipping {$view}.php.html");
+				output("Skipping {$view}.html.php");
 				continue;
 			}
 			
-			output("Create {$view}.php.html");
+			output("Create {$view}.html.php");
 			file_put_contents($toPath, $this->getTemplate($viewTplsPath . DS . $view . '.php'));
 		}
 	}

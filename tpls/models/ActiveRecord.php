@@ -3,8 +3,9 @@ return <<<EOF
 <?php
 namespace {$namespace}\Models;
 
+use \SpeedyPHP\Model\ActiveRecord\Base;
 
-class {$model} extends \ActiveRecord\Model {
+class {$model} extends Base {
 }
 
 ?>

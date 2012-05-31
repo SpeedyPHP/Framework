@@ -206,7 +206,20 @@ abstract class Draw extends Object {
 	 * @return $this
 	 */
 	protected function match(array $options = null) {
-		return $this->pushRoute(new Match($options));
+		$keys	= array_keys($options);
+		$uri	= $this->buildBase($keys[0]);
+		$route	= array_pop($options);
+		
+		if (strpos($route, '#') === false) {
+			$controller = $this->buildController();
+			$route	= "{$controller}#{$route}";
+		} 
+		
+		$params	= array();
+		$params[$uri] = $route;
+		$params	= array_merge($params, $options);
+		
+		return $this->pushRoute(new Match($params));
 	}
 	
 	/**

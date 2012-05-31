@@ -11,11 +11,19 @@ class Server extends Speedy\Task {
 		$port	= 8000;
 		$docroot= $curDir . DS . 'public';
 		$index	= $docroot . DS . 'index.php';
+		$router	= $docroot . DS . 'router.php';
 		 
-		$cmd	= "{$php} -S {$host}:{$port} -t {$docroot}";
+		$cmd	= "{$php} -S {$host}:{$port} -t {$docroot} {$router}";
+
 		output("Starting PHP Server");
 		output("Listening http://{$host}:{$port}");
-		exec($cmd);
+		$handle = popen($cmd, "r");
+		
+		while ($read = fread($handle, 2096)) {
+			output($read);
+		}
+		
+		pclose($handle);
 		
 		return 0;
 	}

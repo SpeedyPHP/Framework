@@ -81,14 +81,8 @@ class View extends Singleton {
 	public function builder($filePath) {
 		if (!file_exists($filePath)) return null;
 		
-		$fileInfo	= pathinfo($filePath);
-		$filename	= $fileInfo['filename']; 
-		$filenameArr= explode('.', $filename);
-		
-		if (count($filenameArr) < 1) return null;
-		$builder	= array_pop($filenameArr); 
-		 
-		return Config::instance()->renderer($builder);
+		$fileInfo	= pathinfo($filePath); 
+		return Config::instance()->renderer($fileInfo['extension']);
 	}
 	
 	/**
@@ -106,7 +100,7 @@ class View extends Singleton {
 		
 		foreach ($renderers as $type => $renderer) {
 			foreach ($viewPaths as $path) {
-				$fullPath	= $path . DS . $file . ".{$type}.{$ext}";
+				$fullPath	= $path . DS . $file . ".{$ext}.{$type}";
 		
 				if (file_exists($fullPath)) {
 					return $fullPath;

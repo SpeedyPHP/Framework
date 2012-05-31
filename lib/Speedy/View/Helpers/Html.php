@@ -315,8 +315,9 @@ class Html extends Base {
 	 * @param string $label
 	 * @return void
 	 */
-	public function submit($label = 'Submit') {
-		return $this->element('input', null, array( 'type' => 'submit', 'value' => $label ));
+	public function submit($label = 'Submit', $options	= array()) {
+		$options	= array_merge(array( 'type' => 'submit', 'value' => $label ), $options);
+		return $this->element('input', null, $options);
 	} 
 	
 	/**

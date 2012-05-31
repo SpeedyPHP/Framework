@@ -13,5 +13,10 @@
 		"SpeedyPHP/Sprockets" : "dev-master",
 		"SpeedyPHP/ActiveRecord" : "dev-master",
 		"jaz303/phake" : "dev-master"
+	},
+	"autoload":{
+		"psr-0": {
+			"Speedy" : "lib"
+		}
 	}
 }
