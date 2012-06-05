@@ -1,7 +1,6 @@
 <?php 
 namespace Speedy\Router\Routes;
 
-import('speedy.router.routes.base');
 
 class Match extends Base {
 	

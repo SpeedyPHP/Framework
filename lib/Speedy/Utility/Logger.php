@@ -1,7 +1,6 @@
 <?php 
 namespace Speedy\Utility;
 
-import('speedy.utility.logger.console');
 
 class Logger {
 		

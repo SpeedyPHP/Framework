@@ -1,10 +1,6 @@
 <?php 
 namespace Speedy\Router;
 
-import('speedy.router');
-import('speedy.router.routes.match');
-import('speedy.router.routes.base');
-//import('speedy.router.routes.resource');
 
 use \Speedy\Router;
 use \Speedy\Router\Routes\Resource;

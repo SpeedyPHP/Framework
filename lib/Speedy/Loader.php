@@ -9,12 +9,8 @@ namespace Speedy {
 
 	const DS 	= DIRECTORY_SEPARATOR;
 	
-	require_once "Object.php";
-	require_once "utility/Inflector.php";
-	require_once "loader/Exception.php";
 	
 	use \Speedy\Utility\Inflector;
-	use \Speedy\Loader\Exception;
 	
 	class Loader extends Object {
 		
@@ -74,8 +70,6 @@ namespace Speedy {
 		}
 		
 		public function __construct() {
-			$this->registerNamespace('speedy', SPEEDY_PATH);
-			
 			return $this;
 		}
 		

@@ -1,8 +1,6 @@
 <?php 
 namespace Speedy;
 
-require_once "Loader.php";
-import("speedy.task");
 
 class Task extends Object {
 	

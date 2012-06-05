@@ -70,7 +70,7 @@ class Object {
 				continue;
 			}
 			
-			import($mixin);
+			if (is_string($mixin)) import($mixin);
 			$class	= \Speedy\Loader::toClass($mixin);
 			if (!$class) {
 				continue;

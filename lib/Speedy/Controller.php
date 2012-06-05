@@ -1,10 +1,6 @@
 <?php 
 namespace Speedy;
 
-import('speedy.object');
-import('speedy.request');
-import('speedy.response');
-import('speedy.utility.logger');
 
 use \Speedy\Utility\Logger;
 use \Speedy\Utility\Inflector;

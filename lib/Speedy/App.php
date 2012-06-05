@@ -1,12 +1,6 @@
 <?php 
 namespace Speedy;
 
-require_once "Loader.php";
-import('speedy.object');
-import('speedy.router');
-import('speedy.dispatcher');
-import('speedy.utility.inflector');
-
 use \Speedy\Router;
 use \Speedy\Utility\Inflector;
 use \Speedy\Config;

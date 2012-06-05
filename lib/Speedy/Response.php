@@ -1,7 +1,6 @@
 <?php 
 namespace Speedy;
 
-import('speedy.object');
 
 class Response extends Object {
 

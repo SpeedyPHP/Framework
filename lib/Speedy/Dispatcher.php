@@ -1,10 +1,6 @@
 <?php 
 namespace Speedy;
 
-import('speedy.object');
-import('speedy.utility.inflector');
-import('speedy.response');
-import('speedy.router');
 
 use \Speedy\Utility\Inflector;
 

@@ -1,8 +1,6 @@
 <?php 
 namespace Speedy;
 
-import("speedy.router.exception");
-import('speedy.request');
 
 use \Speedy\Http\Exception as HttpException;
 use \Speedy\Asset;
