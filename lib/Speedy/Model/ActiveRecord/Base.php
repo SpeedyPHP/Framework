@@ -1,7 +1,7 @@
 <?php 
 namespace Speedy\Model\ActiveRecord;
 
-class Base extends \ActiveRecord\Model {
+class Base extends \Speedy\ActiveRecord\Model {
 
 }
 ?>
