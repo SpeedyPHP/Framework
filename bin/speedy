@@ -13,7 +13,7 @@ define("APP_PATH", APP_ROOT . DS . 'app');
 define('VENDOR_PATH', APP_ROOT . DS . 'vendor');
 defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
 
-require_once SPEEDY_PATH . 'Loader.php';
+require_once VENDOR_PATH . DS . 'autoload.php';
 
 if (function_exists('ini_set')) {
 	ini_set('include_path', SPEEDY_PATH . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'));

@@ -1,5 +1,4 @@
 <?php
-import('speedy.task');
 
 class Speedy extends Speedy\Task {
 	

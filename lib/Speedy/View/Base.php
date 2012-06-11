@@ -37,9 +37,9 @@ abstract class Base extends Object {
 	protected $_yields = array();
 	
 	protected $_mixins	= array(
-		'speedy.view.helpers.html',
-		'speedy.view.helpers.inflector',
-		'speedy.view.helpers.sql_log'
+		'\\Speedy\\View\\Helpers\\Html',
+		'\\Speedy\\View\\Helpers\\Inflector',
+		'\\Speedy\\View\\Helpers\\SqlLog'
 	);
 	
 	public $params;

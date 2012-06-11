@@ -215,6 +215,8 @@ namespace Speedy {
 			if ($this->loaded($namespace)) return true;
 			
 			$path	= $this->toPath($namespace); 
+			if (!$path) return false;
+			
 			if ($this->load($path)) {
 				return true;
 			} else {
@@ -270,17 +272,15 @@ namespace Speedy {
 					
 					return $fullPath;
 				} 
-				
-				throw new Exception("No path found for $namespace for path " . implode(':', $pathTo));
 			} else {
 				$fullPath	= $pathTo . DS . implode(DS, $aClass) . '.php';
 	
-				if (!file_exists($fullPath)) {
-					throw new Exception("No path found for $namespace for path " . $pathTo);
+				if (file_exists($fullPath)) {
+					return $fullPath;
 				}
 			}
 			
-			return $fullPath;
+			return null;
 		}
 		
 		/**
