@@ -7,7 +7,7 @@ use \Speedy\View\Helpers\Base;
 class SqlLog extends Base {
 	
 	public function printSqlLog() {
-		$logger	= \ActiveRecord\Logger\Runtime::instance();
+		$logger	= \Speedy\ActiveRecord\Logger\Runtime::instance();
 		echo $this->_printLog($name, $logger);
 	}
 	
