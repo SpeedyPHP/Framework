@@ -76,7 +76,7 @@ class Base extends \Speedy\ActiveRecord\Model {
 			}
 				
 			$instance	= new $class((is_array($options) ? $options : null));
-				
+			$this->_addPropertiesFromMixin($instance);
 			$this->_mixinObjs[$mixin] = $instance;
 		}
 	
@@ -96,6 +96,29 @@ class Base extends \Speedy\ActiveRecord\Model {
 		}
 	
 		return parent::__call($name, $args);
+	}
+	
+	/**
+	 * Adds properties to owning class
+	 * @param object $mixin
+	 * @return object $this
+	 */
+	private function _addPropertiesFromMixin(object $mixin) {
+		$callbacks = array('before_save', 'before_create', 'before_update', 'before_validation',
+			'before_validation_on_create', 'before_validation_on_update', 'before_destroy',
+			'after_save', 'after_create', 'after_update', 'after_validation', 
+			'after_validation_on_create', 'after_validation_on_update', 'after_destory');
+		
+		foreach ($callbacks as $callback) {
+			if (isset($mixin->{$callback})) {
+				$this->{$callback} = array_merge(
+					(is_array($this->{$callback})) ? array() : $this->{$callback},
+					$mixin->{$callback}
+				);
+			}
+		}
+		
+		return $this;
 	}
 	
 	/**
