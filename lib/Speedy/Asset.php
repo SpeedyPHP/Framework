@@ -52,7 +52,7 @@ class Asset extends Singleton {
 	
 	public function render() {
 		$path	= pathinfo($this->path);
-		$sprocket = new \Speedy\Sprocket($path['basename'], array(
+		$sprocket = new \Speedy\Sprocket\Sprocket($path['basename'], array(
 			'debugMode' => (isset($_GET['debug'])) ? (bool) $_GET['debug'] : $this->debug(),
 			'assetFolder'	=> $path['dirname'] . DS,
 			'cacheFolder'	=> TMP_PATH . DS . 'assets'
