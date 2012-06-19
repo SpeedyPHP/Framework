@@ -10,6 +10,13 @@ use \Speedy\View;
 use \Speedy\Session;
 use \Speedy\Utility\Links;
 
+/**
+ * SpeedyPHP Controller forms the 'C' in MVC
+ *
+ * @author Zachary Quintana
+ * @since 1.0
+ * @package Speedy
+ */
 class Controller extends Object {
 	
 	/**
@@ -20,13 +27,13 @@ class Controller extends Object {
 	
 	/**
 	 * The request object
-	 * @var \Speedy\Request
+	 * @var object \Speedy\Request
 	 */
 	protected $_request;
 	
 	/**
 	 * The response object
-	 * @var \Speedy\Response
+	 * @var object \Speedy\Response
 	 */
 	protected $_response;
 	
@@ -50,13 +57,13 @@ class Controller extends Object {
 	
 	/**
 	 * Closures for object renderers
-	 * @var Speedy\Object
+	 * @var object Speedy\Object
 	 */
 	protected $_format;
 	
 	/**
 	 * Links helper
-	 * @var \Speedy\Utility\Links
+	 * @var object \Speedy\Utility\Links
 	 */
 	protected $_linksHelper;
 	
@@ -64,8 +71,8 @@ class Controller extends Object {
 	
 	/**
 	 * Base class for all controllers
-	 * @param \Speedy\Request $request
-	 * @param \Speedy\Response $response
+	 * @param object \Speedy\Request $request
+	 * @param object \Speedy\Response $response
 	 */
 	public function __construct(\Speedy\Request &$request, \Speedy\Response &$response) {
 		$params	= $request->params();
@@ -97,7 +104,7 @@ class Controller extends Object {
 	
 	/**
 	 * Getter for all params
-	 * @return mixed
+	 * @return mixed default null
 	 */
 	public function params($name = null) {
 		return $this->__dotAccess($name, $this->_params);
@@ -113,7 +120,7 @@ class Controller extends Object {
 	
 	/**
 	 * Getter for links helper
-	 * @return \Speedy\Utility\Links
+	 * @return object \Speedy\Utility\Links
 	 */
 	public function linksHelper() {
 		if (!$this->_linksHelper) {
@@ -132,7 +139,8 @@ class Controller extends Object {
 	}
 	
 	/**
-	 * Call the before filters
+	 * Run filters
+	 * @param string filter name
 	 * @return void
 	 */
 	private function __runFilter($filter) {		
@@ -162,8 +170,8 @@ class Controller extends Object {
 	
 	/**
 	 * Setter for links helper
-	 * @param \Speedy\Utility\Links $helper
-	 * @return \Speedy\View\Helpers\Html
+	 * @param object \Speedy\Utility\Links $helper
+	 * @return object \Speedy\View\Helpers\Html
 	 */
 	private function setLinksHelper(\Speedy\Utility\Links $helper) {
 		$this->_linksHelper	= $helper;
@@ -172,8 +180,8 @@ class Controller extends Object {
 	
 	/**
 	 * Setter for request
-	 * @param \Speedy\Request $request
-	 * @return \Speedy\Controller
+	 * @param object \Speedy\Request $request
+	 * @return object \Speedy\Controller
 	 */
 	private function setRequest(\Speedy\Request &$request) {
 		if (isset($this->_request)) return $this;
@@ -184,8 +192,8 @@ class Controller extends Object {
 	
 	/**
 	 * Response setter
-	 * @param \Speedy\Response $response
-	 * @return \Speedy\Controller
+	 * @param object \Speedy\Response $response
+	 * @return object \Speedy\Controller
 	 */
 	private function setResponse(\Speedy\Response &$response) {
 		if (isset($this->_response)) return $this;
@@ -212,7 +220,7 @@ class Controller extends Object {
 	
 	/**
 	 * Sets rendered to true
-	 * @return \Speedy\Controller
+	 * @return object \Speedy\Controller
 	 */
 	private function rendered() {
 		$this->__rendered	= true;
@@ -273,7 +281,7 @@ class Controller extends Object {
 	/**
 	 * Set all params
 	 * @param array $params
-	 * @return \Speedy\Controller
+	 * @return object \Speedy\Controller
 	 */
 	protected function setParams(&$params) {
 		$this->_params	=& $params;
@@ -282,7 +290,7 @@ class Controller extends Object {
 	
 	/**
 	 * Getter for request
-	 * @return \Speedy\Request
+	 * @return object \Speedy\Request
 	 */
 	protected function request() {
 		return $this->_request;
@@ -290,7 +298,7 @@ class Controller extends Object {
 	
 	/**
 	 * Getter for response
-	 * @return \Speedy\Response
+	 * @return object \Speedy\Response
 	 */
 	protected function &response() {
 		return $this->_response;
@@ -351,7 +359,7 @@ class Controller extends Object {
 	
 	/**
 	 * Accessor for format prop
-	 * @return Object
+	 * @return object
 	 */
 	protected function &format() {
 		return $this->_format;

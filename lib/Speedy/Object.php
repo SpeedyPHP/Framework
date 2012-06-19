@@ -4,6 +4,13 @@ namespace Speedy;
 const DEBUG = false;
 require_once "Exception.php";
 
+/**
+ * Base object for all SpeedyPHP objects
+ *
+ * @author Zachary Quintana
+ * @since 1.0
+ * @package Speedy
+ */
 class Object {
 	
 	const VS = '.';
@@ -167,15 +174,6 @@ class Object {
 	}
 	
 	/**
-	 * Gets data
-	 * @param name or string path of variable
-	 * @return mixed 
-	 */
-	protected function data($name = null) {
-		return $this->__dotAccess($name, $this->_data);
-	}
-	
-	/**
 	 * Sets data
 	 * @return $this
 	 */
@@ -233,6 +231,15 @@ class Object {
 		}
 	
 		return $this->_mixinObjs;
+	}
+	
+	/**
+	 * Gets data
+	 * @param name or string path of variable
+	 * @return mixed 
+	 */
+	public function data($name = null) {
+		return $this->__dotAccess($name, $this->_data);
 	}
 	
 	public function __set($name, $value) {
