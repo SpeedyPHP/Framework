@@ -81,7 +81,7 @@ class Object {
 				continue;
 			}
 			
-			$instance	= new $class((is_array($options) ? $options : null));
+			$instance	= new $class($this, (is_array($options) ? $options : null));
 			
 			$this->_mixinObjs[$mixin] = $instance;
 		}

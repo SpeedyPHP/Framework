@@ -75,7 +75,7 @@ class Base extends \Speedy\ActiveRecord\Model {
 				continue;
 			}
 				
-			$instance	= new $class((is_array($options) ? $options : null));
+			$instance	= new $class($this, (is_array($options) ? $options : null));
 			$this->_addPropertiesFromMixin($instance);
 			$this->_mixinObjs[$mixin] = $instance;
 		}
