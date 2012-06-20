@@ -80,7 +80,8 @@ class Controller extends Object {
 		
 		$this->setRequest($request)
 			->setParams($params)
-			->setResponse($response);
+			->setResponse($response)
+			->_loadMixins();
 	}
 	
 	/**
