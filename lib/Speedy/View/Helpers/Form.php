@@ -71,7 +71,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function email($name, $attrs = array()) {
-		$attrs['value']	= $this->model()->{$name};
+		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
 		return $this->helper()->emailField($this->formatName($name), $attrs);
 	}
 	
@@ -91,7 +91,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function telephone($name, $attrs = array()) {
-		$attrs['value']	= $this->model()->{$name};
+		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
 		return $this->helper()->telephoneField($this->formatName($name), $attrs);
 	}
 	
@@ -112,7 +112,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function password($name, $attrs = array()) {
-		$attrs['value']	= $this->model()->{$name};
+		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
 		return $this->helper()->passwordField($this->formatName($name), $attrs);
 	}
 	
@@ -153,7 +153,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function textField($name, $attrs = array()) {
-		$attrs['value']	= $this->model()->{$name};
+		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
 		return $this->helper()->textFieldTag($this->formatName($name), $attrs);
 	}
 	
@@ -163,7 +163,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function fileField($name, $attrs = array()) {
-		$attrs['value']	= $this->model()->{$name};
+		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
 		return $this->helper()->fileFieldTag($this->formatName($name), $attrs);
 	}
 	
