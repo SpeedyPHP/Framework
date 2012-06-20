@@ -158,6 +158,16 @@ class Form extends Object {
 	}
 	
 	/**
+	 * File field builder
+	 * @param string $name
+	 * @param array $attrs
+	 */
+	public function fileField($name, $attrs = array()) {
+		$attrs['value']	= $this->model()->{$name};
+		return $this->helper()->fileFieldTag($this->formatName($name), $attrs);
+	}
+	
+	/**
 	 * Magic method for when method is missing
 	 * @param string $name
 	 * @param array $args

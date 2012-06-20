@@ -264,6 +264,23 @@ class Html extends Base {
 	}
 	
 	/**
+	 * File field helper
+	 * @param string $name
+	 * @param array $attrs
+	 * @return void
+	 */
+	public function fileFieldTag($name, $attrs = array()) {
+		if (!isset($attrs['id'])) {
+			$attrs['id']	= $this->toId($name);
+		}
+		
+		$attrs['name']	= $this->toName($name);
+		$attrs['type']	= 'file';
+		
+		return $this->element('input', null, $attrs);
+	}
+	
+	/**
 	 * Radio button field helper
 	 * @param string $name
 	 * @param array $attrs
