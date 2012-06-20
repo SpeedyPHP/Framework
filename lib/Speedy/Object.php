@@ -89,7 +89,9 @@ class Object {
 			}
 			
 			$instance	= new $class($this, (is_array($options) ? $options : null));
-			
+			if (method_exists($this, "_addPropertiesFromMixin")) {
+				call_user_func(array($this, "_addPropertiesFromMixin"), $instance);
+			}
 			$this->_mixinObjs[$mixin] = $instance;
 		}
 		
