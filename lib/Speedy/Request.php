@@ -8,7 +8,7 @@ class Request extends Object {
 	
 	public function __construct() {
 		$params	= $_GET;
-		$params = array_merge($params, $_POST);
+		$params = array_merge($params, $_FILES, $_POST);
 		$this->addParams($params);
 		$this->addData($_SERVER);
 		
