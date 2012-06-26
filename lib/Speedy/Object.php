@@ -118,6 +118,15 @@ class Object {
 		return null;
 	}
 	
+	/**
+	 * Getter for mixin
+	 * @param string $mixin
+	 * @return object
+	 */
+	protected function mixin($mixin) {
+		return (isset($this->_mixins[$mixin])) ? $this->_mixins[$mixin] : null;		
+	}
+	
 	protected function __dotIsset($name, &$array) {
 		$value	= $this->__dotAccess($name, $array);
 		return isset($value);
