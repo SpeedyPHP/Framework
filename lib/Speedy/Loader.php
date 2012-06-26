@@ -257,7 +257,7 @@ namespace Speedy {
 				}
 			}*/
 			array_walk($aPath, function(&$item, $key) {
-				Inflector::camelize($item);
+				$item = Inflector::camelize($item);
 			});
 			// Attempt to find and load the file return result
 			$pathTo = $this->path($relNamespace);
