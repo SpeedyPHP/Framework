@@ -124,7 +124,7 @@ class Object {
 	 * @return object
 	 */
 	protected function mixin($mixin) {
-		return (isset($this->_mixins[$mixin])) ? $this->_mixins[$mixin] : null;		
+		return (isset($this->_mixinObjs[$mixin])) ? $this->_mixinObjs[$mixin] : null;		
 	}
 	
 	protected function __dotIsset($name, &$array) {
