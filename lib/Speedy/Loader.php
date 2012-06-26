@@ -247,15 +247,18 @@ namespace Speedy {
 				} else $relNamespace = $relNamespace2;
 			}
 			
-			$aClass	= array();
+			/*$aClass	= array();
 			$total	= count($aPath) - 1;
 			foreach ($aPath as $index => $val) {
 				if ($index < $total) {
-					$aClass[]	= Inflector::underscore($val);
+					$aClass[]	= Inflector::camelize($val);
 				} else {
 					$aClass[]	= Inflector::camelize($val);
 				}
-			}
+			}*/
+			array_walk($aPath, function(&$item, $key) {
+				Inflector::camelize($item);
+			});
 			// Attempt to find and load the file return result
 			$pathTo = $this->path($relNamespace);
 			
@@ -264,7 +267,7 @@ namespace Speedy {
 			// if the file exists and return it
 			if (is_array($pathTo)) {
 				foreach ($pathTo as $path) {
-					$fullPath	= $path . DS . implode(DS, $aClass) . '.php';
+					$fullPath	= $path . DS . implode(DS, $aPath) . '.php';
 					
 					if (!file_exists($fullPath)) {
 						continue;
@@ -273,7 +276,7 @@ namespace Speedy {
 					return $fullPath;
 				} 
 			} else {
-				$fullPath	= $pathTo . DS . implode(DS, $aClass) . '.php';
+				$fullPath	= $pathTo . DS . implode(DS, $aPath) . '.php';
 	
 				if (file_exists($fullPath)) {
 					return $fullPath;
