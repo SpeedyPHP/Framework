@@ -18,18 +18,17 @@ class Dispatcher extends Object {
 			var_dump('Route is broken');
 		}
 		
-		extract($route);
 		$app		= App::instance();
 		$namespace	= $app->ns();
-		$name		= $app->name();
-		$path		= strtolower($controller);
+		$name		= (isset($route['namespace'])) ? $route['namespace'] : $app->name();
+		$path		= strtolower($route['controller']);
 		
 		// Parse controller
-		if (strpos($path, '/')) {
+		/*if (strpos($path, '/')) {
 			$path	= str_replace('/', '.', $path);
-		}
+		}*/
 		
-		$pathArr	= explode('.', $path);
+		$pathArr	= explode('/', $path);
 		foreach ($pathArr as &$part) {
 			$part = Inflector::camelize($part);
 		}
@@ -38,10 +37,10 @@ class Dispatcher extends Object {
 		$fullName	= (count($pathArr) > 0) ? implode('\\', $pathArr) . '\\' . $className : $className;
 		$fullName	= "\\{$name}\\Controllers\\{$fullName}";
 		
-		$import		= (count($pathArr) > 0) ? implode('.', $pathArr) . '.' . Inflector::underscore($className) : Inflector::underscore($className);
-		$import		= $namespace . '.controllers.' . $import;
+		/*$import		= (count($pathArr) > 0) ? implode('.', $pathArr) . '.' . Inflector::underscore($className) : Inflector::underscore($className);
+		$import		= $namespace . '.controllers.' . $import;*/
 		
-		if (!import($import) || !class_exists($fullName)) {
+		if (!class_exists($fullName)) {
 			// TODO: Error controller not found
 			print "Controller not found for $fullName";
 			exit;
@@ -49,9 +48,9 @@ class Dispatcher extends Object {
 		
 		$router->request()->addParams($route);
 		$controllerObj	= new $fullName($router->request(), $response);
-		if (!method_exists($controllerObj, $action)) {
+		if (!method_exists($controllerObj, $route['action'])) {
 			// TODO: Error action not found in controller
-			print "Action #$action not found in $fullName";
+			print "Action {$route['action']} not found in $fullName";
 			exit;
 		}
 		

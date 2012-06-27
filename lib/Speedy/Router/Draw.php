@@ -66,32 +66,45 @@ class Draw extends Object {
 		$base	= $this->buildBase($name, true);
 		$controller	= $this->buildController($name); 
 		
-		$this->pushRoute(new Match(array(
-			"$base" => "$controller#index", 	
-			'on' => self::GET,
-			'name'	=> "{$col}_url"
+		$this->pushRoute(new Match(array_merge(array(
+				"$base" => "$controller#index", 	
+				'on' => self::GET,
+				'name'	=> "{$col}_url"
+			), $options
 		)));
-		$this->pushRoute(new Match(array(
-			"$base/new" => "$controller#_new", 	
-			'on' => self::GET,
-			'name'	=> "new_{$member}_path"
+		$this->pushRoute(new Match(array_merge(array(
+				"$base/new" => "$controller#_new", 	
+				'on' => self::GET,
+				'name'	=> "new_{$member}_path"
+			), $options
 		)));
-		$this->pushRoute(new Match(array(
-			"$base" => "$controller#create", 	
-			'on' => self::POST
+		$this->pushRoute(new Match(array_merge(array(
+				"$base" => "$controller#create", 	
+				'on' => self::POST
+			), $options
 		)));
-		$this->pushRoute(new Match(array(
-			"$base/:id" => "$controller#show", 
-			'on' => self::GET,
-			'name'	=> "{$member}_path"
+		$this->pushRoute(new Match(array_merge(array(
+				"$base/:id" => "$controller#show", 
+				'on' => self::GET,
+				'name'	=> "{$member}_path"
+			), $options
 		)));
-		$this->pushRoute(new Match(array(
-			"$base/:id/edit" => "$controller#edit",	
-			'on' => self::GET,
-			'name'	=> "edit_{$member}_path"
+		$this->pushRoute(new Match(array_merge(array(
+				"$base/:id/edit" => "$controller#edit",	
+				'on' => self::GET,
+				'name'	=> "edit_{$member}_path"
+			), $options
 		)));
-		$this->pushRoute(new Match(array("$base/:id" => "$controller#update", 		'on' => self::PUT)));
-		$this->pushRoute(new Match(array("$base/:id" => "$controller#destroy", 		'on' => self::DELETE)));
+		$this->pushRoute(new Match(array_merge(array(
+				"$base/:id" => "$controller#update", 		
+				'on' => self::PUT
+			), $options
+		)));
+		$this->pushRoute(new Match(array_merge(array(
+				"$base/:id" => "$controller#destroy", 		
+				'on' => self::DELETE
+			), $options
+		)));
 		/*$resource	= new Resource($name, $options);
 		foreach ($resource->getRoutes() as $route) {
 			$this->pushRoute($route);
