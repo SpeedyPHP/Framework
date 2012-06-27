@@ -130,7 +130,7 @@
 			
 			var form	= document.createElement('form');
 			form.setAttribute('action', this.action);
-			form.setAttribute('method', this.method.toUpperCase());
+			form.setAttribute('method', 'POST');
 			
 			var submit	= document.createElement('input');
 			submit.setAttribute('type', 'submit');
@@ -160,11 +160,67 @@
 		
 	});
 	
+	$.Speedy.Class('UpdateLink', {
+		
+		construct: function(el) {
+			var me	= this;
+			
+			this.el	= $(el);
+			this.action	= this.getEl().attr('href');
+			this.method	= 'PUT';
+			
+			this.getEl().click(function() {
+				return me.onClick.apply(me);
+			});
+		},
+	
+		getEl: function() {
+			return this.el;
+		},
+		
+		onClick: function(evt) {
+			return this.doUpdate();
+		},
+		
+		doUpdate: function() {
+			var cont	= document.createElement('div');
+			cont.setAttribute('style', 'display: none;');
+			
+			var form	= document.createElement('form');
+			form.setAttribute('action', this.action);
+			form.setAttribute('method', 'POST');
+			
+			var submit	= document.createElement('input');
+			submit.setAttribute('type', 'submit');
+			submit.setAttribute('value', 'Submit');
+			
+			var input	= document.createElement('input');
+			input.setAttribute('type', 'hidden');
+			input.setAttribute('value', this.getEl().data('method'));
+			input.setAttribute('name', '_method');
+			
+			$(form).append(input);
+			$(form).append(submit);
+			$(cont).append(form);
+			$('body').append(cont); 
+			
+			$('form:last').submit();
+			return false;
+		},
+		
+		getForm: function() {
+			return this.form;
+		}
+		
+	});
+	
 	
 	$(document).ready(function() {
 		$('a[href]').each(function(index) {
 			if ($(this).data('method') == 'delete') {
 				return $.Speedy.New('DeleteLink', this)
+			} else if ($(this).data('method') == 'put') {
+				return $.Speedy.New('UpdateLink', this)
 			}
 		});
 	});

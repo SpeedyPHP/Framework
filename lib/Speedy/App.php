@@ -106,7 +106,7 @@ class App extends Object {
 		$loader->registerNamespace("{$this->ns()}.assets", 		array(APP_PATH . DS . 'assets'));
 		$loader->registerNamespace("{$this->ns()}.views", 		array(APP_PATH . DS . 'views'));
 		$loader->registerNamespace($this->ns(), APP_PATH);
-		$loader->registerNamespace('sprockets', VENDOR_PATH . DS . 'SpeedyPHP' . DS . 'Sprockets'); 
+		//$loader->registerNamespace('sprockets', VENDOR_PATH . DS . 'SpeedyPHP' . DS . 'Sprockets'); 
 		
 		$loader->setAliases(array(
 			'views'			=> "{$this->ns()}.views",
