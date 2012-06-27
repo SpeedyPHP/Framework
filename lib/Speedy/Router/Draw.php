@@ -55,26 +55,12 @@ class Draw extends Object {
 	}
 	
 	/**
-	 * Gets called on init and draws all routes
-	 */
-	protected function draw() {}
-	
-	/**
-	 * Sets the router
-	 * @param \Speedy\Router $router
-	 */
-	protected function setRouter(\Speedy\Router &$router) {
-		$this->_router =& $router;
-		return $this;
-	}
-	
-	/**
 	 * Adds resource routes
 	 * @param string $name
 	 * @param array $options
 	 * @return $this
 	 */
-	protected function resources($name, array $options = null, $closure = null) {
+	public function resources($name, array $options = null, $closure = null) {
 		$member	= $this->buildHelper($name, true);
 		$col	= $this->buildHelper($name);
 		$base	= $this->buildBase($name, true);
@@ -124,7 +110,7 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	protected function member($method, $action) {
+	public function member($method, $action) {
 		$uri	= $this->buildBase($action, true);
 		$controller	= $this->buildController();
 		
@@ -137,11 +123,93 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	protected function collection($method, $action) {
+	public function collection($method, $action) {
 		$controller	= $this->buildController();
 		$uri	= $this->buildBase($action);
 		
 		return $this->routeFactory($method, $uri, "$controller#$action");
+	}
+	
+	/**
+	 * Simple get route
+	 * @param string $uri
+	 * @param string $action
+	 * @return object $this
+	 */
+	public function post($uri, $action) {
+		$defaults= array();
+		$params	= array_merge($defaults, array(
+			$uri	=> $action,
+			'on'	=> self::POST
+		));
+	
+		return $this->match($params);
+	}
+	
+	/**
+	 * Simple get route
+	 * @param string $uri
+	 * @param string $action
+	 * @return object $this
+	 */
+	public function get($uri, $action) {
+		$defaults= array();
+		$params	= array_merge($defaults, array(
+			$uri	=> $action,
+			'on'	=> self::GET
+		));
+		
+		return $this->match($params);
+	}
+	
+	/**
+	 * Adds match route to stack
+	 * @param string $format
+	 * @param array $options
+	 * @return $this
+	 */
+	public function match(array $options = null) {
+		$keys	= array_keys($options);
+		$uri	= $this->buildBase($keys[0]);
+		$route	= array_pop($options);
+		
+		if (strpos($route, '#') === false) {
+			$controller = $this->buildController();
+			$route	= "{$controller}#{$route}";
+		} 
+		
+		$params	= array();
+		$params[$uri] = $route;
+		$params	= array_merge($params, $options);
+		
+		return $this->pushRoute(new Match($params));
+	} 
+	
+	/**
+	 * Set a namespaced route
+	 * @param string $ns
+	 * @param closure $closure
+	 * @return void
+	 */
+	public function _namespace($ns, $closure, $type = self::TYPE_NS) {
+		$this->setCurrentNamespace($ns, $type);
+		$closure();
+		$this->resetCurrentNamespace();
+		return;
+	}
+	
+	/**
+	 * Gets called on init and draws all routes
+	 */
+	protected function draw() {}
+	
+	/**
+	 * Sets the router
+	 * @param \Speedy\Router $router
+	 */
+	protected function setRouter(\Speedy\Router &$router) {
+		$this->_router =& $router;
+		return $this;
 	}
 	
 	/**
@@ -164,61 +232,6 @@ class Draw extends Object {
 	}
 	
 	/**
-	 * Simple get route
-	 * @param string $uri
-	 * @param string $action
-	 * @return object $this
-	 */
-	protected function post($uri, $action) {
-		$defaults= array();
-		$params	= array_merge($defaults, array(
-			$uri	=> $action,
-			'on'	=> self::POST
-		));
-	
-		return $this->match($params);
-	}
-	
-	/**
-	 * Simple get route
-	 * @param string $uri
-	 * @param string $action
-	 * @return object $this
-	 */
-	protected function get($uri, $action) {
-		$defaults= array();
-		$params	= array_merge($defaults, array(
-			$uri	=> $action,
-			'on'	=> self::GET
-		));
-		
-		return $this->match($params);
-	}
-	
-	/**
-	 * Adds match route to stack
-	 * @param string $format
-	 * @param array $options
-	 * @return $this
-	 */
-	protected function match(array $options = null) {
-		$keys	= array_keys($options);
-		$uri	= $this->buildBase($keys[0]);
-		$route	= array_pop($options);
-		
-		if (strpos($route, '#') === false) {
-			$controller = $this->buildController();
-			$route	= "{$controller}#{$route}";
-		} 
-		
-		$params	= array();
-		$params[$uri] = $route;
-		$params	= array_merge($params, $options);
-		
-		return $this->pushRoute(new Match($params));
-	}
-	
-	/**
 	 * Push route into router stack
 	 * @param \Speedy\Router\Routes\Route $route
 	 */
@@ -234,19 +247,6 @@ class Draw extends Object {
 	protected function rootTo($toString, $params) {
 		$params	= array_merge(array('/' => $toString), $params);
 		return $this->pushRoute(new Match($params));
-	} 
-	
-	/**
-	 * Set a namespaced route
-	 * @param string $ns
-	 * @param closure $closure
-	 * @return void
-	 */
-	protected function _namespace($ns, $closure, $type = self::TYPE_NS) {
-		$this->setCurrentNamespace($ns, $type);
-		$closure();
-		$this->resetCurrentNamespace();
-		return;
 	}
 	
 	/**
