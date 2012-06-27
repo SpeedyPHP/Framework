@@ -117,7 +117,7 @@ namespace Speedy {
 		 * Returns namespaces array
 		 * @return array
 		 */
-		public function getNamespaces() {
+		public function namespaces() {
 			return $this->_namespaces;	
 		}
 		
