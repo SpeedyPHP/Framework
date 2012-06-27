@@ -60,7 +60,7 @@ class Draw extends Object {
 	 * @param array $options
 	 * @return $this
 	 */
-	public function resources($name, array $options = null, $closure = null) {
+	public function resources($name, array $options = array(), $closure = null) {
 		$member	= $this->buildHelper($name, true);
 		$col	= $this->buildHelper($name);
 		$base	= $this->buildBase($name, true);
