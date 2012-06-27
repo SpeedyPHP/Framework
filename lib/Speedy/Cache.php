@@ -70,8 +70,9 @@ class Cache extends Singleton {
 	 * @param string $path
 	 */
 	public function clearAll($path) {
-		foreach (glob($path . DS . "*", as $filename)) {
-			debug($filename);
+		$path = $this->path($path);
+		foreach (glob($path . DS . "*") as $filename) {
+			@unlink($filename);
 		}
 	} 
 	
