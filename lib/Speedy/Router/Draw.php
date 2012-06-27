@@ -8,7 +8,7 @@ use \Speedy\Router\Routes\Match;
 use \Speedy\Object;
 use \Speedy\Utility\Inflector;
 
-abstract class Draw extends Object {
+class Draw extends Object {
 	const GET	= "GET";
 	const POST	= "POST";
 	const PUT	= "PUT";
@@ -57,7 +57,7 @@ abstract class Draw extends Object {
 	/**
 	 * Gets called on init and draws all routes
 	 */
-	abstract protected function draw();
+	protected function draw() {}
 	
 	/**
 	 * Sets the router
