@@ -48,6 +48,34 @@ class Cache extends Singleton {
 	}
 	
 	/**
+	 * Clear a cache
+	 * @param string $name
+	 * @param string $setting
+	 */
+	public static function clear($name = null, $path = 'default') {
+		if ($name) {
+			$filepath = self::instance()->path($path) . DS . $name;
+			if (file_exists($filepath)) {
+				@unlink($filepath);
+			}
+			
+			return;
+		} else {
+			self::instance()->clearAll($path);	
+		}
+	}
+	
+	/**
+	 * Clear entire cache for path
+	 * @param string $path
+	 */
+	public function clearAll($path) {
+		foreach (glob($path . DS . "*", as $filename)) {
+			debug($filename);
+		}
+	} 
+	
+	/**
 	 * Read from cache
 	 * @param string $name
 	 * @param string $setting (optional)
