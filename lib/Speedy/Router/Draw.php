@@ -60,7 +60,7 @@ class Draw extends Object {
 	 * @param array $options
 	 * @return $this
 	 */
-	public function resources($name, $options = array(), $closure = null) {
+	public function resources($name, $options = null, $closure = null) {
 		$member	= $this->buildHelper($name, true);
 		$col	= $this->buildHelper($name);
 		$base	= $this->buildBase($name, true);
@@ -70,40 +70,40 @@ class Draw extends Object {
 				"$base" => "$controller#index", 	
 				'on' => self::GET,
 				'name'	=> "{$col}_url"
-			), $options
+			), (is_array($options)) ? $options : array()
 		)));
 		$this->pushRoute(new Match(array_merge(array(
 				"$base/new" => "$controller#_new", 	
 				'on' => self::GET,
 				'name'	=> "new_{$member}_path"
-			), $options
+			), (is_array($options)) ? $options : array()
 		)));
 		$this->pushRoute(new Match(array_merge(array(
 				"$base" => "$controller#create", 	
 				'on' => self::POST
-			), $options
+			), (is_array($options)) ? $options : array()
 		)));
 		$this->pushRoute(new Match(array_merge(array(
 				"$base/:id" => "$controller#show", 
 				'on' => self::GET,
 				'name'	=> "{$member}_path"
-			), $options
+			), (is_array($options)) ? $options : array()
 		)));
 		$this->pushRoute(new Match(array_merge(array(
 				"$base/:id/edit" => "$controller#edit",	
 				'on' => self::GET,
 				'name'	=> "edit_{$member}_path"
-			), $options
+			), (is_array($options)) ? $options : array()
 		)));
 		$this->pushRoute(new Match(array_merge(array(
 				"$base/:id" => "$controller#update", 		
 				'on' => self::PUT
-			), $options
+			), (is_array($options)) ? $options : array()
 		)));
 		$this->pushRoute(new Match(array_merge(array(
 				"$base/:id" => "$controller#destroy", 		
 				'on' => self::DELETE
-			), $options
+			), (is_array($options)) ? $options : array()
 		)));
 		/*$resource	= new Resource($name, $options);
 		foreach ($resource->getRoutes() as $route) {

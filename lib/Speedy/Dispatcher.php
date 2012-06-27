@@ -60,7 +60,7 @@ class Dispatcher extends Object {
 			exit;
 		}
 		
-		$controllerObj->__run($action);
+		$controllerObj->__run($route['action']);
 		echo $response;
 	}
 	
