@@ -34,7 +34,7 @@ class Set {
 			$new = [];
 			foreach ($props as $prop => $value) {
 				if (is_array($value)) {
-					$new[$value] = (array)self::toArray($value);
+					$new[$prop] = (array)self::toArray($value);
 				} else {
 					if (isset($value->_name_)) {
 						$new = array_merge($new, self::toArray($value));
