@@ -1,7 +1,7 @@
 <?php 
 namespace Speedy;
 
-use \Speedy\Object
+use \Speedy\Object;
 
 class Collection extends Object implements Iterator, ArrayAccess, Countable, Serializeable {
 	

@@ -9,12 +9,14 @@ App::instance();
 import('speedy.utility.inflector');
 
 use \Speedy\Utility\Inflector;
+use \Speedy\ActiveRecord\Connection;
+use \Speedy\ActiveRecord\SchemaMigration;
 
 
 group('db', function() {
 	desc('seeds the database');
 	task('seed', function() {
-		$connection	= \ActiveRecord\Connection::instance();
+		$connection	= Connection::instance();
 		
 		output('========== Attempting to Seed Database ============');
 		try {
@@ -51,7 +53,7 @@ group('db', function() {
 			$class	= Inflector::camelize(implode('_', $fileArr));
 			
 			
-			$obj	= new $class(\ActiveRecord\Connection::instance());
+			$obj	= new $class(Connection::instance());
 			if ($obj->migrated()) {
 				continue;
 			}
@@ -80,7 +82,7 @@ group('db', function() {
 	task('rollback', function() {
 		import('active_record.migration');
 		
-		$last	= \ActiveRecord\SchemaMigration::last();
+		$last	= SchemaMigration::last();
 		$glob	= ROOT . DS . 'db' . DS . 'migrate' . DS . $last->version . '*.php';
 		$rollback	= false;
 		
