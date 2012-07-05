@@ -322,8 +322,11 @@ class Html extends Base {
 	 * @param string $label
 	 * @return void
 	 */
-	public function labelTag($input, $label = null) {
-		return $this->element('label', $label, array( 'for' => $this->toId($input) ));
+	public function labelTag($input, $label = null, $attrs = null) {
+		$attrs = array_merge(
+					['for' => $this->toId($input)], 
+					(is_array($attrs)) ? $attrs : []);
+		return $this->element('label', $label, $attrs);
 	}
 	
 	/**

@@ -24,7 +24,7 @@ class Match extends Base {
 		}
 		unset($params[$firstKey]);
 		
-		if ($params['name']) {
+		if (isset($params['name'])) {
 			$this->setName($params['name']);
 		}
 		
