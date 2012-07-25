@@ -90,11 +90,11 @@ class Controller extends Object {
 	 */
 	public function __run($action) {
 		
-		$this->__runFilter('before_filter');
+		$this->__runFilter('beforeFilter');
 		
 		$this->{$action}();
 		
-		$this->__runFilter('after_filter');
+		$this->__runFilter('afterFilter');
 		
 		$this->__beforeRender();
 		if (!$this->isRendered()) {
