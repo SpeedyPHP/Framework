@@ -143,8 +143,12 @@ class Form extends Object {
 	 * @param string $name
 	 * @param array $attrs
 	 */
-	public function label($name, $label = null) {
-		return $this->helper()->labelTag($this->formatName($name), ($label !== null) ? $label : $this->helper()->toLabel($name));
+	public function label($name, $label = null, $attrs = null) {
+		return $this->helper()
+					->labelTag(
+							$this->formatName($name), 
+							($label !== null) ? $label : $this->helper()->toLabel($name),
+							$attrs);
 	}
 	
 	/**

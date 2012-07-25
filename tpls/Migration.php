@@ -2,7 +2,7 @@
 return <<<EOF
 <?php
 
-use \ActiveRecord\Migration;
+use \Speedy\ActiveRecord\Migration;
 
 class $name extends Migration {
 
