@@ -141,6 +141,7 @@ class Form extends Object {
 	/**
 	 * Label builder
 	 * @param string $name
+	 * @param string $label
 	 * @param array $attrs
 	 */
 	public function label($name, $label = null, $attrs = null) {
