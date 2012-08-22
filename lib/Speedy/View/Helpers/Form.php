@@ -180,7 +180,7 @@ class Form extends Object {
 	 * @param string $value
 	 * @param mixed $defaultSelected
 	 */
-	public function collectionSelect($name, array $collection, $key, $value, $defaultSelected = null, $attrs = []) {
+	public function collectionSelect($name, $collection, $key, $value, $defaultSelected = null, $attrs = []) {
 		$options = [];
 		foreach ($collection as $record) {
 			$options[] = [$record->{$value}, $record->{$key}];
