@@ -180,13 +180,13 @@ class Form extends Object {
 	 * @param string $value
 	 * @param mixed $defaultSelected
 	 */
-	public function collectionSelect($name, array $collection, $key, $value, $defaultSelected) {
+	public function collectionSelect($name, array $collection, $key, $value, $defaultSelected = null, $attrs = []) {
 		$options = [];
 		foreach ($collection as $record) {
 			$options[] = [$record->{$value}, $record->{$key}];
 		}
 		
-		return $this->select($name, $options, $defaultSelected);
+		return $this->select($name, $options, $defaultSelected, $attrs);
 	}
 	
 	/**
@@ -195,13 +195,13 @@ class Form extends Object {
 	 * @param array $options
 	 * @param mixed $defaultSelected
 	 */
-	public function select($name, array $options, $defaultSelected = null) {
+	public function select($name, array $options, $defaultSelected = null, $attrs = []) {
 		$selected = (isset($this->model()->{$name})) ? $this->model()->{$name} : $defaultSelected;
 		return $this->helper()
 						->selectTag(
 								$this->formatName($name), 
-								$this->helper()->optionsForSelect($options), 
-								$defaultSelected); 
+								$this->helper()->optionsForSelect($options, $defaultSelected), 
+								$attrs); 
 	}
 	
 	/**
