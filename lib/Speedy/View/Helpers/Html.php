@@ -277,7 +277,7 @@ class Html extends Base {
 		
 		$attrs['name']	= $this->toName($name);
 		
-		return $this->element('select', $content, $attrs)
+		return $this->element('select', $content, $attrs);
 	}
 	
 	/**
