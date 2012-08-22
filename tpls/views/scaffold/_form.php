@@ -7,9 +7,9 @@ $tpl	= <<<EOF
 			<?php element('h2', "{\$this->pluralize(\$this->{$modelLc}, 'error')} prohibited this {$modelLc} from beign saved:"); ?>
 		</div>
 		<ul>
-			<?php foreach(\$this->{$modelLc}->errors as \$error): ?>
+			<?php \$this->{$modelLc}->errors->each(function(\$error) { ?>
 				<li><?php echo \$error; ?></li>
-			<?php endforeach; ?>
+			<?php }); ?>
 		</ul>
 	<?php endif; ?>
 EOF;
