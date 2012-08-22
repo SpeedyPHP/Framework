@@ -173,6 +173,38 @@ class Form extends Object {
 	}
 	
 	/**
+	 * Select builder from collection
+	 * @param string $name
+	 * @param array $collection
+	 * @param string $key
+	 * @param string $value
+	 * @param mixed $defaultSelected
+	 */
+	public function collectionSelect($name, array $collection, $key, $value, $defaultSelected) {
+		$options = [];
+		foreach ($collection as $record) {
+			$options[] = [$record->{$value}, $record->{$key}];
+		}
+		
+		return $this->select($name, $options, $defaultSelected);
+	}
+	
+	/**
+	 * Select builder
+	 * @param string $name
+	 * @param array $options
+	 * @param mixed $defaultSelected
+	 */
+	public function select($name, array $options, $defaultSelected = null) {
+		$selected = (isset($this->model()->{$name})) ? $this->model()->{$name} : $defaultSelected;
+		return $this->helper()
+						->selectTag(
+								$this->formatName($name), 
+								$this->helper()->optionsForSelect($options), 
+								$defaultSelected); 
+	}
+	
+	/**
 	 * Magic method for when method is missing
 	 * @param string $name
 	 * @param array $args

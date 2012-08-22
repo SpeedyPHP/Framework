@@ -264,6 +264,46 @@ class Html extends Base {
 	}
 	
 	/**
+	 * Select field helper
+	 * @param string $name
+	 * @param string $content
+	 * @param array $attrs
+	 * @return void
+	 */
+	public function selectTag($name, $content = '', $attrs = array()) {
+		if (!isset($attrs['id'])) {
+			$attrs['id']	= $this->toId($name);
+		}
+		
+		$attrs['name']	= $this->toName($name);
+		
+		return $this->element('select', $content, $attrs)
+	}
+	
+	/**
+	 * Options for select helper
+	 * @param array $options
+	 * @param mixed $selected
+	 */
+	public function optionsForSelect(array $options, $selected = null) {
+		$content = '';
+		foreach ($options as $option) {
+			$label = $option[0];
+			$value = $option[1];
+			
+			$optContent = '<option value="' . $value . '"';
+			if ($selected && $selected == $value) {
+				$optContent .= ' selected="selected"';
+			} 
+			$optContent .= '>' . $label . '</option>' . "\n";
+			
+			$content .= $optContent; 
+		}
+		
+		return $content;
+	}
+	
+	/**
 	 * File field helper
 	 * @param string $name
 	 * @param array $attrs
