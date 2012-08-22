@@ -16,6 +16,10 @@ EOF;
 $tpl	.= "\n\r";
 
 foreach ($columns as $column) {
+	if ($column->name == 'id') {
+		continue;
+	}
+	
 	$tpl	.= 
 		"\t<div class=\"field\">\n" .
 		"\t\t<?php \$f->label(\"{$column->name}\"); ?>\n" .

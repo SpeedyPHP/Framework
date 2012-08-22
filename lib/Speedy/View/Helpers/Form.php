@@ -113,7 +113,7 @@ class Form extends Object {
 	 */
 	public function password($name, $attrs = array()) {
 		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
-		return $this->helper()->passwordField($this->formatName($name), $attrs);
+		return $this->helper()->passwordFieldTag($this->formatName($name), $attrs);
 	}
 	
 	/**
