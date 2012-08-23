@@ -298,7 +298,8 @@ EOF;
 			for ($i = 2; $i < $count; $i++) {
 				$columnDef	= $this->data($i);
 				$def	= explode(':', $columnDef);
-				$actions .= "\t\t\$this->add_column($table, {$def[0]}, {$def[1]});\n";
+				if (strlen($actions) > 0) $actions .= "\t\t";
+				$actions .= "\$this->add_column('$table', '{$def[0]}', '{$def[1]}');\n";
 			}
 		}
 		
