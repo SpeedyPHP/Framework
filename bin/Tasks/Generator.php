@@ -291,6 +291,15 @@ EOF;
 			
 			$actions 	.= "\n\t\t\t" . '$this->timestamps();' . "\n";
 			$actions	.= "\t\t});";
+		} elseif (preg_match("/^add_([\w\_]+)_to_([\w\_]+)/", $name, $matches)) {
+			$table = Inflector::pluralize($matches[1]);
+			$actions = '';
+			
+			for ($i = 2; $i < $count; $i++) {
+				$columnDef	= $this->data($i);
+				$def	= explode(':', $columnDef);
+				$actions .= "\t\t\$this->add_column($table, {$def[0]}, {$def[1]});\n";
+			}
 		}
 		
 		$this->set('name', Inflector::camelize($name));
