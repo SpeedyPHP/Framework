@@ -292,7 +292,7 @@ EOF;
 			$actions 	.= "\n\t\t\t" . '$this->timestamps();' . "\n";
 			$actions	.= "\t\t});";
 		} elseif (preg_match("/^add_([\w\_]+)_to_([\w\_]+)/", $name, $matches)) {
-			$table = Inflector::pluralize($matches[1]);
+			$table = $matches[2];
 			$actions = '';
 			
 			for ($i = 2; $i < $count; $i++) {
