@@ -298,8 +298,14 @@ EOF;
 			for ($i = 2; $i < $count; $i++) {
 				$columnDef	= $this->data($i);
 				$def	= explode(':', $columnDef);
-				if (strlen($actions) > 0) $actions .= "\t\t";
-				$actions .= "\$this->add_column('$table', '{$def[0]}', '{$def[1]}');\n";
+				
+				$format = '';
+				if (strlen($actions) > 0) $format .= "\t\t";
+				$format .= '%s';
+				
+				if ($this->hasData($i + 1)) $format .= "\n";
+				
+				$actions .= str_replace($format, '%s', "\$this->add_column('$table', '{$def[0]}', '{$def[1]}');");
 			}
 		}
 		
