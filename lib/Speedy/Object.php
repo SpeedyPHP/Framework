@@ -257,11 +257,20 @@ class Object {
 	}
 	
 	public function __set($name, $value) {
-		return $this->setData($name, $value);
+		$method = 'set' . ucfirst($name);
+		if ($this->respondsTo($method)) {
+			return $this->{$method}($value);
+		} else {
+			return $this->setData($name, $value);
+		}
 	}
 	
 	public function __get($name) {
-		return ($this->hasData($name)) ? $this->data($name) : null;
+		if ($this->respondsTo($name)) {
+			return $this->{$name}();
+		} else {
+			return ($this->hasData($name)) ? $this->data($name) : null;
+		}
 	}
 	
 	public function __isset($name) {
@@ -285,6 +294,10 @@ class Object {
 	public function respondsTo($method) {
 		return method_exists($this, $method);
 	}
+
+	public function includes($name) {
+		return property_exists($this, $name);
+	}
 	
 	/**
 	 * Magic methods for magic getters, setters, and methods
@@ -303,16 +316,33 @@ class Object {
 		$nameParts	= $nameParts[0];
 		$verb		= array_shift($nameParts);
 		$path		= strtolower(implode(self::VS, $nameParts));
+		$property = lcfirst(implode('', $nameParts));
 		switch($verb) {
-			case "has":
-				return $this->hasData($path);
+			case "has":		
+				if ($this->includes($property)) {
+					return empty($this->{$property});
+				} else {
+					return $this->hasData($path);
+				}
 			case "set":
-				array_unshift($args, $path);
-				return call_user_func_array(array($this, 'setData'), $args);
+				$method = 'set' . implode('', $nameParts);
+        if (property_exists($this, $property)) {
+					$this->{$property} = $args[0];
+				} elseif ($this->respondsTo($method)) {
+					$this->{$method}($args[0]);
+				} else {
+					array_unshift($args, $path);
+					call_user_func_array(array($this, 'setData'), $args);
+				}
+				return;
 			case "get":
 				return $this->data($path);
 			default:
-				return $this->_callMixin($name, $args);
+				if ($this->includes($name)) {
+					return $this->{$name};
+				} else {
+					return $this->_callMixin($name, $args);
+				}
 		}
 	}
 }

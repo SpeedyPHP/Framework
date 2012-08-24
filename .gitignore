@@ -3,6 +3,9 @@
 docs
 .project
 .settings
+*~
+vendor
+composer.lock
 
 # OS generated files #
 ######################

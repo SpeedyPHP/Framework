@@ -7,6 +7,10 @@
  */
 namespace Speedy {
 
+  require_once dirname(__FILE__) . DS . "Utility" . DS . "Inflector.php"; 
+  require_once dirname(__FILE__) . DS . "Loader" . DS . "Exception.php";
+  require_once dirname(__FILE__) . DS . "Object.php";
+
 	const DS 	= DIRECTORY_SEPARATOR;
 	
 	
@@ -210,11 +214,11 @@ namespace Speedy {
 		 * @param pathToClass
 		 * @return mixed, false on failure to find and load class
 		 */
-		public function import($namespace) {
+		public function import($className) {
 			// Check if already loaded
-			if ($this->loaded($namespace)) return true;
+			if ($this->loaded($className)) return true;
 			
-			$path	= $this->toPath($namespace); 
+			$path	= $this->toPath($className); 
 			if (!$path) return false;
 			
 			if ($this->load($path)) {
@@ -227,63 +231,22 @@ namespace Speedy {
 		}
 		
 		/**
-		 * Gets the path for a namespace
-		 * @param string $namespace
+		 * Gets the path for class name
+		 * @param string $className
 		 * @throws Exception
 		 */
-		public function toPath($namespace) {
-			// Explode the $namespace and to build path
-			$aPath 		= explode('.', $namespace); 
-			$firstSpace = array_shift($aPath);
-			$secondSpace= array_shift($aPath);
-			$relNamespace	= $firstSpace . '.' . $secondSpace; 
+		public function toPath($className) {
+			if (!strpos($className, '\\')) return null;
+
+			$aPath = explode('\\', $className);
+			$ns	= $aPath[0];
+
+			if (!$this->hasNamespace($ns)) return null;
+
+			$path = str_replace('_', DS, $className);
+			$path = str_replace('\\', DS, $className);
 			
-			if (!$this->hasNamespace($relNamespace)) {
-				array_unshift($aPath, $secondSpace);
-				$relNamespace2	= $firstSpace; 
-				
-				if (!$this->hasNamespace($relNamespace2)) {
-					throw new Exception('No namespace for ' . $relNamespace);
-				} else $relNamespace = $relNamespace2;
-			}
-			
-			/*$aClass	= array();
-			$total	= count($aPath) - 1;
-			foreach ($aPath as $index => $val) {
-				if ($index < $total) {
-					$aClass[]	= Inflector::camelize($val);
-				} else {
-					$aClass[]	= Inflector::camelize($val);
-				}
-			}*/
-			array_walk($aPath, function(&$item, $key) {
-				$item = Inflector::camelize($item);
-			});
-			// Attempt to find and load the file return result
-			$pathTo = $this->path($relNamespace);
-			
-			// if the $pathTo is an array then loop all potential
-			// paths to find the correct one. Otherwise check
-			// if the file exists and return it
-			if (is_array($pathTo)) {
-				foreach ($pathTo as $path) {
-					$fullPath	= $path . DS . implode(DS, $aPath) . '.php';
-					
-					if (!file_exists($fullPath)) {
-						continue;
-					}
-					
-					return $fullPath;
-				} 
-			} else {
-				$fullPath	= $pathTo . DS . implode(DS, $aPath) . '.php';
-	
-				if (file_exists($fullPath)) {
-					return $fullPath;
-				}
-			}
-			
-			return null;
+			return $this->path($ns) . DS . $path . '.php';
 		}
 		
 		/**
@@ -327,8 +290,8 @@ namespace Speedy {
 	function autoload($className) {
 		if (!strpos($className, '\\')) return false;
 	
-		$namespace	= Loader::instance()->toNamespace($className);
-		return import($namespace);
+		//$namespace	= Loader::instance()->toNamespace($className);
+		return Loader::instance()->import($className);
 	}
 	
 }
@@ -336,12 +299,10 @@ namespace Speedy {
 namespace {
 	function import($classPath, $vars = null) {
 		// Ignore some paths that are already loaded
-		if ($classPath == 'speedy.object') return;
-		if ($classPath == 'speedy.utility.inflector') return;
-		if ($classPath == 'speedy.loader.exception') return;
 		$loader = \Speedy\Loader::instance();
+		$class = $loader->toClass($classPath);
 		
-		return $loader->import($classPath);
+		return $loader->import($class);
 	}
 	
 	spl_autoload_register('Speedy\autoload', false);

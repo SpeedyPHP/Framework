@@ -13,7 +13,7 @@ EOF;
 	}
 	
 	public function defaultTask() {
-		$class = ucfirst($this->getData(0));
+		$class = ucfirst($this->data(0));
 		$fileName = $class . ".php";
 		$filePath = SPEEDY_CLI . DS . "tests" . DS . $fileName;
 		

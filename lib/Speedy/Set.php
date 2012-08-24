@@ -3,7 +3,7 @@ namespace Speedy;
 
 class Set extends \ArrayIterator {
 	
-	public function (mixed $array) {
+	public function __construct(mixed $array) {
 		if (!is_array($array) && !is_object($array)) {
 			$array = [];
 		}
@@ -18,7 +18,7 @@ class Set extends \ArrayIterator {
 		return;
 	}
 	
-	public function each_key($closure) {
+	public function eachKey($closure) {
 		foreach ($this as $key => &$value) {
 			$closure($key, $value);
 		}

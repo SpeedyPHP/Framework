@@ -124,7 +124,7 @@ EOF;
 			'config'	=> array(
 				'App.php' => 'App.php',
 				'Routes.php'=> 'Routes.php',
-				'database.yml'	=> 'configuration' . DS . 'database.php'
+				'database.json'	=> 'configuration' . DS . 'database.php'
 			),
 			'environments'	=> array(
 				'development.php'	=> 'configuration' . DS . 'development.php',
