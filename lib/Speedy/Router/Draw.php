@@ -132,7 +132,7 @@ class Draw extends Object {
 			$defaults = [
 				$uri	=> "{$controller}#{$action}",
 				'on'	=> $settings['method'],
-				'name'	=> (isset($settings['helper')) ? str_replace('%s', $replace, $settings['helper']) : null
+				'name'	=> (isset($settings['helper'])) ? str_replace('%s', $replace, $settings['helper']) : null
 			];
 			$opts = array_merge($defaults, (is_array($options)) ? $options : []);
 			
