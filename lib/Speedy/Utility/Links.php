@@ -69,7 +69,7 @@ class Links extends Singleton {
 		$path	= $this->routePath($name);
 		extract($path);
 			
-		if (count($args) < count($tokens)) {
+		if (isset($tokens) && count($args) < count($tokens)) {
 			throw new Exception('No route matches ' . $format);
 		}
 			

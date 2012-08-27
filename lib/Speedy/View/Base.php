@@ -3,6 +3,7 @@ namespace Speedy\View;
 
 use Speedy\Object;
 use Speedy\View;
+use Speedy\Session;
 
 abstract class Base extends Object {
 	
@@ -163,6 +164,13 @@ abstract class Base extends Object {
 	public function setOption($name, $value) {
 		$this->_options[$name]	= $value;
 		return $this;
+	}
+	
+	/**
+	 * Session object getter
+	 */
+	public function session() {
+		return Session::instance();
 	}
 	
 	/**

@@ -179,9 +179,8 @@ EOF;
 				$action = $this->data($i);
 				if (in_array($name, $restricted)) $action = "_{$action}";
 				
-				$actions .= "\n\t\tfunction {$action}() {\n";
-				$actions .= "\t\t\t\n";
-				$actions .= "\t\t}\n";
+				$actions .= "\n\tfunction {$action}() {\n";
+				$actions .= "\t}\n";
 			}
 		}
 	
