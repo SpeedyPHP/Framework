@@ -239,8 +239,8 @@ namespace Speedy {
 			if (!strpos($className, '\\')) return null;
 
 			$aPath = explode('\\', $className);
-			$firstSpace = array_shift($aPath);
-			$secondSpace= array_shift($aPath);
+			$firstSpace = strtolower(array_shift($aPath));
+			$secondSpace= strtolower(array_shift($aPath));
 			$ns	= $firstSpace . '.' . $secondSpace;
 				
 			if (!$this->hasNamespace($ns)) {
@@ -248,15 +248,29 @@ namespace Speedy {
 				$ns2	= $firstSpace;
 			
 				if (!$this->hasNamespace($ns2)) {
-					throw new Exception('No namespace for ' . $ns);
+					return null;
 				} else $ns = $ns2;
 			}
 			if (!$this->hasNamespace($ns)) return null;
 
+			$className = implode('\\', $aPath);
 			$path = str_replace('_', DS, $className);
 			$path = str_replace('\\', DS, $className);
 			
-			return $this->path($ns) . DS . $path . '.php';
+			$pathTo = $this->path($ns);
+			if (is_array($pathTo)) {
+				foreach ($pathTo as $pathAttempt) {
+					$fullPath = $pathAttempt . DS . $path . '.php';
+					
+					if (!file_exists($fullPath)) {
+						continue;
+					}
+					
+					return $fullPath;
+				}
+			} else {
+				return $pathTo . DS . $path . '.php';
+			}
 		}
 		
 		/**

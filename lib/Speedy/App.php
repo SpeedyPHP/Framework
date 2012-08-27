@@ -100,11 +100,11 @@ class App extends Object {
 		
 		$loader = Loader::instance();
 		$loader->registerNamespace("{$this->ns()}.config", CONFIG_PATH);
-		$loader->registerNamespace("{$this->ns()}.controllers", array(APP_PATH . DS . 'controllers'));
-		$loader->registerNamespace("{$this->ns()}.models", 		array(APP_PATH . DS . 'models'));
-		$loader->registerNamespace("{$this->ns()}.helpers", 	array(APP_PATH . DS . 'helpers'));
-		$loader->registerNamespace("{$this->ns()}.assets", 		array(APP_PATH . DS . 'assets'));
-		$loader->registerNamespace("{$this->ns()}.views", 		array(APP_PATH . DS . 'views'));
+		$loader->registerNamespace("{$this->ns()}.controllers", [APP_PATH . DS . 'controllers']);
+		$loader->registerNamespace("{$this->ns()}.models", 		[APP_PATH . DS . 'models']);
+		$loader->registerNamespace("{$this->ns()}.helpers", 	[APP_PATH . DS . 'helpers']);
+		$loader->registerNamespace("{$this->ns()}.assets", 		[APP_PATH . DS . 'assets']);
+		$loader->registerNamespace("{$this->ns()}.views", 		[APP_PATH . DS . 'views']);
 		$loader->registerNamespace($this->ns(), APP_PATH);
 		//$loader->registerNamespace('sprockets', VENDOR_PATH . DS . 'SpeedyPHP' . DS . 'Sprockets'); 
 		
