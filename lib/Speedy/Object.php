@@ -132,6 +132,32 @@ class Object {
 		return isset($value);
 	}
 	
+	protected function __doUnset($name, &$array) {
+		if (!$array) return;
+		if ($name === null) return;
+		if (!empty($array[$name])) {
+			return;
+		}
+		
+		
+		$parts = explode(self::VS, $name);
+		$return =& $array;
+		
+		for ($i = 0; $i < count($parts)-1; $i++) {
+			if (isset($return[$parts[$i]]) && is_array($return[$parts[$i]])) {
+				$return =& $return[$parts[$i]];
+			} else {
+				return;
+			}
+		}
+		
+		if (isset($return[$parts[$i]])) {
+			unset($return[$parts[$i]]);
+		}
+		
+		return;
+	}
+	
 	/**
 	 * Get data from array by dot accessor string
 	 * @param string $name
