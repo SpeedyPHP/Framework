@@ -91,11 +91,13 @@ class Draw extends Object {
 			'show'	=> [
 				'baseSuffix'=> '/:id', 
 				'method'=> self::GET,
+				'helper'=> "%s_path",
 				'type'	=> self::MemberActionType
 			],
 			'edit'	=> [
 				'baseSuffix'=> '/:id/edit', 
 				'method'=> self::GET,
+				'helper'=> "edit_%s_path",
 				'type'	=> self::MemberActionType
 			],
 			'update'=> [
@@ -126,13 +128,14 @@ class Draw extends Object {
 			$replace = '';
 			if ($settings['type'] === self::CollectionActionType) $replace = $col;
 			if ($settings['type'] === self::MemberActionType) $replace = $member; 
+			$helper = str_replace('%s', $replace, $settings['helper']);
 			
 			$uri	= $base;
 			if (isset($settings['baseSuffix'])) $uri .= $settings['baseSuffix'];
 			$defaults = [
 				$uri	=> "{$controller}#{$action}",
 				'on'	=> $settings['method'],
-				'name'	=> (isset($settings['helper'])) ? str_replace('%s', $replace, $settings['helper']) : null
+				'name'	=> (isset($settings['helper'])) ? $helper : null
 			];
 			$opts = array_merge($defaults, (is_array($options)) ? $options : []);
 			
