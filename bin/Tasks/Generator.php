@@ -170,10 +170,25 @@ EOF;
 		$viewPath[]	= strtolower($name);
 		
 		$this->_recurseMkdir($viewPath, self::VIEWS_DIR);
+		
+		$actions = "";
+		if (count($this->data())) {
+			$restricted = ['new'];
+			
+			for ($i = 2; $i < count($this->data()); $i++) {
+				$action = $this->data($i);
+				if (in_array($name, $restricted)) $action = "_{$action}";
+				
+				$actions .= "\n\t\tfunction {$action}() {\n";
+				$actions .= "\t\t\t\n";
+				$actions .= "\t\t}\n";
+			}
+		}
 	
 		$this->set('namespace', 	$app->name());
+		$this->set('controllerNs',	implode('\\', $nameArray));
 		$this->set('controller',	$name);
-		$this->set('actions',		'');
+		$this->set('actions',		$actions);
 		$content	= $this->getTemplate('BaseController.php');
 		
 		output("Create {$name}.php");

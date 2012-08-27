@@ -20,6 +20,9 @@ class Draw extends Object {
 	const TYPE_RESOURCE = 1;
 	const TYPE_NS	= 2;
 	
+	const MemberActionType = 1;
+	const CollectionActionType = 2;
+	
 	
 	/**
 	 * Holds all route instances
@@ -66,45 +69,76 @@ class Draw extends Object {
 		$base	= $this->buildBase($name, true);
 		$controller	= $this->buildController($name); 
 		
-		$this->pushRoute(new Match(array_merge(array(
-				"$base" => "$controller#index", 	
-				'on' => self::GET,
-				'name'	=> "{$col}_url"
-			), (is_array($options)) ? $options : array()
-		)));
-		$this->pushRoute(new Match(array_merge(array(
-				"$base/new" => "$controller#_new", 	
-				'on' => self::GET,
-				'name'	=> "new_{$member}_path"
-			), (is_array($options)) ? $options : array()
-		)));
-		$this->pushRoute(new Match(array_merge(array(
-				"$base" => "$controller#create", 	
-				'on' => self::POST
-			), (is_array($options)) ? $options : array()
-		)));
-		$this->pushRoute(new Match(array_merge(array(
-				"$base/:id" => "$controller#show", 
-				'on' => self::GET,
-				'name'	=> "{$member}_path"
-			), (is_array($options)) ? $options : array()
-		)));
-		$this->pushRoute(new Match(array_merge(array(
-				"$base/:id/edit" => "$controller#edit",	
-				'on' => self::GET,
-				'name'	=> "edit_{$member}_path"
-			), (is_array($options)) ? $options : array()
-		)));
-		$this->pushRoute(new Match(array_merge(array(
-				"$base/:id" => "$controller#update", 		
-				'on' => self::PUT
-			), (is_array($options)) ? $options : array()
-		)));
-		$this->pushRoute(new Match(array_merge(array(
-				"$base/:id" => "$controller#destroy", 		
-				'on' => self::DELETE
-			), (is_array($options)) ? $options : array()
-		)));
+		$only	= (is_array($options['only']) && count($options['only']) > 0) ? $options['only'] : null;
+		$except	= (is_array($options['except']) && count($options['except']) > 0) ? $options['except'] : null;
+		$defaultActions= [
+			'index' => [
+				'method'=> self::GET,
+				'helper'=> "%s_url",
+				'type'	=> self::CollectionActionType
+			], 
+			'new'	=> [
+				'action'	=> '_new',
+				'baseSuffix'=> '/new', 
+				'method'=> self::GET,
+				'helper'=> "new_%s_path",
+				'type'	=> self::MemberActionType
+			],
+			'create'=> [
+				'method'=> self::POST,
+				'type'	=> self::CollectionActionType
+			],
+			'show'	=> [
+				'baseSuffix'=> '/:id', 
+				'method'=> self::GET,
+				'type'	=> self::MemberActionType
+			],
+			'edit'	=> [
+				'baseSuffix'=> '/:id/edit', 
+				'method'=> self::GET,
+				'type'	=> self::MemberActionType
+			],
+			'update'=> [
+				'baseSuffix'=> '/:id',	
+				'method'=> self::PUT,
+				'type'	=> self::MemberActionType 
+			],
+			'destroy'	=> [
+				'baseSuffix'=> '/:id', 
+				'method'=> self::DELETE,
+				'type'	=> self::MemberActionType
+			]
+		];
+		
+		foreach ($actions as $action => $settings) {
+			if (is_array($only) && !in_array($action, $only)) {
+				continue;
+			}
+			
+			if (is_array($except) && in_array($action, $except)) {
+				continue;
+			}
+			
+			if (isset($settings['action'])) {
+				$action = $settings['action'];
+			}
+			
+			$replace = '';
+			if ($settings['type'] === self::CollectionActionType) $replace = $col;
+			if ($settings['type'] === self::MemberActionType) $replace = $member; 
+			
+			$uri	= $base;
+			if (isset($settings['baseSuffix'])) $uri .= $settings['baseSuffix'];
+			$defaults = [
+				$uri	=> "{$controller}#{$action}",
+				'on'	=> $settings['method'],
+				'name'	=> (isset($settings['helper')) ? str_replace('%s', $replace, $settings['helper']) : null
+			];
+			$opts = array_merge($defaults, (is_array($options)) ? $options : []);
+			
+			$this->pushRoute(new Match($opts));
+		}
+		
 		/*$resource	= new Resource($name, $options);
 		foreach ($resource->getRoutes() as $route) {
 			$this->pushRoute($route);
