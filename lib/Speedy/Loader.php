@@ -239,8 +239,18 @@ namespace Speedy {
 			if (!strpos($className, '\\')) return null;
 
 			$aPath = explode('\\', $className);
-			$ns	= $aPath[0];
-
+			$firstSpace = array_shift($aPath);
+			$secondSpace= array_shift($aPath);
+			$ns	= $firstSpace . '.' . $secondSpace;
+				
+			if (!$this->hasNamespace($ns)) {
+				array_unshift($aPath, $secondSpace);
+				$ns2	= $firstSpace;
+			
+				if (!$this->hasNamespace($ns2)) {
+					throw new Exception('No namespace for ' . $ns);
+				} else $ns = $ns2;
+			}
 			if (!$this->hasNamespace($ns)) return null;
 
 			$path = str_replace('_', DS, $className);
