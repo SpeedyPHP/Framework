@@ -18,14 +18,13 @@ class Session extends Singleton {
 		session_start();
 		
 		$self	= self::instance();
-		$self->addData($_SESSION);
 	
 		if (!$self->has('ip_address')) {
-			$self->setData('ip_address', $_SERVER['REMOTE_ADDR']);
+			$self->write('ip_address', $_SERVER['REMOTE_ADDR']);
 		}
 
 		if (!$self->has('user_agent')) {
-			$self->setData('user_agent', $_SERVER['HTTP_USER_AGENT']);
+			$self->write('user_agent', $_SERVER['HTTP_USER_AGENT']);
 		}
 	}	
 	
@@ -35,11 +34,11 @@ class Session extends Singleton {
 	}
 	
 	public function write($key, $value) {
-		return self::instance()->setData($key, $value);
+		return $this->__dotSetter($key, $value, $_SESSION);
 	}
 	
 	public function read($key) {
-		return self::instance()->data($key);
+		return $this->__dotAccess($key, $_SESSION);
 	}
 	
 	public function destroy() {
@@ -52,7 +51,7 @@ class Session extends Singleton {
 	}
 	
 	public function has($name) {
-		return $this->hasData($name);
+		return ($this->read($name)) ? true : false;
 	}
 	
 	protected function addData(&$data) {
