@@ -10,11 +10,11 @@ class Session extends Singleton {
 		// This implementation borrowed from http://thinkvitamin.com/code/how-to-create-bulletproof-sessions/
 		//session_name($name . '_Session');
 		
-		$domain = isset($domain) ? $domain : isset($_SERVER['SERVER_NAME']);
+		//$domain = isset($domain) ? $domain : isset($_SERVER['SERVER_NAME']);
 		
-		$https	= isset($secure) ? $secure : isset($_SERVER['HTTPS']);
+		//$https	= isset($secure) ? $secure : isset($_SERVER['HTTPS']);
 		
-		session_set_cookie_params($limit, $path, $domain, $secure, true);
+		//session_set_cookie_params($limit, $path, $domain, $secure, true);
 		session_start();
 		
 		$self	= self::instance();
@@ -37,7 +37,7 @@ class Session extends Singleton {
 		return $this->__dotSetter($key, $value, $_SESSION);
 	}
 	
-	public function read($key) {
+	public function read($key = null) {
 		return $this->__dotAccess($key, $_SESSION);
 	}
 	
