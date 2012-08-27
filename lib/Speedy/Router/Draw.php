@@ -110,7 +110,7 @@ class Draw extends Object {
 			]
 		];
 		
-		foreach ($actions as $action => $settings) {
+		foreach ($defaultActions as $action => $settings) {
 			if (is_array($only) && !in_array($action, $only)) {
 				continue;
 			}
