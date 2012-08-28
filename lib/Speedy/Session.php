@@ -68,10 +68,6 @@ class Session extends Singleton {
 		return $this;
 	}
 	
-	public function __destruct() {
-		// $_SESSION	= self::instance()->data();
-	}
-	
 	public function has($name) {
 		return ($this->read($name)) ? true : false;
 	}
