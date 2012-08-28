@@ -108,7 +108,6 @@ class Object {
 	 */
 	protected function _callMixin($name, $args) {
 		foreach ($this->_mixins() as $instance) {
-			var_dump($instance->respondsTo($name));
 			if ($instance instanceof \Speedy\Object && $instance->respondsTo($name)) {
 				return call_user_func_array(array($instance, $name), $args);
 			}
