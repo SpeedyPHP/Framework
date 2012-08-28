@@ -49,7 +49,7 @@ class Session extends Singleton {
 	public function read($key = null) {
 		if ($this->has($key)) 
 			return $this->data($key);
-		elseif (strpos('flash') !== false) {
+		elseif (strpos($key, 'flash') !== false) {
 			$aKey = explode('.', $key);
 			array_shift($aKey);
 				
