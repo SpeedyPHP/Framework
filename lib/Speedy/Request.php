@@ -3,6 +3,12 @@ namespace Speedy;
 
 class Request extends Object {
 	
+	const GET	= 'GET';
+	const POST	= 'POST';
+	const PUT	= 'PUT';
+	const DELETE= 'DELETE';
+	
+	
 	private $_params;
 	
 	
