@@ -49,8 +49,12 @@ class Session extends Singleton {
 	public function read($key = null) {
 		if ($this->has($key)) 
 			return $this->data($key);
-		elseif ($this->__dotIsset($key, $this->flash))
-			return $this->__dotAccess($key, $this->flash);
+		elseif (strpos('flash') !== false) {
+			$aKey = explode('.', $key);
+			array_shift($aKey);
+				
+			return $this->__dotAccess(implode('.', $aKey), $this->flash);
+		}
 		
 		return null;
 	}
