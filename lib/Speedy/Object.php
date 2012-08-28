@@ -300,10 +300,10 @@ class Object {
 	}
 	
 	public function __get($name) {
-		if ($this->respondsTo($name)) {
+		if ($this->hasData($name)) {
+			return $this->data($name);
+		} elseif ($this->respondsTo($name)) {
 			return $this->{$name}();
-		} else {
-			return ($this->hasData($name)) ? $this->data($name) : null;
 		}
 	}
 	
