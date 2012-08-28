@@ -132,7 +132,7 @@ class Object {
 		return isset($value);
 	}
 	
-	protected function __doUnset($name, &$array) {
+	protected function __dotUnset($name, &$array) {
 		if (!$array) return;
 		if ($name === null) return;
 		if (!empty($array[$name])) {
@@ -247,6 +247,10 @@ class Object {
 	 */
 	protected function hasData($name) {
 		return ($this->data($name)) ? true : false;
+	}
+	
+	protected function unsetData($name) {
+		return $this->__dotUnset($name, $this->_data);
 	}
 	
 	/**

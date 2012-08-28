@@ -263,11 +263,11 @@ class Controller extends Object {
 		}
 		
 		if (isset($options['notice'])) {
-			Session::instance()->write('notice', $options['notice']);
+			Session::instance()->write('flash.notice', $options['notice']);
 		} 
 		
-		if (isset($options['status'])) {
-			Session::instance()->write('error', $options['status']);
+		if (isset($options['error'])) {
+			Session::instance()->write('flash.error', $options['error']);
 		}
 		
 		$this->response()

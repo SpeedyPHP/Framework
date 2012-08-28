@@ -5,6 +5,9 @@ use \Speedy\Singleton;
 
 class Session extends Singleton {
 	
+	public $flash;
+	
+	
 	
 	static function start($name = 'App', $limit = 0, $path = '/', $domain = null, $secure = null) {
 		// This implementation borrowed from http://thinkvitamin.com/code/how-to-create-bulletproof-sessions/
@@ -18,6 +21,7 @@ class Session extends Singleton {
 		session_start();
 		
 		$self	= self::instance();
+		$self->addData($_SESSION);
 	
 		if (!$self->has('ip_address')) {
 			$self->write('ip_address', $_SERVER['REMOTE_ADDR']);
@@ -25,6 +29,11 @@ class Session extends Singleton {
 
 		if (!$self->has('user_agent')) {
 			$self->write('user_agent', $_SERVER['HTTP_USER_AGENT']);
+		}
+		
+		if ($self->has('flash')) {
+			$self->flash = $self->read('flash');
+			$self->erase('flash');
 		}
 	}	
 	
@@ -34,11 +43,20 @@ class Session extends Singleton {
 	}
 	
 	public function write($key, $value) {
-		return $this->__dotSetter($key, $value, $_SESSION);
+		return $this->setData($key, $value);
 	}
 	
 	public function read($key = null) {
-		return $this->__dotAccess($key, $_SESSION);
+		if ($this->has($key)) 
+			return $this->data($key);
+		elseif ($this->__dotIsset($key, $this->flash))
+			return $this->__dotAccess($key, $this->flash);
+		
+		return null;
+	}
+	
+	public function erase($key) {
+		return $this->unsetData($key);
 	}
 	
 	public function destroy() {
