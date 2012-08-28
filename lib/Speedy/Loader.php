@@ -238,13 +238,13 @@ namespace Speedy {
 		public function toPath($className) {
 			if (!strpos($className, '\\')) return null;
 
-			$aPath = explode('\\', $className);
+			$aPath = explode('\\', $className); 
 			$firstSpace = strtolower(array_shift($aPath));
 			$secondSpace= strtolower(array_shift($aPath));
 			$ns	= $firstSpace . '.' . $secondSpace;
 				
 			if (!$this->hasNamespace($ns)) {
-				array_unshift($aPath, $secondSpace);
+				array_unshift($aPath, Inflector::camelize($secondSpace));
 				$ns2	= $firstSpace;
 			
 				if (!$this->hasNamespace($ns2)) {

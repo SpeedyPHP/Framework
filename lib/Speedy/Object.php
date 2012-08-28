@@ -107,7 +107,8 @@ class Object {
 	 * 
 	 */
 	protected function _callMixin($name, $args) {
-		foreach ($this->_getMixins() as $instance) {
+		foreach ($this->_mixins() as $instance) {
+			var_dump($instance->respondsTo($name));
 			if ($instance instanceof \Speedy\Object && $instance->respondsTo($name)) {
 				return call_user_func_array(array($instance, $name), $args);
 			}
@@ -124,6 +125,10 @@ class Object {
 	 * @return object
 	 */
 	protected function mixin($mixin) {
+		if (empty($this->_mixinObjs) && !$this->_loadedMixins()) {
+			$this->_loadMixins();
+		}
+		
 		return (isset($this->_mixinObjs[$mixin])) ? $this->_mixinObjs[$mixin] : null;		
 	}
 	
@@ -269,7 +274,7 @@ class Object {
 	 * Gets all mixins
 	 * @return array of mixin instances
 	 */
-	private function _getMixins() {
+	private function _mixins() {
 		if (empty($this->_mixinObjs) && !$this->_loadedMixins()) {
 			$this->_loadMixins();
 		}

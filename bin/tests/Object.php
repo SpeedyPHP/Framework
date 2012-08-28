@@ -1,6 +1,9 @@
 <?php
 
-class Object extends \Speedy\Test {
+use \Speedy\Test;
+use \Speedy\Functions;
+
+class Object extends Test {
 	
 	private $_object;
 	
@@ -17,8 +20,9 @@ class Object extends \Speedy\Test {
 		$object->setSomeDataPoint('data');
 		
 		fecho("Attempting to pull the data");
-		fecho($object->data('test.test') . " -> Should be 1");
-		fecho($object->getSomeDataPoint() . " -> Should be \"data\"");
+		assert($object->data('test.test') == 1);
+		assert($object->getSomeDataPoint() == 'data');
+		//fecho($object->getSomeDataPoint() . " -> Should be \"data\"");
 		
 		fecho("Dumping all data");
 		fecho($object->data());
@@ -29,10 +33,11 @@ class Object extends \Speedy\Test {
 		$test->setOtherPrivate('nothing');
 
 		fecho("Attempt to pull data");
-		fecho($test->someProp() . ' -> Should be "blah"');
-		fecho($test->otherPrivate() . ' -> Should be "Nothing"');
+		assert($test->someProp() == 'blah');
+		assert($test->otherPrivate() == 'Nothing');
 
 		var_dump($test);
+		fecho("Test successful");
 	}
 	
 }
@@ -42,6 +47,8 @@ class TestObj extends \Speedy\Object {
 	public $someProp;
 
 	private $_otherPrivate;
+	
+	protected $_mixins = [ '\\Speedy\\Controller\\Helper\\Session' => ['alias' => 'Session']];
 
 
 	protected function setOtherPrivate($value) {

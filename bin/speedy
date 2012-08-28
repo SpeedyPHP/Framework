@@ -17,7 +17,7 @@ if (file_exists(VENDOR_PATH . DS . 'autoload.php')) {
   require_once VENDOR_PATH . DS . 'autoload.php';
 } elseif (file_exists(SPEEDY_PATH . DS . "lib")) {
   require_once SPEEDY_PATH . DS . "lib" . DS . "Speedy" . DS . "Loader.php";
-  \Speedy\Loader::instance()->registerNamespace('Speedy', SPEEDY_PATH . DS . "lib");
+  \Speedy\Loader::instance()->registerNamespace('speedy', SPEEDY_PATH . DS . "lib" . DS . "Speedy");
 } else {
   trigger_error("Unable to load Speedy library, please run in app directory or set environment variable SPEEDY_PATH", E_ERROR);
 }
@@ -27,6 +27,9 @@ if (function_exists('ini_set')) {
 }
 
 function output($str = "") {
+	if (is_array($str)) {
+		$str = print_r($str, true);
+	}
 	fwrite(STDOUT, $str . "\n");
 }
 
