@@ -86,6 +86,15 @@ abstract class Base extends Object {
 		echo "\n" . \Speedy\View::instance()->yield($name) . "\n";
 	}
 	
+	/**
+	 * Check if content exists for yield
+	 * @param string $name
+	 * @return boolean
+	 */
+	public function hasContentFor($name) {
+		return View::instance()->hasContentFor($name);
+	}
+	
 	public function contentFor($name, $closure) {
 		ob_start();
 		$closure();

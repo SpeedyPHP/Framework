@@ -147,6 +147,15 @@ class View extends Singleton {
 	}
 	
 	/**
+	 * Check is content for yield exists
+	 * @param string $name
+	 * @return bool
+	 */
+	public function hasContentFor($name) {
+		return isset($this->_yield[$name]);
+	}
+	
+	/**
 	 * Getter for vars
 	 * @return array
 	 */
@@ -188,11 +197,12 @@ class View extends Singleton {
 	 * @param array $options (optional)
 	 * @return \Speedy\View\Base
 	 */
-	public function renderer($name) {
+	public function renderer($name, array $options = []) {
 		if (!$this->hasRenderer($name)) {
 			$class	= Loader::instance()->toClass($name);
 			$obj	= new $class();
-			$obj->setParams($this->params());
+			$obj->setParams($this->params())
+				->setOptions($options);
 			
 			$this->setRenderer($name, $obj);
 		}
