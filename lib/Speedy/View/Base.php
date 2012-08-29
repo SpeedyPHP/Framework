@@ -60,7 +60,34 @@ abstract class Base extends Object {
 	 * Renders a template
 	 * @param $path optional
 	 */
-	abstract public function render($path = null);
+	abstract public function renderTemplate($path); 
+	
+	public function render($path = null) {
+		$ns			= \App::instance()->ns();
+		$options	= $this->options();
+		$path		= ($path) ? $path : $this->path();
+		$vars		= $this->vars();
+		
+		if (($partialPath = $this->isPartial($path)) !== false) {
+			View::instance()->render($partialPath, $options);
+			return;
+		}
+		
+		if (!file_exists($path)) {
+			throw new HttpException('View found not found at ' . $path);
+		}
+		
+		if ($options['layout']) {
+			$layout	= 'layouts' . DS . $options['layout'];
+			View::instance()->setYield('__main__', $this->toString($path));
+		
+			unset($options['layout']);
+			View::instance()->render($layout, $options);
+			return;
+		} else {
+			return $this->renderTemplate($path);
+		}
+	}
 	
 	/**
 	 * Renders the template to a string
