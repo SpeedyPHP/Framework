@@ -287,10 +287,7 @@ class Html extends Base {
 	 */
 	public function optionsForSelect(array $options, $selected = null) {
 		$content = '';
-		foreach ($options as $option) {
-			$label = $option[0];
-			$value = $option[1];
-			
+		foreach ($options as $value => $label) {			
 			$optContent = '<option value="' . $value . '"';
 			if ($selected && $selected == $value) {
 				$optContent .= ' selected="selected"';
