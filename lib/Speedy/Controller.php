@@ -343,7 +343,7 @@ class Controller extends Object {
 			->setVars($this->tplVars())
 			->setData($this->data())
 			->setParams($this->params())
-			->render($relPath, $options, $ext);
+			->render($relPath, $options, null, $ext);
 		
 		$content	= ob_get_contents();
 		ob_end_clean();

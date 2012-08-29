@@ -69,7 +69,7 @@ abstract class Base extends Object {
 		$vars		= array_merge($this->vars(), $vars);
 		
 		if (($partialPath = $this->isPartial($path)) !== false) {
-			View::instance()->render($partialPath, $options);
+			View::instance()->render($partialPath, $options, $vars);
 			return;
 		}
 		
@@ -79,10 +79,10 @@ abstract class Base extends Object {
 		
 		if ($options['layout']) {
 			$layout	= 'layouts' . DS . $options['layout'];
-			View::instance()->setYield('__main__', $this->toString($path));
+			View::instance()->setYield('__main__', $this->toString($path, $vars));
 		
 			unset($options['layout']);
-			View::instance()->render($layout, $options);
+			View::instance()->render($layout, $options, $vars);
 			return;
 		} else {
 			return $this->renderTemplate($path, $vars);
@@ -95,11 +95,11 @@ abstract class Base extends Object {
 	 * @param string $renderer optional
 	 * @return string
 	 */
-	public function toString($template = null) {
+	public function toString($template = null, $vars = []) {
 		$this->setOption('layout', null);
 		
 		ob_start();
-		$this->render($template);
+		$this->render($template, $vars);
 		$content	= ob_get_contents();
 		ob_end_clean();
 		return $content;

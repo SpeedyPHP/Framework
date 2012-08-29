@@ -30,7 +30,7 @@ class View extends Singleton {
 	 * Render the template
 	 * @param string $template
 	 */
-	public function render($file, $options, $ext = 'html') {
+	public function render($file, $options, $vars = null, $ext = 'html') {
 		if (isset($options['json'])) return $this->toJson($options['json']);
 		
 		// $viewPaths	= Loader::instance()->path('views');
@@ -66,7 +66,7 @@ class View extends Singleton {
 		$rendererObj
 			->setPath($fullPath)
 			->setOptions($options)
-			->setVars($this->vars())
+			->setVars(array_merge($this->vars(), (array)$vars))
 			->setData($this->data())
 			->render(); 
 		
