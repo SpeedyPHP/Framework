@@ -10,7 +10,8 @@ class Asset extends Singleton {
 
 	public $types	= array(
 		'javascript',
-		'style'
+		'style',
+		'images'
 	);
 	
 	public $path;

@@ -14,7 +14,7 @@ class Php extends Base {
 	 */
 	public function renderTemplate($path = null, $vars = []) {
 		extract($vars);
-		include_once $path;
+		include $path;
 		return;
 	}
 	
