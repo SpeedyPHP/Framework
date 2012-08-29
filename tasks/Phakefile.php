@@ -65,7 +65,7 @@ group('db', function() {
 			output("===================================================");
 			output();
 			
-			$obj->up();
+			$obj->runUp();
 			$log	= $obj->log();
 			foreach ($log as $l) {
 				output($l);
@@ -104,7 +104,7 @@ group('db', function() {
 			
 			output('================== Rolling Back ===================');
 			output();
-			$obj->down();
+			$obj->runDown();
 			$log	= $obj->log();
 			foreach ($log as $l) {
 				output($l);
