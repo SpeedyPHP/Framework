@@ -12,7 +12,7 @@ class Php extends Base {
 	 * Render the template
 	 * @param string $path
 	 */
-	public function renderTemplate($path = null) {
+	public function renderTemplate($path = null, $vars = []) {
 		extract($vars);
 		include_once $path;
 		return;

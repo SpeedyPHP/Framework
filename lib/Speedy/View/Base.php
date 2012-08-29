@@ -60,13 +60,13 @@ abstract class Base extends Object {
 	 * Renders a template
 	 * @param $path optional
 	 */
-	abstract public function renderTemplate($path); 
+	abstract public function renderTemplate($path, $vars = []); 
 	
-	public function render($path = null) {
+	public function render($path = null, $vars = []) {
 		$ns			= \App::instance()->ns();
 		$options	= $this->options();
 		$path		= ($path) ? $path : $this->path();
-		$vars		= $this->vars();
+		$vars		= array_merge($this->vars(), $vars);
 		
 		if (($partialPath = $this->isPartial($path)) !== false) {
 			View::instance()->render($partialPath, $options);
@@ -85,7 +85,7 @@ abstract class Base extends Object {
 			View::instance()->render($layout, $options);
 			return;
 		} else {
-			return $this->renderTemplate($path);
+			return $this->renderTemplate($path, $vars);
 		}
 	}
 	
