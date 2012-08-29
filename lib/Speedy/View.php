@@ -152,7 +152,7 @@ class View extends Singleton {
 	 * @return bool
 	 */
 	public function hasContentFor($name) {
-		return isset($this->_yield[$name]);
+		return isset($this->_yields[$name]);
 	}
 	
 	/**
