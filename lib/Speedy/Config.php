@@ -118,7 +118,11 @@ namespace Speedy {
 					break;
 			}
 	
-			$string .= "://{$username}:{$password}@{$host}/{$database}";
+			$string .= "://{$username}";
+			if (isset($password) && strlen($password) > 0)
+				$string .= ":{$password}";
+			$string .= "@{$host}/{$database}";
+			
 			return $string;
 		}
 	
