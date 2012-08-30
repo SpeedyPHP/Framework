@@ -97,7 +97,7 @@ group('db', function() {
 			$version= array_shift($fileArr);
 			$class	= Inflector::camelize(implode('_', $fileArr));
 			
-			$obj	= new $class(\ActiveRecord\Connection::instance());
+			$obj	= new $class(Connection::instance());
 			if (!$obj->migrated()) {
 				continue;
 			}

@@ -127,8 +127,9 @@ class Draw extends Object {
 			
 			$replace = '';
 			if ($settings['type'] === self::CollectionActionType) $replace = $col;
-			if ($settings['type'] === self::MemberActionType) $replace = $member; 
-			$helper = str_replace('%s', $replace, $settings['helper']);
+			if ($settings['type'] === self::MemberActionType) $replace = $member;
+			if (isset($settings['helper'])) 
+				$helper = str_replace('%s', $replace, $settings['helper']);
 			
 			$uri	= $base;
 			if (isset($settings['baseSuffix'])) $uri .= $settings['baseSuffix'];
