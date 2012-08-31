@@ -69,8 +69,8 @@ class Draw extends Object {
 		$base	= $this->buildBase($name, true);
 		$controller	= $this->buildController($name); 
 		
-		$only	= (is_array($options['only']) && count($options['only']) > 0) ? $options['only'] : null;
-		$except	= (is_array($options['except']) && count($options['except']) > 0) ? $options['except'] : null;
+		$only	= (isset($options['only']) && count($options['only']) > 0) ? $options['only'] : null;
+		$except	= (isset($options['except']) && count($options['except']) > 0) ? $options['except'] : null;
 		$defaultActions= [
 			'index' => [
 				'method'=> self::GET,
