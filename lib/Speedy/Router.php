@@ -106,7 +106,7 @@ class Router extends Object {
 				exit;
 			}
 			
-			throw new HttpException("No route matches request '{$this->request()->url()}' for {$this->request()->method()}");
+			throw new HttpException("No route matches request '{$this->request()->scriptName()}' for {$this->request()->method()}");
 			
 		}
 		
