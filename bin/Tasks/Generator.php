@@ -3,13 +3,13 @@ use \Speedy\Utility\Inflector;
 
 class Generator extends Speedy\Task {
 	
-	const CONTROLLERS_DIR	= "controllers";
+	const CONTROLLERS_DIR	= "Controllers";
 	
-	const HELPERS_DIR		= "helpers";
+	const HELPERS_DIR		= "Helpers";
 	
-	const MODELS_DIR		= "models";
+	const MODELS_DIR		= "Models";
 	
-	const VIEWS_DIR			= "views";
+	const VIEWS_DIR			= "Views";
 	
 	const MIGRATION_DIR		= "migrate";
 	
