@@ -8,10 +8,10 @@ class SqlLog extends Base {
 	
 	public function printSqlLog() {
 		$logger	= \Speedy\ActiveRecord\Logger\Runtime::instance();
-		echo $this->_printLog($name, $logger);
+		echo $this->_printLog($logger);
 	}
 	
-	private function _printLog($name, $logger) {
+	private function _printLog($logger) {
 		$html	= 
 			'<div class="sql-log">' . 
 				"\t<h3>SQL Log</h3>\n" . 
