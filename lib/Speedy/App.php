@@ -1,9 +1,13 @@
 <?php 
 namespace Speedy;
 
+
+use \Speedy\Config;
 use \Speedy\Router;
 use \Speedy\Utility\Inflector;
-use \Speedy\Config;
+use \Speedy\Exception\Error as ErrorException;
+use \Speedy\Middleware\Stack as MiddlewareStack;
+use \Speedy\Middleware\Asset as MiddlewareAsset;
 
 class App extends Object {
 	
@@ -37,7 +41,17 @@ class App extends Object {
 	 */
 	protected $_orm;
 	
+	/**
+	 * Middleware Stack
+	 * @var object \Speedy\Middleware\Stack
+	 */
+	protected $_middlewareStack;
 	
+	/**
+	 * List of middlewares 
+	 * @var array
+	 */
+	protected $_middlewares = [];
 	
 	
 	/**
@@ -122,6 +136,12 @@ class App extends Object {
 		if (file_exists($envConfigPath)) {
 			require_once $envConfigPath;
 		}
+		
+		$this->setMiddlewareStack(new MiddlewareStack($this));
+		$this->middlewareStack()->add(new MiddlewareAsset($this->middlewareStack()));
+		if (!empty($this->_middlewares)) {
+			$this->middlewareStack()->addFromArray($this->_middlewares);
+		}
 	}
 	
 	/**
@@ -157,6 +177,14 @@ class App extends Object {
 	public function name() {
 		return (!empty($this->_name)) ? $this->_name : null;
 	}
+	
+	/**
+	 * Getter for middleware stack
+	 * @return object \Speedy\Middleware\Stack
+	 */
+	public function middlewareStack() {
+		return $this->_middlewareStack;
+	}
 
 	/**
 	 * Bootstrap all application
@@ -177,7 +205,16 @@ class App extends Object {
 	}
 	
 	public function run() {
-		Dispatcher::run($this->router());
+		set_error_handler([$this, 'handleError']);
+		
+	}
+	
+	public function call() {
+		try {
+			Dispatcher::run($this->router());
+		} catch (Exception $e) {
+			debug($e);
+		}
 	}
 	
 	/**
@@ -254,6 +291,15 @@ class App extends Object {
 	}
 	
 	/**
+	 * Setter for middleware stack
+	 * @param \Speedy\Middleware\Stack $stack
+	 */
+	private function setMiddlewareStack(\Speedy\Middleware\Stack $stack) {
+		$this->_middlewareStack = $stack;
+		return $this;
+	}
+	
+	/**
 	 * Setter for request
 	 * @param \Speedy\Request $request
 	 * @return $this
@@ -263,6 +309,12 @@ class App extends Object {
 		return $this;
 	}
 	
+	public function handleError($errno, $errstr = '', $errfile = '', $errline = '') {
+		if ( error_reporting() & $errno ) {
+			throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+		}
+		return true;
+	}
 }
 
 

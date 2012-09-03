@@ -3,10 +3,11 @@ namespace Speedy;
 
 use \Speedy\Config;
 use \Speedy\Loader;
-use \Speedy\Singleton;
+use \Speedy\Router;
+use \Speedy\Middleware\Base as MiddlewareBase;
 
 
-class Asset extends Singleton {
+class Asset extends MiddlewareBase {
 
 	public $types	= array(
 		'javascript',
@@ -19,6 +20,19 @@ class Asset extends Singleton {
 	private $_debug	= false;
 	
 	
+	
+	public function call() {
+		if ($this->has($this->request()->scriptName()) !== false) {
+			$this->render();
+			exit;
+		}
+		
+		$this->next()->call();
+	}
+	
+	public function request() {
+		return Router::instance()->request();
+	}
 	
 	/**
 	 * Get asset if exists
