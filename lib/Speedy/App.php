@@ -220,7 +220,7 @@ class App extends Object {
 	public function call() {
 		try {
 			Dispatcher::run($this->router());
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			debug($e);
 		}
 	}
