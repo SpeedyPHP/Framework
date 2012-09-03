@@ -219,8 +219,10 @@ class App extends Object {
 	
 	public function call() {
 		try {
-			Dispatcher::run($this->router());
+			$response = Dispatcher::run($this->router());
+			echo $response;
 		} catch (\Exception $e) {
+			$this->cleanBuffer();
 			echo $this->exceptionFormat($e);
 		}
 	}
@@ -296,6 +298,12 @@ class App extends Object {
 		];
 		$html = implode("\n", $html);
 		return sprintf($html, $e->getCode(), $e->getMessage(), $e->getFile(), $e->getTraceAsString());
+	}
+	
+	protected function cleanBuffer() {
+		if ( ob_get_level() !== 0 ) {
+			ob_clean();
+		}
 	}
 	
 	/**
