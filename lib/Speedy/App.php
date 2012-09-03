@@ -221,7 +221,7 @@ class App extends Object {
 		try {
 			Dispatcher::run($this->router());
 		} catch (\Exception $e) {
-			debug($e);
+			echo $this->exceptionFormat($e);
 		}
 	}
 	
@@ -278,6 +278,24 @@ class App extends Object {
 	protected function configure($closure) {
 		//return $this->config()->setup($closure);
 		return $closure(Config::instance());
+	}
+	
+	protected function exceptionFormat(\Exception $e) {
+		$html = [
+		'<html>',
+		'<head>',
+		'</head>',
+		'<body>',
+		'<div class="page-header">',
+		'<h1>Exception Caught!</h1>',
+		'</div>',
+		'<div class="description"><p>%s %s in %s</p></div>',
+		'<div class="stack">%s</div>',
+		'</body>',
+		'</html>'
+		];
+		$html = implode("\n", $html);
+		return sprintf($html, $e->getCode(), $e->getMessage(), $e->getFile(), $e->getTraceAsString());
 	}
 	
 	/**

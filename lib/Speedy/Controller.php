@@ -315,8 +315,8 @@ class Controller extends Object {
 	 */
 	protected function render() {
 		$args	= func_get_args();
-		$path	= (is_string($args[0])) ? array_shift($args) : null;
-		$options= (is_array($args[0])) ? array_shift($args) : array();
+		$path	= (isset($args[0]) && is_string($args[0])) ? array_shift($args) : null;
+		$options= (isset($args[0]) && is_array($args[0])) ? array_shift($args) : array();
 		
 		if ($this->isRendered()) return;
 		
@@ -392,7 +392,6 @@ class Controller extends Object {
 		$this->_tplVars[$name]	= $value;
 		return $this;
 	}
-
 }
 
 ?>
