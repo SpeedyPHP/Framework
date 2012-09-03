@@ -77,7 +77,7 @@ abstract class Base extends Object {
 			throw new HttpException('View found not found at ' . $path);
 		}
 		
-		if ($options['layout']) {
+		if (isset($options['layout'])) {
 			$layout	= 'layouts' . DS . $options['layout'];
 			View::instance()->setYield('__main__', $this->toString($path, $vars));
 		
