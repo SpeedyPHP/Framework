@@ -42,6 +42,7 @@ class Asset extends MiddlewareBase {
 	public function has($asset) {
 		$paths	= Loader::instance()->path('assets');
 		
+		$match = false;
 		foreach ($paths	as $path) {
 			foreach ($this->types as $type) {
 				$file	= $path . DS . $type . $asset;
@@ -54,11 +55,12 @@ class Asset extends MiddlewareBase {
 				}
 					
 				$this->path	= $file;
+				$match = true;
 				break(2);
 			}
 		}
 		
-		return (strlen($this->path)) ? true : false;
+		return $match;
 	}
 	
 	public function path() {

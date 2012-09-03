@@ -403,10 +403,13 @@ EOF;
 	private function _cleanName($name) {
 		if (strpos($name, '/') !== false) {
 			$nameArray	= explode('/', $name);
-			$lastIndex	= count($nameArray) - 1;
+			array_walk($nameArray, function(&$item, $key) {
+				$item = Inflector::camelize($item);
+			});
+			//$lastIndex	= count($nameArray) - 1;
 			
-			$nameArray[$lastIndex]	= ucfirst(end($nameArray));
-		} else $nameArray = array(ucfirst($name));
+			//$nameArray[$lastIndex]	= ucfirst(end($nameArray));
+		} else $nameArray = array(Inflector::camelize($name));
 		
 		return $nameArray;
 	}
