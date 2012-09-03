@@ -1,5 +1,5 @@
 <?php 
-namespace Speedy;
+namespace Speedy\Middleware;
 
 use \Speedy\Config;
 use \Speedy\Loader;
