@@ -204,9 +204,17 @@ class App extends Object {
 		return $this;
 	}
 	
+	/**
+	 * Getter for middleware stack
+	 * @return object \Speedy\Middleware\Stack
+	 */
+	public function stack() {
+		return $this->_middlewareStack;
+	}
+	
 	public function run() {
 		set_error_handler([$this, 'handleError']);
-		
+		$this->stack()->run();
 	}
 	
 	public function call() {

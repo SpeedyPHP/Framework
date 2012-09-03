@@ -58,6 +58,10 @@ class Stack implements \ArrayAccess {
 		return $this[$this->_position];
 	}
 	
+	public function run() {
+		$this[0]->call();
+	}
+	
 	public function offsetExists($offset) {
 		return isset($this->_stack[$offset]);
 	}
