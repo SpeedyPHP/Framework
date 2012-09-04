@@ -28,7 +28,7 @@ class Dispatcher extends Object {
 			$path	= str_replace('/', '.', $path);
 		}*/
 		
-		$pathArr	= explode('/', $path);
+		$pathArr	= $route['controller'] = explode('/', $path);
 		foreach ($pathArr as &$part) {
 			$part = Inflector::camelize($part);
 		}
