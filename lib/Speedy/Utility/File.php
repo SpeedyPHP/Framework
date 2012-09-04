@@ -14,8 +14,8 @@ class File {
 	 * @param resource $context
 	 * @return bool
 	 */
-	public static function cp($source, $dest, $resource = null) {
-		return copy($source, $dest, $resource);
+	public static function cp($source, $dest) {
+		return copy($source, $dest);
 	}
 	
 	/**
@@ -25,16 +25,16 @@ class File {
 	 * @param resource $context
 	 * @return void
 	 */
-	public static function cp_r($source, $dest, $resource = null) {
+	public static function cp_r($source, $dest) {
 		$dir = opendir($source);
 		@mkdir($dest);
 		while(false !== ($file = readdir($dir))) {
 			if (($file != '.') && ($file != '..')) {
 				if (is_dir($source . DS . $file)) {
-					self::cp_r($source . DS . $file, $dest . DS . $file, $resource);
+					self::cp_r($source . DS . $file, $dest . DS . $file);
 				}
 				else {
-					self::cp($source . DS . $file, $dest . DS . $file, $resource);
+					self::cp($source . DS . $file, $dest . DS . $file);
 				}
 			}
 		}
@@ -47,15 +47,15 @@ class File {
 	 * @param resource $context
 	 * @return bool
 	 */
-	public static function rm_rf($dirname, $context = null) {
+	public static function rm_rf($dirname) {
 		foreach(glob($dirname . DS . '*') as $file) {
 			if(is_dir($file))
-				self::rm_rf($file, $context);
+				self::rm_rf($file);
 			else
-				unlink($file, $context);
+				unlink($file);
 		}
 		
-		return rmdir($dirname, $context);
+		return rmdir($dirname);
 	}
 	
 }
