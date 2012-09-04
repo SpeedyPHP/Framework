@@ -96,32 +96,60 @@ trait ArrayAccess {
 		return $this;
 	}
 	
-	protected function __dotMutateData($data) {
-		if (empty($data)) return [];
-		
-		$mutated = [];
-		foreach ($data as $key => $value) {
-			$keys   = explode("/", $key);
-			$total  = count($keys);
-			$current        =& $mutated;
-			//$currentIds     =& $this->__aaCurrentIds;
-		
-			for ($i = 0; $i < $total-1; $i++) {
-				if (empty($current[$keys[$i]])) {
-					$current[$keys[$i]]     = array();
-					//$currentIds[$keys[$i]]  = array();
-				}
-		
-				$current	=& $current[$keys[$i]];
-				//$currentIds =& $currentIds[$keys[$i]];
+}
+
+
+function mutateData($data) {
+	if (empty($data)) return [];
+
+	$mutated = [];
+	foreach ($data as $key => $value) {
+		$keys   = explode("/", $key);
+		$total  = count($keys);
+		$current        =& $mutated;
+		//$currentIds     =& $this->__aaCurrentIds;
+
+		for ($i = 0; $i < $total-1; $i++) {
+			if (empty($current[$keys[$i]])) {
+				$current[$keys[$i]]     = array();
+				//$currentIds[$keys[$i]]  = array();
 			}
-		
-			$current[$keys[$i]]     = $value;
-			//$currentIds[$keys[$i]]  = $result['Config']['id'];
+
+			$current	=& $current[$keys[$i]];
+			//$currentIds =& $currentIds[$keys[$i]];
 		}
-		
-		return $mutated;
+
+		$current[$keys[$i]]     = $value;
+		//$currentIds[$keys[$i]]  = $result['Config']['id'];
 	}
-	
+
+	return $mutated;
+}
+
+function mutateDataWithKeyValue($data, $key, $value) {
+	if (empty($data)) return [];
+
+	$mutated = [];
+	foreach ($data as $item) {
+		$keys   = explode("/", $item[$key]);
+		$total  = count($keys);
+		$current        =& $mutated;
+		//$currentIds     =& $this->__aaCurrentIds;
+
+		for ($i = 0; $i < $total-1; $i++) {
+			if (empty($current[$keys[$i]])) {
+				$current[$keys[$i]]     = array();
+				//$currentIds[$keys[$i]]  = array();
+			}
+
+			$current	=& $current[$keys[$i]];
+			//$currentIds =& $currentIds[$keys[$i]];
+		}
+
+		$current[$keys[$i]]     = $item[$value];
+		//$currentIds[$keys[$i]]  = $result['Config']['id'];
+	}
+
+	return $mutated;
 }
 ?>
