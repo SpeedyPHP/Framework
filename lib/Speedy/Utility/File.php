@@ -14,7 +14,7 @@ class File {
 	 * @param resource $context
 	 * @return bool
 	 */
-	public static function cp($source, $dest, $resouce = null) {
+	public static function cp($source, $dest, $resource = null) {
 		return copy($source, $dest, $resource);
 	}
 	
@@ -25,7 +25,7 @@ class File {
 	 * @param resource $context
 	 * @return void
 	 */
-	public static function cp_r($source, $dest, $resouce = null) {
+	public static function cp_r($source, $dest, $resource = null) {
 		$dir = opendir($source);
 		@mkdir($dest);
 		while(false !== ($file = readdir($dir))) {
