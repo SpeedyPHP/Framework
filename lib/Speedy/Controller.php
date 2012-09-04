@@ -324,6 +324,7 @@ class Controller extends Object {
 			'layout' => $this->layout() 
 		), $options);
 		$controller	= $this->params('controller');
+		if (is_array($controller)) $controller = implode('/', $controller);
 		$action		= Inflector::underscore($this->params('action'));
 		$ext		= strtolower($this->params('ext'));
 		
