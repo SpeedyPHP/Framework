@@ -6,6 +6,10 @@ define('ARRAY_ACCESS_VS', '.');
 
 trait ArrayAccess {
 	
+	private $__aaCurrent;
+	//private $__aaCurrentIds;
+	
+	
 	protected function __dotIsset($name, &$array) {
 		$value	= $this->__dotAccess($name, $array);
 		return isset($value);
@@ -90,6 +94,33 @@ trait ArrayAccess {
 	
 		$current[$keys[$i]] 	= $value;
 		return $this;
+	}
+	
+	protected function __dotMutateData($data) {
+		if (empty($data)) return [];
+		
+		$mutated = [];
+		foreach ($data as $key => $value) {
+			$keys   = explode("/", $key);
+			$total  = count($keys);
+			$current        =& $mutated;
+			//$currentIds     =& $this->__aaCurrentIds;
+		
+			for ($i = 0; $i < $total-1; $i++) {
+				if (empty($current[$keys[$i]])) {
+					$current[$keys[$i]]     = array();
+					//$currentIds[$keys[$i]]  = array();
+				}
+		
+				$current	=& $current[$keys[$i]];
+				//$currentIds =& $currentIds[$keys[$i]];
+			}
+		
+			$current[$keys[$i]]     = $value;
+			//$currentIds[$keys[$i]]  = $result['Config']['id'];
+		}
+		
+		return $mutated;
 	}
 	
 }
