@@ -3,6 +3,7 @@ namespace Speedy;
 
 const DEBUG = false;
 require_once "Exception.php";
+require_once "Utility/ArrayAccess.php";
 
 /**
  * Base object for all SpeedyPHP objects
@@ -12,8 +13,7 @@ require_once "Exception.php";
  * @package Speedy
  */
 class Object {
-	
-	const VS = '.';
+	use \Speedy\Utility\ArrayAccess;
 	
 	/**
 	 * Method mixins
@@ -131,91 +131,6 @@ class Object {
 		return (isset($this->_mixinObjs[$mixin])) ? $this->_mixinObjs[$mixin] : null;		
 	}
 	
-	protected function __dotIsset($name, &$array) {
-		$value	= $this->__dotAccess($name, $array);
-		return isset($value);
-	}
-	
-	protected function __dotUnset($name, &$array) {
-		if (!$array) return;
-		if ($name === null) return;
-		if (!empty($array[$name])) {
-			return;
-		}
-		
-		
-		$parts = explode(self::VS, $name);
-		$return =& $array;
-		
-		for ($i = 0; $i < count($parts)-1; $i++) {
-			if (isset($return[$parts[$i]]) && is_array($return[$parts[$i]])) {
-				$return =& $return[$parts[$i]];
-			} else {
-				return;
-			}
-		}
-		
-		if (isset($return[$parts[$i]])) {
-			unset($return[$parts[$i]]);
-		}
-		
-		return;
-	}
-	
-	/**
-	 * Get data from array by dot accessor string
-	 * @param string $name
-	 * @param array $array
-	 */
-	protected function __dotAccess($name, &$array) {
-		if (!$array)return null;
-		if ($name === null) return $array;
-		if (!empty($array[$name])) {
-			return $array[$name];
-		}
-		
-		
-		$parts = explode(self::VS, $name);
-		$return =& $array;
-		
-		for ($i = 0; $i < count($parts)-1; $i++) {
-			if (isset($return[$parts[$i]]) && is_array($return[$parts[$i]])) {
-				$return =& $return[$parts[$i]];
-			} else {
-				return null;
-			}
-		}
-		
-		if (isset($return[$parts[$i]])) {
-			return $return[$parts[$i]];
-		} else return null;
-		
-		return $return;
-	}
-	
-	/**
-	 * Dot string setter for array
-	 * @param string $name
-	 * @param mixed $value
-	 * @param array $array
-	 * @return $this;
-	 */
-	protected function __dotSetter($name, $value, &$array) {
-		$keys 	= explode(self::VS, $name);
-		$total 	= count($keys);
-		$current=& $array;
-		
-		for ($i = 0; $i < $total-1; $i++) {
-			if (empty($current[$keys[$i]])) {
-				$current[$keys[$i]] 	= array();
-			}
-		
-			$current 	=& $current[$keys[$i]];
-		}
-		
-		$current[$keys[$i]] 	= $value;
-		return $this;
-	}
 	
 	/**
 	 * Sets data
@@ -349,7 +264,7 @@ class Object {
 		preg_match_all('/((?:^|[A-Z])[a-z]+)/', $name, $nameParts);
 		$nameParts	= $nameParts[0];
 		$verb		= array_shift($nameParts);
-		$path		= strtolower(implode(self::VS, $nameParts));
+		$path		= strtolower(implode(ARRAY_ACCESS_VS, $nameParts));
 		$property = lcfirst(implode('', $nameParts));
 		switch($verb) {
 			case "has":		
