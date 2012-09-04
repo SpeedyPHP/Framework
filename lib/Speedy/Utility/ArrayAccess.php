@@ -95,61 +95,50 @@ trait ArrayAccess {
 		$current[$keys[$i]] 	= $value;
 		return $this;
 	}
+
+	function mutateData($data) {
+		if (empty($data)) return [];
 	
-}
-
-
-function mutateData($data) {
-	if (empty($data)) return [];
-
-	$mutated = [];
-	foreach ($data as $key => $value) {
-		$keys   = explode("/", $key);
-		$total  = count($keys);
-		$current        =& $mutated;
-		//$currentIds     =& $this->__aaCurrentIds;
-
-		for ($i = 0; $i < $total-1; $i++) {
-			if (empty($current[$keys[$i]])) {
-				$current[$keys[$i]]     = array();
-				//$currentIds[$keys[$i]]  = array();
+		$mutated = [];
+		foreach ($data as $key => $value) {
+			$keys   = explode("/", $key);
+			$total  = count($keys);
+			$current        =& $mutated;
+	
+			for ($i = 0; $i < $total-1; $i++) {
+				if (empty($current[$keys[$i]])) {
+					$current[$keys[$i]]     = array();
+				}
+	
+				$current	=& $current[$keys[$i]];
 			}
-
-			$current	=& $current[$keys[$i]];
-			//$currentIds =& $currentIds[$keys[$i]];
+			$current[$keys[$i]]     = $value;
 		}
-
-		$current[$keys[$i]]     = $value;
-		//$currentIds[$keys[$i]]  = $result['Config']['id'];
+	
+		return $mutated;
 	}
-
-	return $mutated;
-}
-
-function mutateDataWithKeyValue($data, $key, $value) {
-	if (empty($data)) return [];
-
-	$mutated = [];
-	foreach ($data as $item) {
-		$keys   = explode("/", $item[$key]);
-		$total  = count($keys);
-		$current        =& $mutated;
-		//$currentIds     =& $this->__aaCurrentIds;
-
-		for ($i = 0; $i < $total-1; $i++) {
-			if (empty($current[$keys[$i]])) {
-				$current[$keys[$i]]     = array();
-				//$currentIds[$keys[$i]]  = array();
+	
+	function mutateDataWithKeyValue($data, $key, $value) {
+		if (empty($data)) return [];
+	
+		$mutated = [];
+		foreach ($data as $item) {
+			$keys   = explode("/", $item[$key]);
+			$total  = count($keys);
+			$current        =& $mutated;
+	
+			for ($i = 0; $i < $total-1; $i++) {
+				if (empty($current[$keys[$i]])) {
+					$current[$keys[$i]]     = array();
+				}
+	
+				$current	=& $current[$keys[$i]];
 			}
-
-			$current	=& $current[$keys[$i]];
-			//$currentIds =& $currentIds[$keys[$i]];
+	
+			$current[$keys[$i]]     = $item[$value];
 		}
-
-		$current[$keys[$i]]     = $item[$value];
-		//$currentIds[$keys[$i]]  = $result['Config']['id'];
+	
+		return $mutated;
 	}
-
-	return $mutated;
 }
 ?>
