@@ -4,7 +4,7 @@ return <<<EOF
 defined('SPEEDY_ENV')  or define("SPEEDY_ENV", (getenv("SPEEDY_ENV")) ? getenv('SPEEDY_ENV') : 'development');
 defined('DS') or define('DS', DIRECTORY_SEPARATOR); 			// Alias directory separator as DS
 defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App
-defined('PUBLIC') or define('PUBLIC', dirname(__FILE__));		// Define path to the public directory
+defined('PUBLIC_DIR') or define('PUBLIC_DIR', dirname(__FILE__));		// Define path to the public directory
 defined('APP_PATH') or define('APP_PATH', ROOT . DS . 'app');	// Define path to the app directory
 defined('CONFIG_PATH') or define('CONFIG_PATH', ROOT . DS . 'config');	// Define path to the config directory
 defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
