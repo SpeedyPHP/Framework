@@ -292,7 +292,7 @@ class App extends Object {
 		'<h1>Exception Caught!</h1>',
 		'</div>',
 		'<div class="description"><p>%s %s in %s</p></div>',
-		'<div class="stack">%s</div>',
+		'<div class="stack"><pre>%s</pre></div>',
 		'</body>',
 		'</html>'
 		];
