@@ -218,9 +218,9 @@ class Html extends Base {
 	 * @return void
 	 */
 	public function hiddenFieldTag($name, $value, $attrs = array()) {
-		/*if (!isset($attrs['id'])) {
+		if (!isset($attrs['id'])) {
 			$attrs['id']	= $this->toId($name);
-		}*/
+		}
 	
 		$attrs['name']	= $this->toName($name);
 		$attrs['type']	= 'hidden';
