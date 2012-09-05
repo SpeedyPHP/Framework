@@ -144,6 +144,7 @@ class App extends Object {
 		
 		output("\nStarting new request");
 		output("REQUEST: " . self::request()->url());
+		output("METHOD: " . self::request()->method());
 	}
 	
 	/**
