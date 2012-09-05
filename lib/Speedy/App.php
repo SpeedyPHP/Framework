@@ -108,7 +108,6 @@ class App extends Object {
 			throw new Exception("Subclass of App needs property \$_name defined.");
 		}
 		
-		output("\nStarting new request");
 		$this->_setRequest(new Request());
 		$this->setNs(Inflector::underscore($this->name()));
 		
@@ -142,6 +141,9 @@ class App extends Object {
 		if (!empty($this->_middlewares)) {
 			$this->middlewareStack()->addFromArray($this->_middlewares);
 		}
+		
+		output("\nStarting new request");
+		output("REQUEST: " . self::request()->url());
 	}
 	
 	/**
@@ -254,6 +256,13 @@ class App extends Object {
 		return $this->_request;
 	}
 	
+	public function handleError($errno, $errstr = '', $errfile = '', $errline = '') {
+		if ( error_reporting() & $errno ) {
+			throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+		}
+		return true;
+	}
+	
 	/**
 	 * Setter for config
 	 * @param \Speedy\Config $config
@@ -341,13 +350,6 @@ class App extends Object {
 	private function _setRequest($request) {
 		$this->_request	= $request;
 		return $this;
-	}
-	
-	public function handleError($errno, $errstr = '', $errfile = '', $errline = '') {
-		if ( error_reporting() & $errno ) {
-			throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
-		}
-		return true;
 	}
 }
 
