@@ -133,7 +133,7 @@ abstract class Base extends Object {
 	}
 	
 	public function isPartial($path) {
-		if (preg_match("#/?_(\w)*/#i", $path, $matches)) return $path;
+		if (preg_match("#/^_(\w)*/#i", $path, $matches)) return $path;
 		
 		$controller = $this->param('controller');
 		if (is_array($controller)) $controller = implode('/', $controller);
