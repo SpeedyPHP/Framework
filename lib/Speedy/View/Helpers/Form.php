@@ -201,7 +201,7 @@ class Form extends Object {
 		return $this->helper()
 						->selectTag(
 								$this->formatName($name), 
-								$this->helper()->optionsForSelect($options, $defaultSelected), 
+								$this->helper()->optionsForSelect($options, $selected), 
 								$attrs); 
 	}
 	
