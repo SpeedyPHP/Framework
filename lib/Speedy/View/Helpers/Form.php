@@ -248,7 +248,7 @@ class Form extends Object {
 	 * Format name for field
 	 * @param string $name
 	 */
-	private function formatName($name) {
+	public function formatName($name) {
 		return $this->name() . '.' . $name;
 	}
 	
