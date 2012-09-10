@@ -3,7 +3,6 @@ namespace Speedy\View\Helpers;
 
 
 use \Speedy\Object;
-use \Speedy\Utility\Inflector;
 use \Speedy\View\Helpers\Html;
 
 class Form extends Object {
