@@ -289,7 +289,7 @@ class Html extends Base {
 		$content = '';
 		foreach ($options as $value => $label) {			
 			$optContent = '<option value="' . $value . '"';
-			if ($selected && $selected == $value) {
+			if ($selected != null && $selected == $value) {
 				$optContent .= ' selected="selected"';
 			} 
 			$optContent .= '>' . $label . '</option>' . "\n";
