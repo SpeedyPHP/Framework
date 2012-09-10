@@ -258,7 +258,7 @@ class Form extends Object {
 	 * @return \Speedy\View\Helpers\Form
 	 */
 	protected function setName($name) {
-		$this->_name = Inflector::underscore($name);
+		$this->_name = \Speedy\Utility\Inflector::underscore($name);
 		return $this;
 	}
 	
