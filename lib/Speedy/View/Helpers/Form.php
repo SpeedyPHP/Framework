@@ -1,8 +1,10 @@
 <?php 
 namespace Speedy\View\Helpers;
 
-use \Speedy\View\Helpers\Html;
+
 use \Speedy\Object;
+use \Speedy\Utility\Inflector;
+use \Speedy\View\Helpers\Html;
 
 class Form extends Object {
 	
@@ -257,7 +259,7 @@ class Form extends Object {
 	 * @return \Speedy\View\Helpers\Form
 	 */
 	protected function setName($name) {
-		$this->_name = strtolower($name);
+		$this->_name = Inflector::underscore($name);
 		return $this;
 	}
 	
