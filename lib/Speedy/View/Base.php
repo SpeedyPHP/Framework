@@ -217,7 +217,7 @@ abstract class Base extends Object {
 	 * Getter for templatePath
 	 * @return string
 	 */
-	protected function path() {
+	public function path() {
 		return $this->_path;
 	}
 	
@@ -225,7 +225,7 @@ abstract class Base extends Object {
 	 * Getter for template variables
 	 * @return array
 	 */
-	protected function vars() {
+	public function vars() {
 		return $this->_vars;
 	}
 	
@@ -235,7 +235,7 @@ abstract class Base extends Object {
 	 * @param mixed $value
 	 * @return \Speedy\View
 	 */
-	protected function set($name, $value) {
+	public function set($name, $value) {
 		$this->_vars[$name]	= $value;
 		return $this;
 	}
