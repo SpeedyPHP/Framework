@@ -159,9 +159,9 @@ trait ArrayAccess {
 			}
 	
 			if (isset($current[$keys[$i]]) && !is_array($current[$keys[$i]])) {
-				$current[$keys[$i]] 	= [$current[$keys[$i]], $item[$value]];
-			} elseif (isset($current[$keys[$i]]) && is_array($current[$keys[$i]])) {
 				$current[$keys[$i]][] 	= $item[$value];
+			} elseif (isset($current[$keys[$i]]) && is_array($current[$keys[$i]])) {
+				$current[$keys[$i]] 	= [$current[$keys[$i]], $item[$value]];
 			} else {
 				$current[$keys[$i]] 	= $item[$value];
 			}
