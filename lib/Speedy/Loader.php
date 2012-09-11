@@ -306,7 +306,7 @@ namespace Speedy {
 				$value	= Inflector::camelize($value);
 			}
 			
-			return '\\' . implode('\\', $namespaceArr);
+			return implode('\\', $namespaceArr);
 		}
 		
 	}
@@ -326,7 +326,7 @@ namespace {
 		$loader = \Speedy\Loader::instance();
 		$class = $loader->toClass($classPath);
 		
-		return $loader->import($class, '.');
+		return $loader->import($class);
 	}
 	
 	spl_autoload_register('Speedy\autoload', false);
