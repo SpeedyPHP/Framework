@@ -214,11 +214,11 @@ namespace Speedy {
 		 * @param pathToClass
 		 * @return mixed, false on failure to find and load class
 		 */
-		public function import($className) {
+		public function import($className, $seperator = '\\') {
 			// Check if already loaded
 			if ($this->loaded($className)) return true;
 			
-			$path	= $this->toPath($className); 
+			$path	= $this->toPath($className, $seperator); 
 			if (!$path) return false;
 			
 			if ($this->load($path)) {
@@ -235,10 +235,10 @@ namespace Speedy {
 		 * @param string $className
 		 * @throws Exception
 		 */
-		public function toPath($className) {
-			if (!strpos($className, '\\')) return null;
+		public function toPath($className, $seperator = '\\') {
+			if (!strpos($className, $seperator)) return null;
 
-			$aPath = explode('\\', $className); 
+			$aPath = explode($seperator, $className); 
 			$firstSpace = strtolower(array_shift($aPath));
 			$secondSpace= strtolower(array_shift($aPath));
 			$ns	= $firstSpace . '.' . $secondSpace;
@@ -253,9 +253,9 @@ namespace Speedy {
 			}
 			if (!$this->hasNamespace($ns)) return null;
 
-			$className = implode('\\', $aPath);
+			$className = implode($seperator, $aPath);
 			$path = str_replace('_', DS, $className);
-			$path = str_replace('\\', DS, $className);
+			$path = str_replace($seperator, DS, $className);
 			
 			$pathTo = $this->path($ns);
 			if (is_array($pathTo)) {
@@ -315,7 +315,7 @@ namespace Speedy {
 		if (!strpos($className, '\\')) return false;
 	
 		//$namespace	= Loader::instance()->toNamespace($className);
-		return Loader::instance()->import($className);
+		return Loader::instance()->import($className, '.');
 	}
 	
 }
