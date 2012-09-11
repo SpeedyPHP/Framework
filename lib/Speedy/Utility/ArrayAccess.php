@@ -2,13 +2,21 @@
 namespace Speedy\Utility;
 
 
-define('ARRAY_ACCESS_VS', '.');
+define('ARRAY_ACCESS_DEFAULT_DELIMETER', '.');
 
 trait ArrayAccess {
 	
 	private $__aaCurrent;
+	
+	private static $__aaDelimeter = ARRAY_ACCESS_DEFAULT_DELIMETER;
 	//private $__aaCurrentIds;
 	
+	
+	
+	protected function __aaSetDelimeter($delimeter) {
+		self::$__aaDelimeter = $delimeter;
+		return $this;
+	}
 	
 	protected function __dotIsset($name, &$array) {
 		$value	= $this->__dotAccess($name, $array);
@@ -23,7 +31,7 @@ trait ArrayAccess {
 		}
 	
 	
-		$parts = explode(ARRAY_ACCESS_VS, $name);
+		$parts = explode(self::$__aaDelimeter, $name);
 		$return =& $array;
 	
 		for ($i = 0; $i < count($parts)-1; $i++) {
@@ -54,7 +62,7 @@ trait ArrayAccess {
 		}
 	
 	
-		$parts = explode(ARRAY_ACCESS_VS, $name);
+		$parts = explode(self::$__aaDelimeter, $name);
 		$return =& $array;
 	
 		for ($i = 0; $i < count($parts)-1; $i++) {
@@ -80,7 +88,7 @@ trait ArrayAccess {
 	 * @return $this;
 	 */
 	protected function __dotSetter($name, $value, &$array) {
-		$keys 	= explode(ARRAY_ACCESS_VS, $name);
+		$keys 	= explode(self::$__aaDelimeter, $name);
 		$total 	= count($keys);
 		$current=& $array;
 	
