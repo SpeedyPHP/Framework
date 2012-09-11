@@ -159,7 +159,7 @@ namespace Speedy {
 				$this->_namespace[$namespace]	= array( $this->path($namespace) );
 			}
 			
-			$this->_namespace[$namespace][]	= $path;
+			array_unshift($this->_namespace[$namespace], $path);
 			return $this;
 		}
 		
