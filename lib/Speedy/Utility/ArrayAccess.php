@@ -67,7 +67,7 @@ trait ArrayAccess {
 				$tmp	= $this->__dotAccess($part, $array);
 				if (!is_array($tmp)) $tmp = [$tmp];
 				
-				array_merge($res, $tmp);
+				$res = array_merge($res, $tmp);
 			}
 			
 			return $res;
