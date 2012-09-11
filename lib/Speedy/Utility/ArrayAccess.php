@@ -150,7 +150,13 @@ trait ArrayAccess {
 				$current	=& $current[$keys[$i]];
 			}
 	
-			$current[$keys[$i]]     = $item[$value];
+		if (isset($current[$keys[$i]]) && !is_array($current[$keys[$i]])) {
+			$current[$keys[$i]] 	= [$current[$keys[$i]], $value];
+		} elseif (isset($current[$keys[$i]]) && is_array($current[$keys[$i]])) {
+			$current[$keys[$i]][] 	= $value;
+		} else {
+			$current[$keys[$i]] 	= $value;
+		}
 		}
 	
 		return $mutated;
