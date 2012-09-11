@@ -241,6 +241,14 @@ abstract class Base extends Object {
 	}
 	
 	/**
+	 * Getter for current url
+	 * @return string
+	 */
+	public function here() {
+		return $this->param('url');
+	}
+	
+	/**
 	 * Setter for controller
 	 * @param unknown_type $controller
 	 */
