@@ -71,8 +71,21 @@ trait ArrayAccess {
 				}
 				
 				if (!is_array($tmp)) $tmp = [$tmp];
+				
+				$filtered = [];
+				foreach ($tmp as $key => $value) {
+					if (!is_int($key)) {
+						continue;
+					}
+					
+					$filtered[]	= $value;
+				}
 			
-				$res = array_merge($res, $tmp);
+				if (empty($filtered)) {
+					continue;
+				}
+				
+				$res = array_merge($res, $filtered);
 			}
 			
 			return $res;
