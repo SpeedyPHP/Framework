@@ -301,13 +301,13 @@ class App extends Object {
 		'<div class="page-header">',
 		'<h1>Exception Caught!</h1>',
 		'</div>',
-		'<div class="description"><p>[Error Number: %s] %s in %s</p></div>',
+		'<div class="description"><p>[Error Number: %s] %s in %s on line %s</p></div>',
 		'<div class="stack"><pre>%s</pre></div>',
 		'</body>',
 		'</html>'
 		];
 		$html = implode("\n", $html);
-		return sprintf($html, $e->getCode(), $e->getMessage(), $e->getFile(), $e->getTraceAsString());
+		return sprintf($html, $e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
 	}
 	
 	protected function cleanBuffer() {
