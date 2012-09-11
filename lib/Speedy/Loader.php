@@ -155,11 +155,11 @@ namespace Speedy {
 			}
 			
 			// Move the namespace into an array if its not already
-			if (!is_array($this->_namespace[$namespace])) {
-				$this->_namespace[$namespace]	= array( $this->path($namespace) );
+			if (!is_array($this->_namespaces[$namespace])) {
+				$this->_namespaces[$namespace]	= array( $this->path($namespace) );
 			}
 			
-			array_unshift($this->_namespace[$namespace], $path);
+			array_unshift($this->_namespaces[$namespace], $path);
 			return $this;
 		}
 		
