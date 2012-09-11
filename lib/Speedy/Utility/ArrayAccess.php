@@ -61,6 +61,14 @@ trait ArrayAccess {
 			return $array[$name];
 		}
 	
+		if (is_array($name)) {
+			$res = [];
+			foreach ($name as $part) {
+				$res[]	= $this->__dotAccess($part, $array);
+			}
+			
+			return $res;
+		}
 	
 		$parts = explode(self::$__aaDelimeter, $name);
 		$return =& $array;
