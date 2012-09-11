@@ -315,7 +315,7 @@ namespace Speedy {
 		if (!strpos($className, '\\')) return false;
 	
 		//$namespace	= Loader::instance()->toNamespace($className);
-		return Loader::instance()->import($className, '.');
+		return Loader::instance()->import($className);
 	}
 	
 }
@@ -326,7 +326,7 @@ namespace {
 		$loader = \Speedy\Loader::instance();
 		$class = $loader->toClass($classPath);
 		
-		return $loader->import($class);
+		return $loader->import($class, '.');
 	}
 	
 	spl_autoload_register('Speedy\autoload', false);
