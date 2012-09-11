@@ -57,7 +57,7 @@ trait ArrayAccess {
 	protected function __dotAccess($name, &$array) {
 		if (!$array)return null;
 		if ($name === null) return $array;
-		if (!empty($array[$name])) {
+		if (!is_array($name) && !empty($array[$name])) {
 			return $array[$name];
 		}
 	
