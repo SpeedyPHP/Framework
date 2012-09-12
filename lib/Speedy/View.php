@@ -146,6 +146,10 @@ class View extends Singleton {
 		return $this->params;
 	}
 	
+	public function param($name) {
+		return $this->__dotAccess($name, $this->_params);
+	}
+	
 	/**
 	 * Check is content for yield exists
 	 * @param string $name
