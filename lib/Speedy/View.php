@@ -73,6 +73,15 @@ class View extends Singleton {
 		return true;
 	}
 	
+	public function renderToString($file, $options, $vars = null, $ext = 'html') {
+		ob_start();
+		$this->render($file, $options, $vars, $ext);
+		$content = ob_get_contents();
+		ob_end_clean();
+		
+		return $content;
+	}
+	
 	/**
 	 * Figure out the builder
 	 * @param string $filePath
