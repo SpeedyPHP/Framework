@@ -337,7 +337,7 @@ class Controller extends Object {
 			$action	= 'new';
 		if (!$path) $path	= $controller . DS . $action;
 		
-		if (strpos($path, '/') === false) {
+		if (is_string($path) && strpos($path, '/') === false) {
 			$relPath	= $controller . DS . $path;
 		} else {
 			$relPath	= $path;
