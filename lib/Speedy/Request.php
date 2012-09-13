@@ -103,6 +103,11 @@ class Request extends Object {
 		return $this->data('REQUEST_URI');
 	}
 	
+	public function hasUri() {
+		$uri	= $this->uri();
+		return !empty($uri);
+	}
+	
 	/**
 	 * Getter for script name
 	 */
@@ -115,7 +120,7 @@ class Request extends Object {
 	 * @return string
 	 */
 	public function url() {
-		return ($this->hasParam('url')) ? $this->param('url') : '/'; 
+		return (!$this->hasParam('url')) ? (($this->hasUri()) ? $this->uri() : '/') : $this->param('url'); 
 	}
 	
 	public function parseUri() {
