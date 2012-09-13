@@ -320,7 +320,7 @@ class Controller extends Object {
 	 */
 	protected function render() {
 		$args	= func_get_args();
-		$path	= (isset($args[0]) && is_string($args[0])) ? array_shift($args) : null;
+		$path	= array_shift($args);
 		$options= (isset($args[0]) && is_array($args[0])) ? array_shift($args) : array();
 		
 		if ($this->isRendered()) return;
