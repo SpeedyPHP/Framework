@@ -331,7 +331,7 @@ class Controller extends Object {
 		$controller	= $this->params('controller');
 		if (is_array($controller)) $controller = implode('/', $controller);
 		$action		= Inflector::underscore($this->params('action'));
-		$ext		= strtolower($this->params('ext'));
+		$ext		= isset($options['ext']) ? $options['ext'] : strtolower($this->params('ext'));
 		
 		if ($action == '_new')
 			$action	= 'new';
