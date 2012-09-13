@@ -4,6 +4,7 @@ namespace Speedy\View;
 use Speedy\Object;
 use Speedy\View;
 use Speedy\Session;
+use Speedy\Http\Exception as HttpException;
 
 abstract class Base extends Object {
 	
