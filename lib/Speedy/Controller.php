@@ -289,6 +289,11 @@ class Controller extends Object {
 		return $this;
 	}
 	
+	protected function setParam($name, $value) {
+		$this->__dotSetter($name, $value, $this->_params);
+		return $this;
+	}
+	
 	/**
 	 * Getter for request
 	 * @return object \Speedy\Request
