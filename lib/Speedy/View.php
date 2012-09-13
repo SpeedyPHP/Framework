@@ -126,7 +126,7 @@ class View extends Singleton {
 	 * @return \Speedy\Response
 	 */
 	public function &response() {
-		return $this->response;
+		return $this->_response;
 	}
 	
 	/**
