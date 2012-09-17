@@ -233,7 +233,7 @@ class Draw extends Object {
 	public function match(array $options = null) {
 		$keys	= array_keys($options);
 		$uri	= $this->buildBase($keys[0]);
-		$route	= array_pop($options);
+		$route	= array_shift($options);
 		
 		if (strpos($route, '#') === false) {
 			$controller = $this->buildController();
