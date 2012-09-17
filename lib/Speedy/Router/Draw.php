@@ -214,9 +214,12 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	public function get($action, $options = []) {
+		$uri	= $this->buildBase($action);
+		$controller	= $this->data('controller');
+		
 		$defaults= array();
 		$params	= array_merge($defaults, $options, array(
-			$uri	=> $this->buildBase($action),
+			$uri	=> "$controller#$action",
 			'on'	=> self::GET
 		));
 		
