@@ -127,6 +127,11 @@ class Request extends Singleton {
 	public function parseUri() {
 		$url = $this->url();
 		
+		if (strpos($url, '?') !== false) {
+			$aUrl	= explode('?', $url);
+			$url	= array_shift($aUrl);	
+		}
+		
 		$urlParts	= explode("/", $url);
 		$last		= end($urlParts);
 		
