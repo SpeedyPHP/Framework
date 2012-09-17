@@ -112,6 +112,15 @@ class Draw extends Object {
 			]
 		];
 		
+		/*$resource	= new Resource($name, $options);
+		 foreach ($resource->getRoutes() as $route) {
+		$this->pushRoute($route);
+		}*/
+		
+		if ($closure) {
+			$this->_namespace($name, $closure, self::TYPE_RESOURCE);
+		}
+		
 		foreach ($defaultActions as $action => $settings) {
 			if (is_array($only) && !in_array($action, $only)) {
 				continue;
@@ -141,15 +150,6 @@ class Draw extends Object {
 			$opts = array_merge($defaults, (is_array($options)) ? $options : []);
 			
 			$this->pushRoute(new Match($opts));
-		}
-		
-		/*$resource	= new Resource($name, $options);
-		foreach ($resource->getRoutes() as $route) {
-			$this->pushRoute($route);
-		}*/
-		
-		if ($closure) {
-			$this->_namespace($name, $closure, self::TYPE_RESOURCE);
 		}
 		
 		return $this;
