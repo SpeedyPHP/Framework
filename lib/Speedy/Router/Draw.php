@@ -195,12 +195,11 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	public function post($action, $options = []) {
-		$uri	= $this->buildBase($action);
 		$controller	= $this->data('controller');
 		
 		$defaults= array();
 		$params	= array_merge($defaults, $options, array(
-			$uri	=> "$controller#$action",
+			$action	=> "$controller#$action",
 			'on'	=> self::POST
 		));
 	
@@ -214,12 +213,11 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	public function get($action, $options = []) {
-		$uri	= $this->buildBase($action);
 		$controller	= $this->data('controller');
 		
 		$defaults= array();
 		$params	= array_merge($defaults, $options, array(
-			$uri	=> "$controller#$action",
+			$action	=> "$controller#$action",
 			'on'	=> self::GET
 		));
 		
