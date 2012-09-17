@@ -161,10 +161,9 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	public function member($method, $action = null) {
+	public function member($action) {
 		$uri	= $this->buildBase($action, true);
 		$controller	= $this->buildController();
-		if (!$action) $action = $method;
 		
 		return $this->routeFactory($method, $uri, "$controller#$action");
 	}
@@ -175,13 +174,19 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	public function collection($method, $action = null) {
+	public function collection($closure) {
+		$this->setData('controller', $this->buildController());
+		$closure();
+		$this->unsetData('controller');
+		
+		return;
+	}
+	/*public function collection($action) {
 		$controller	= $this->buildController();
 		$uri	= $this->buildBase($action);
-		if (!$action) $action = $method;
 		
 		return $this->routeFactory($method, $uri, "$controller#$action");
-	}
+	}*/
 	
 	/**
 	 * Simple get route
@@ -189,10 +194,13 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	public function post($uri, $action) {
+	public function post($action, $options = []) {
+		$uri	= $this->buildBase($action);
+		$controller	= $this->data('controller');
+		
 		$defaults= array();
-		$params	= array_merge($defaults, array(
-			$uri	=> $action,
+		$params	= array_merge($defaults, $options, array(
+			$uri	=> "$controller#$action",
 			'on'	=> self::POST
 		));
 	
@@ -205,10 +213,10 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	public function get($uri, $action) {
+	public function get($action, $options = []) {
 		$defaults= array();
-		$params	= array_merge($defaults, array(
-			$uri	=> $action,
+		$params	= array_merge($defaults, $options, array(
+			$uri	=> $this->buildBase($action),
 			'on'	=> self::GET
 		));
 		
