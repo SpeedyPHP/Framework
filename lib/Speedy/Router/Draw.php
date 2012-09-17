@@ -161,9 +161,10 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	public function member($method, $action) {
+	public function member($method, $action = null) {
 		$uri	= $this->buildBase($action, true);
 		$controller	= $this->buildController();
+		if (!$action) $action = $method;
 		
 		return $this->routeFactory($method, $uri, "$controller#$action");
 	}
@@ -174,9 +175,10 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	public function collection($method, $action) {
+	public function collection($method, $action = null) {
 		$controller	= $this->buildController();
 		$uri	= $this->buildBase($action);
+		if (!$action) $action = $method;
 		
 		return $this->routeFactory($method, $uri, "$controller#$action");
 	}
