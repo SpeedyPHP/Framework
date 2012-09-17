@@ -161,11 +161,14 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	public function member($action) {
-		$uri	= $this->buildBase($action, true);
-		$controller	= $this->buildController();
+	public function member($closure) {
+		$this->setData('controller', $this->buildController());
+		$this->setData('uri_prefix', ':id/');
+		$closure();
+		$this->unsetData('controller');
+		$this->unsetData('uri_prefix');
 		
-		return $this->routeFactory($method, $uri, "$controller#$action");
+		return;
 	}
 	
 	/**
@@ -195,15 +198,7 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	public function post($action, $options = []) {
-		$controller	= $this->data('controller');
-		
-		$defaults= array();
-		$params	= array_merge($defaults, $options, array(
-			$action	=> "$controller#$action",
-			'on'	=> self::POST
-		));
-	
-		return $this->match($params);
+		return $this->routeFactory($action, self::POST, $options);
 	}
 	
 	/**
@@ -213,15 +208,7 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	public function get($action, $options = []) {
-		$controller	= $this->data('controller');
-		
-		$defaults= array();
-		$params	= array_merge($defaults, $options, array(
-			$action	=> "$controller#$action",
-			'on'	=> self::GET
-		));
-		
-		return $this->match($params);
+		return $this->routeFactory($action, self::GET, $options);
 	}
 	
 	/**
@@ -280,17 +267,18 @@ class Draw extends Object {
 	 * @param string $action
 	 * @return object $this
 	 */
-	protected function routeFactory($method, $uri, $action) {
-		switch (strtoupper($method)) {
-			case self::POST:
-				return $this->post($uri, $action);
-				break;
-				
-			case self::GET:
-			default:
-				return $this->get($uri, $action);
-				break;
-		}
+	protected function routeFactory($action, $method, $options = []) {
+		$controller	= $this->data('controller');
+		$prefix	= ($this->hasData('uri_prefix')) ? $this->data('uri_prefix') : '';
+		$uri	= $prefix . $action;
+		
+		$defaults= array();
+		$params	= array_merge($defaults, $options, array(
+				$uri	=> "$controller#$action",
+				'on'	=> $method
+		));
+		
+		return $this->match($params);
 	}
 	
 	/**
