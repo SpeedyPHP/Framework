@@ -1,7 +1,8 @@
 <?php 
 namespace Speedy;
 
-class Request extends Object {
+
+class Request extends Singleton {
 	
 	const GET	= 'GET';
 	const POST	= 'POST';

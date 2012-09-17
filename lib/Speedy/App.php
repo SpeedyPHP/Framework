@@ -108,7 +108,7 @@ namespace Speedy {
 				throw new Exception("Subclass of App needs property \$_name defined.");
 			}
 			
-			$this->_setRequest(new Request());
+			$this->_setRequest(Request::instance());
 			$this->setNs(Inflector::underscore($this->name()));
 			
 			$loader = Loader::instance();
