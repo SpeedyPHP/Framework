@@ -226,6 +226,7 @@ namespace Speedy {
 				echo $response;
 			} catch (\Exception $e) {
 				$this->cleanBuffer();
+				header("HTTP/1.0 500 Internal Server Error");
 				echo $this->exceptionFormat($e);
 			}
 		}
