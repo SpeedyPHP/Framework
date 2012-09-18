@@ -197,7 +197,7 @@ class Form extends Object {
 	 */
 	public function select($name, array $options, $defaultSelected = null, $attrs = []) {
 		$selected = (isset($this->model()->{$name})) ? $this->model()->{$name} : $defaultSelected;
-		return $this->->selectTag(
+		return $this->selectTag(
 								$this->formatName($name), 
 								$this->optionsForSelect($options, $selected), 
 								$attrs); 
