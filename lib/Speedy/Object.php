@@ -107,10 +107,12 @@ class Object {
 	 * 
 	 */
 	protected function _callMixin($name, $args) {
-		foreach ($this->_mixins() as $instance) {
+		foreach ($this->_mixins() as $class => $instance) {
 			if ($instance instanceof \Speedy\Object && $instance->respondsTo($name)) {
 				return call_user_func_array(array($instance, $name), $args);
-			}
+			} elseif (class_exists($class) && is_callable("{$class}::{$name}")) {
+				return call_user_func_array("{$class}::{$name}", $args);
+			} 
 		}
 		
 		throw new Exception("No method exists " . get_class($this) . "#$name");
