@@ -184,7 +184,7 @@ class Form extends Object {
 		$options = [];
 		if (!empty($collection)) {
 			foreach ($collection as $record) {
-				$options[$record->{$key}] = [$record->{$value}];
+				$options[$record->{$key}] = $record->{$value};
 			}
 		}
 		
