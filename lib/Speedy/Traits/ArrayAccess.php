@@ -1,5 +1,5 @@
 <?php
-namespace Speedy\Utility;
+namespace Speedy\Traits;
 
 
 define('ARRAY_ACCESS_DEFAULT_DELIMETER', '.');
