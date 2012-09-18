@@ -13,7 +13,8 @@ require_once "Utility/ArrayAccess.php";
  * @package Speedy
  */
 class Object {
-	use \Speedy\Utility\ArrayAccess;
+	use \Speedy\Traits\ArrayAccess;
+	use \Speedy\Traits\Convenience;
 	
 	/**
 	 * Method mixins
@@ -110,8 +111,6 @@ class Object {
 		foreach ($this->_mixins() as $class => $instance) {
 			if ($instance instanceof \Speedy\Object && $instance->respondsTo($name)) {
 				return call_user_func_array(array($instance, $name), $args);
-			} elseif (class_exists($class) && is_callable("{$class}::{$name}")) {
-				return call_user_func_array("{$class}::{$name}", $args);
 			} 
 		}
 		
@@ -240,14 +239,6 @@ class Object {
 		unset($current[$keys[$i]]);
 		
 		return $this;
-	}
-	
-	public function respondsTo($method) {
-		return method_exists($this, $method);
-	}
-
-	public function includes($name) {
-		return property_exists($this, $name);
 	}
 	
 	/**
