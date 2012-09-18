@@ -76,6 +76,8 @@ trait Html {
 	
 		$attrs['method']	= Draw::POST;
 		$form	= new Form($model);
+		$form->setData($this->data());
+		
 		if (!isset($attrs['action']))
 			$attrs['action']	= $form->path();
 		
