@@ -1,10 +1,8 @@
 <?php 
 namespace Speedy\View\Helpers;
 
-use \Speedy\View\Helpers\Base;
 
-
-class SqlLog extends Base {
+trait SqlLog {
 	
 	public function printSqlLog() {
 		$logger	= \Speedy\ActiveRecord\Logger\Runtime::instance();

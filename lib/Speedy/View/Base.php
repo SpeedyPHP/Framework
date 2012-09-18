@@ -9,6 +9,8 @@ use Speedy\Http\Exception as HttpException;
 abstract class Base extends Object {
 	
 	use \Speedy\View\Helpers\Html;
+	use \Speedy\View\Helpers\Inflector;
+	use \Speedy\View\Helpers\SqlLog;
 	
 	/**
 	* Reference to controller
@@ -42,8 +44,8 @@ abstract class Base extends Object {
 	
 	protected $_mixins	= array(
 		//'\\Speedy\\View\\Helpers\\Html',
-		'\\Speedy\\View\\Helpers\\Inflector',
-		'\\Speedy\\View\\Helpers\\SqlLog'
+		//'\\Speedy\\View\\Helpers\\Inflector',
+		//'\\Speedy\\View\\Helpers\\SqlLog'
 	);
 	
 	public $params;
