@@ -3,7 +3,7 @@ namespace Speedy;
 
 const DEBUG = false;
 require_once "Exception.php";
-require_once "Utility/ArrayAccess.php";
+require_once "Traits/ArrayAccess.php";
 
 /**
  * Base object for all SpeedyPHP objects
