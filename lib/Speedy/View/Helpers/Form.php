@@ -3,9 +3,10 @@ namespace Speedy\View\Helpers;
 
 
 use \Speedy\Object;
-use \Speedy\View\Helpers\Html;
 
 class Form extends Object {
+	
+	use \Speedy\View\Helpers\Html;
 	
 	private $_model;
 	
@@ -17,7 +18,7 @@ class Form extends Object {
 	
 	
 	
-	public function __construct($model, \Speedy\View\Helpers\Html &$helper) {
+	public function __construct($model) {
 		$basepath	= '';
 		if (is_array($model)) {
 			$basepathArr	= $model;
@@ -25,7 +26,6 @@ class Form extends Object {
 			$basepath	= implode('_', $basepathArr) . '_';
 		}
 		
-		$this->setHelper($helper);
 		$this->setModel($model);
 		
 		$class	= get_class($model);
@@ -49,10 +49,10 @@ class Form extends Object {
 		
 		if ($model->id) {
 			$actionPath	= "{$basepath}{$actionPath}_path";
-			$this->setPath($this->helper()->{$actionPath}($model->id));
+			$this->setPath($this->{$actionPath}($model->id));
 		} else {
 			$actionPath	= "{$basepath}{$actionPath}_url";
-			$this->setPath($this->helper()->{$actionPath}());
+			$this->setPath($this->{$actionPath}());
 		}
 	}
 	
@@ -63,7 +63,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function textArea($name, $attrs = array()) {
-		return $this->helper()->textAreaTag($this->formatName($name), $this->model()->{$name}, $attrs);
+		return $this->textAreaTag($this->formatName($name), $this->model()->{$name}, $attrs);
 	}
 	
 	/**
@@ -73,7 +73,7 @@ class Form extends Object {
 	 */
 	public function email($name, $attrs = array()) {
 		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
-		return $this->helper()->emailField($this->formatName($name), $attrs);
+		return $this->emailField($this->formatName($name), $attrs);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class Form extends Object {
 	 */
 	public function url($name, $attrs = array()) {
 		$attrs['value']	= $this->model()->{$name};
-		return $this->helper()->urlField($this->formatName($name), $attrs);
+		return $this->urlField($this->formatName($name), $attrs);
 	}
 	
 	/**
@@ -93,7 +93,7 @@ class Form extends Object {
 	 */
 	public function telephone($name, $attrs = array()) {
 		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
-		return $this->helper()->telephoneField($this->formatName($name), $attrs);
+		return $this->telephoneField($this->formatName($name), $attrs);
 	}
 	
 	/**
@@ -104,7 +104,7 @@ class Form extends Object {
 	 */
 	public function hidden($name, $value = null, $attrs = array()) {
 		$value	= ($value) ? $value : $this->model()->{$name};
-		return $this->helper()->hiddenFieldTag($this->formatName($name), $value, $attrs);
+		return $this->hiddenFieldTag($this->formatName($name), $value, $attrs);
 	}
 	
 	/**
@@ -114,7 +114,7 @@ class Form extends Object {
 	 */
 	public function password($name, $attrs = array()) {
 		//$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
-		return $this->helper()->passwordFieldTag($this->formatName($name), $attrs);
+		return $this->passwordFieldTag($this->formatName($name), $attrs);
 	}
 	
 	/**
@@ -124,7 +124,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function radioButton($name, $value, $attrs = array()) {
-		return $this->helper()->radioButtonTag($this->formatName($name), $value, $attrs);
+		return $this->radioButtonTag($this->formatName($name), $value, $attrs);
 	}
 	
 	/**
@@ -136,7 +136,7 @@ class Form extends Object {
 		if (isset($this->model()->{$name})) {
 			$attrs['checked']	= 'checked';
 		}
-		return $this->helper()->checkBoxTag($this->formatName($name), $attrs);
+		return $this->checkBoxTag($this->formatName($name), $attrs);
 	}
 	
 	/**
@@ -146,10 +146,9 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function label($name, $label = null, $attrs = null) {
-		return $this->helper()
-					->labelTag(
+		return $this->labelTag(
 							$this->formatName($name), 
-							($label !== null) ? $label : $this->helper()->toLabel($name),
+							($label !== null) ? $label : $this->toLabel($name),
 							$attrs);
 	}
 	
@@ -160,7 +159,7 @@ class Form extends Object {
 	 */
 	public function textField($name, $attrs = array()) {
 		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
-		return $this->helper()->textFieldTag($this->formatName($name), $attrs);
+		return $this->textFieldTag($this->formatName($name), $attrs);
 	}
 	
 	/**
@@ -170,7 +169,7 @@ class Form extends Object {
 	 */
 	public function fileField($name, $attrs = array()) {
 		$attrs['value']	= (isset($this->model()->{$name})) ? $this->model()->{$name} : null;
-		return $this->helper()->fileFieldTag($this->formatName($name), $attrs);
+		return $this->fileFieldTag($this->formatName($name), $attrs);
 	}
 	
 	/**
@@ -198,10 +197,9 @@ class Form extends Object {
 	 */
 	public function select($name, array $options, $defaultSelected = null, $attrs = []) {
 		$selected = (isset($this->model()->{$name})) ? $this->model()->{$name} : $defaultSelected;
-		return $this->helper()
-						->selectTag(
+		return $this->->selectTag(
 								$this->formatName($name), 
-								$this->helper()->optionsForSelect($options, $selected), 
+								$this->optionsForSelect($options, $selected), 
 								$attrs); 
 	}
 	
@@ -212,13 +210,13 @@ class Form extends Object {
 	 * @throws \Exception
 	 * @return mixed
 	 */
-	public function __call($name, $args) {
+	/*public function __call($name, $args) {
 		if (method_exists($this->helper(), $name)) {
 			return call_user_func_array(array($this->helper(), $name), $args);
 		}
 	
 		throw new \Exception("No method exists " . get_class($this) . "#$name");
-	}
+	}*/
 	
 	/**
 	 * Getter for name

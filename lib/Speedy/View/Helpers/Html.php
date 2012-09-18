@@ -3,7 +3,6 @@ namespace Speedy\View\Helpers;
 
 use \Speedy\View\Exception as ViewException;
 use \Speedy\View\Helpers\Exception;
-use \Speedy\View\Helpers\Base;
 use \Speedy\View\Helpers\Form;
 use \Speedy\Router;
 use \Speedy\Router\Draw;
@@ -11,7 +10,7 @@ use \Speedy\Utility\Inflector;
 use \Speedy\Utility\Links;
 use \App;
 
-class Html extends Base {
+trait Html {
 	
 	private $_selfClosing	= array(
 		'input',
@@ -76,7 +75,7 @@ class Html extends Base {
 		
 	
 		$attrs['method']	= Draw::POST;
-		$form	= new Form($model, $this);
+		$form	= new Form($model);
 		if (!isset($attrs['action']))
 			$attrs['action']	= $form->path();
 		
@@ -439,6 +438,8 @@ class Html extends Base {
 		if ($this->linksHelper()->hasRoutePath($name)) {
 			return $this->linksHelper()->__pathToLink($name, $args);
 		}
+		
+		return parent::__call($name, $args);
 	}
 	
 	public function respondsTo($method) {

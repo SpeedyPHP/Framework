@@ -8,6 +8,8 @@ use Speedy\Http\Exception as HttpException;
 
 abstract class Base extends Object {
 	
+	use \Speedy\View\Helpers\Html;
+	
 	/**
 	* Reference to controller
 	* @var \Speedy\Controller
@@ -39,7 +41,7 @@ abstract class Base extends Object {
 	protected $_yields = array();
 	
 	protected $_mixins	= array(
-		'\\Speedy\\View\\Helpers\\Html',
+		//'\\Speedy\\View\\Helpers\\Html',
 		'\\Speedy\\View\\Helpers\\Inflector',
 		'\\Speedy\\View\\Helpers\\SqlLog'
 	);
