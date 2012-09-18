@@ -4,6 +4,7 @@ namespace Speedy;
 const DEBUG = false;
 require_once "Exception.php";
 require_once "Traits/ArrayAccess.php";
+require_once 'Traits/Convenience.php';
 
 /**
  * Base object for all SpeedyPHP objects
