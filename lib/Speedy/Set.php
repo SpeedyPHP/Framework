@@ -3,14 +3,6 @@ namespace Speedy;
 
 class Set extends \ArrayIterator {
 	
-	public function __construct(mixed $array) {
-		if (!is_array($array) && !is_object($array)) {
-			$array = [];
-		}
-		
-		return parent::__construct($array);
-	}
-	
 	public function each($closure) {
 		foreach ($this as &$value) {
 			$closure($value);
@@ -23,6 +15,14 @@ class Set extends \ArrayIterator {
 			$closure($key, $value);
 		}
 		return;
+	}
+	
+	public function first() {
+		return $this[0];
+	}
+	
+	public function length() {
+		return $this->count();
 	}
 	
 }
