@@ -302,6 +302,23 @@ trait Html {
 	}
 	
 	/**
+	 * Create options array from collection
+	 * @param mixed array/object $collection either array or object that implements \ArrayAccess
+	 * @param mixed $key
+	 * @param mixed $value
+	 */
+	public function optionsFromCollectionForSelect($collection, $key, $value) {
+		$options = [];
+		if (!empty($collection)) {
+			foreach ($collection as $record) {
+				$options[$record[$key]] = $record[$value];
+			}
+		}
+		
+		return $options;
+	}
+	
+	/**
 	 * File field helper
 	 * @param string $name
 	 * @param array $attrs

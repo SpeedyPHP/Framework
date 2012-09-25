@@ -181,14 +181,11 @@ class Form extends Object {
 	 * @param mixed $defaultSelected
 	 */
 	public function collectionSelect($name, $collection, $key, $value, $defaultSelected = null, $attrs = []) {
-		$options = [];
-		if (!empty($collection)) {
-			foreach ($collection as $record) {
-				$options[$record->{$key}] = $record->{$value};
-			}
-		}
-		
-		return $this->select($name, $options, $defaultSelected, $attrs);
+		return $this->select(
+				$name, 
+				$this->optionsFromCollectionForSelect($collection), 
+				$defaultSelected, 
+				$attrs);
 	}
 	
 	/**
