@@ -377,6 +377,13 @@ namespace {
 		}
 		return $files;
 	}
+	
+	function is_hash($var) {
+		if (!is_array($var))
+			return false;
+	
+		return array_keys($var) !== range(0,sizeof($var)-1);
+	}
 
 }
 
