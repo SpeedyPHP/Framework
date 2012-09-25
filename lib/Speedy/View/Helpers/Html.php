@@ -551,7 +551,8 @@ trait Html {
 	 * @return string
 	 */
 	private function toId($string) {
-		if (strpos($string, '.') === false) return $string;
+		$string	= str_replace(']', '', $string);
+		$string = str_replace('[', '_', $string);
 		
 		return str_replace('.', '_', $string);
 	}
