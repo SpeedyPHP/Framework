@@ -11,7 +11,7 @@
 	"require": {
 		"php": ">=5.4",
 		"SpeedyPHP/Sprockets" : "dev-master",
-		"SpeedyPHP/ActiveRecord" : "dev-master",
+		"SpeedyPHP/ActiveRecord" : "dev-speedy",
 		"jaz303/phake" : "dev-master"
 	},
 	"autoload":{
