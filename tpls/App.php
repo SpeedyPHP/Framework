@@ -8,8 +8,6 @@ use \Speedy\Session;
 class App extends \Speedy\App {
 
 	protected \$_name = "{$namespace}";
-	
-	protected \$_orm	= \Speedy\Orm\ActiveRecord;
 
 
 	protected function initApp() {
