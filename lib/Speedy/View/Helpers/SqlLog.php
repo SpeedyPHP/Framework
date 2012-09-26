@@ -5,7 +5,7 @@ namespace Speedy\View\Helpers;
 trait SqlLog {
 	
 	public function printSqlLog() {
-		$logger	= \Speedy\ActiveRecord\Logger\Runtime::instance();
+		$logger	= \ActiveRecord\Logger\Runtime::instance();
 		echo $this->_printLog($logger);
 	}
 	
