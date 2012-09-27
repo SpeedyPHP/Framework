@@ -45,11 +45,15 @@ class Logger {
 		self::instance()->logger()->warn($msg);
 	}
 	
+	public static function ready() {
+		return static::$_ready;
+	}
+	
 	public function setLogger($logger) {
 		if (!class_exists($logger)) return;
 		
 		$this->_logger	= $logger;
-		self::$_ready	= true;
+		static::$_ready	= true;
 		return $this;
 	}
 	
