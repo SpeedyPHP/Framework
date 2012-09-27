@@ -12,7 +12,7 @@ class Logger {
 	
 	private $_loggerObj;
 	
-	private $_ready = false;
+	private static $_ready = false;
 	
 	
 	
@@ -21,27 +21,27 @@ class Logger {
 	}
 	
 	public static function info($msg) {
-		if (!$this->_ready) return;
+		if (!self::$_ready) return;
 		self::instance()->logger()->debug($msg);
 	}
 	
 	public static function debug($msg) {
-		if (!$this->_ready) return;
+		if (!self::$_ready) return;
 		self::instance()->logger()->debug($msg);
 	}
 	
 	public static function error($msg) {
-		if (!$this->_ready) return;
+		if (!self::$_ready) return;
 		self::instance()->logger()->error($msg);
 	}
 	
 	public static function fatal($msg) {
-		if (!$this->_ready) return;
+		if (!self::$_ready) return;
 		self::instance()->logger()->fatal($msg);
 	}
 	
 	public static function warn($msg) {
-		if (!$this->_ready) return;
+		if (!self::$_ready) return;
 		self::instance()->logger()->warn($msg);
 	}
 	
@@ -49,7 +49,7 @@ class Logger {
 		if (!class_exists($logger)) return;
 		
 		$this->_logger	= $logger;
-		$this->_ready	= true;
+		self::$_ready	= true;
 		return $this;
 	}
 	
