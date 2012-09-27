@@ -21,17 +21,17 @@ class Console extends Base {
 	
 	public function error($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->($this->boldText('[ERROR] ') . $msg);
+		$this->add($this->boldText('[ERROR] ') . $msg);
 	}
 	
 	public function fatal($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->($this->boldText('[FATAL] ') . $msg);
+		$this->add($this->boldText('[FATAL] ') . $msg);
 	}
 	
 	public function warn($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->($this->boldText('[WARN] ') . $msg);
+		$this->add($this->boldText('[WARN] ') . $msg);
 	}
 
 	public function boldText($text) {
