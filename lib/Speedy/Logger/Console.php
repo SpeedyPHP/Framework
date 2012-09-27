@@ -7,7 +7,11 @@ class Console extends Base {
 	
 	public function add($msg) {
 		$msg	= $this->cleanInput($msg);
-		fwrite(STDOUT, $msg . "\n");
+		ob_start();
+		echo $msg;
+		$content	= ob_get_clean();
+		
+		fwrite(STDOUT, $content . "\n");
 	}
 	
 	public function info($msg) {
