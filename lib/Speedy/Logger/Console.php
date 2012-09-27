@@ -39,7 +39,7 @@ class Console extends Base {
 	}
 
 	public function boldText($text) {
-		return '\033[1m' . $text . '\033[0m';
+		return chr(27) . '[1m' . $text . chr(27) . '[0m';
 	}
 	
 	/**
