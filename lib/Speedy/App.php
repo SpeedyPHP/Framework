@@ -141,10 +141,6 @@ namespace Speedy {
 			if (!empty($this->_middlewares)) {
 				$this->middlewareStack()->addFromArray($this->_middlewares);
 			}
-			
-			output("\nStarting new request");
-			output("REQUEST: " . self::request()->url());
-			output("METHOD: " . self::request()->method());
 		}
 		
 		/**

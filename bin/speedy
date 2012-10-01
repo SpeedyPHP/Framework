@@ -38,6 +38,11 @@ if (file_exists($pathToApp)) {
 	include $pathToApp;
 }
 
+$pathToDefines = APP_ROOT . DS . 'public' . DS . 'defines.php';
+if (file_exists($pathToDefines) {
+	include $pathToDefines;
+}
+
 if (class_exists('App')) {
   App::instance();
 	define("APP_LOADED", true);

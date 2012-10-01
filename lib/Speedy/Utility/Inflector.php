@@ -38,7 +38,7 @@ class Inflector
     * @param    string    $word    English noun to pluralize
     * @return string Plural noun
     */
-    function pluralize($word)
+    public static function pluralize($word)
     {
         $plural = array(
         '/(quiz)$/i' => '\1zes',
@@ -103,7 +103,7 @@ class Inflector
     * @param    string    $word    English noun to singularize
     * @return string Singular noun.
     */
-    function singularize($word)
+    public static function singularize($word)
     {
         $singular = array (
         '/(quiz)zes$/i' => '\\1',
@@ -184,7 +184,7 @@ class Inflector
     * the words in the title.
     * @return string Text formatted as title
     */
-    function titleize($word, $uppercase = '')
+    public static function titleize($word, $uppercase = '')
     {
         $uppercase = $uppercase == 'first' ? 'ucfirst' : 'ucwords';
         return $uppercase(Inflector::humanize(Inflector::underscore($word)));
@@ -206,7 +206,7 @@ class Inflector
     * @param    string    $word    Word to convert to camel case
     * @return string UpperCamelCasedWord
     */
-    function camelize($word)
+    public static function camelize($word)
     {
         return str_replace(' ','',ucwords(preg_replace('/[^A-Z^a-z^0-9]+/',' ',$word)));
     }
@@ -227,7 +227,7 @@ class Inflector
     * @param    string    $word    Word to underscore
     * @return string Underscored word
     */
-    function underscore($word)
+    public static function underscore($word)
     {
         return  strtolower(preg_replace('/[^A-Z^a-z^0-9]+/','_',
         preg_replace('/([a-z\d])([A-Z])/','\1_\2',
@@ -254,7 +254,7 @@ class Inflector
     * instead of just the first one.
     * @return string Human-readable word
     */
-    function humanize($word, $uppercase = '')
+    public static function humanize($word, $uppercase = '')
     {
         $uppercase = $uppercase == 'all' ? 'ucwords' : 'ucfirst';
         return $uppercase(str_replace('_',' ',preg_replace('/_id$/', '',$word)));
@@ -276,7 +276,7 @@ class Inflector
     * @param    string    $word    Word to lowerCamelCase
     * @return string Returns a lowerCamelCasedWord
     */
-    function variablize($word)
+    public static function variablize($word)
     {
         $word = Inflector::camelize($word);
         return strtolower($word[0]).substr($word,1);
@@ -297,7 +297,7 @@ class Inflector
     * @param    string    $class_name    Class name for getting related table_name.
     * @return string plural_table_name
     */
-    function tableize($class_name)
+    public static function tableize($class_name)
     {
         return Inflector::pluralize(Inflector::underscore($class_name));
     }
@@ -317,7 +317,7 @@ class Inflector
     * @param    string    $table_name    Table name for getting related ClassName.
     * @return string SingularClassName
     */
-    function classify($table_name)
+    public static function classify($table_name)
     {
         return Inflector::camelize(Inflector::singularize($table_name));
     }
@@ -335,7 +335,7 @@ class Inflector
     * @param    integer    $number    Number to get its ordinal value
     * @return string Ordinal representation of given string.
     */
-    function ordinalize($number)
+    public static function ordinalize($number)
     {
         if (in_array(($number % 100),range(11,13))){
             return $number.'th';

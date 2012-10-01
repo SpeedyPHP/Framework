@@ -2,6 +2,8 @@
 namespace Speedy;
 
 
+use Speedy\Logger;
+
 class Request extends Singleton {
 	
 	const GET	= 'GET';
@@ -20,6 +22,9 @@ class Request extends Singleton {
 		$this->addData($_SERVER);
 		
 		$this->parseUri();
+		Logger::info("\nStarting new request");
+		Logger::info("REQUEST: " . $this->url());
+		Logger::info("METHOD: " . $this->method());
 	}
 	
 	/**
