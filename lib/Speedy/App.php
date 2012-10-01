@@ -157,7 +157,7 @@ namespace Speedy {
 		 */
 		public function config($name = null) {
 			if (!$this->_config) {
-				$config =& Config::instance();
+				$config = Config::instance();
 				$this->setConfig($config);
 			}
 			

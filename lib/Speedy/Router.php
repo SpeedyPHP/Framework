@@ -141,8 +141,8 @@ class Router extends Object {
 	 * Setter for request
 	 * @param \Speedy\Request $request
 	 */
-	public function setRequest(\Speedy\Request &$request) {
-		$this->_request	=& $request;
+	public function setRequest(\Speedy\Request $request) {
+		$this->_request	= $request;
 		return $this;
 	}
 	

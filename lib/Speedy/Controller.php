@@ -2,13 +2,13 @@
 namespace Speedy;
 
 
-use \Speedy\Utility\Logger;
-use \Speedy\Utility\Inflector;
-use \Speedy\Config;
-use \Speedy\Http\Exception as HttpException;
-use \Speedy\View;
-use \Speedy\Session;
-use \Speedy\Utility\Links;
+//use Speedy\Utility\Logger;
+use Speedy\Utility\Inflector;
+use Speedy\Config;
+use Speedy\Http\Exception as HttpException;
+use Speedy\View;
+use Speedy\Session;
+use Speedy\Utility\Links;
 
 /**
  * SpeedyPHP Controller forms the 'C' in MVC

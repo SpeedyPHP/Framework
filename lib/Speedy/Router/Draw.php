@@ -256,8 +256,8 @@ class Draw extends Object {
 	 * Sets the router
 	 * @param \Speedy\Router $router
 	 */
-	protected function setRouter(\Speedy\Router &$router) {
-		$this->_router =& $router;
+	protected function setRouter(\Speedy\Router $router) {
+		$this->_router = $router;
 		return $this;
 	}
 	
