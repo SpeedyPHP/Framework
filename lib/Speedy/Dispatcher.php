@@ -6,7 +6,7 @@ use \Speedy\Utility\Inflector;
 
 class Dispatcher extends Object {
 
-	public static function run(\Speedy\Router &$router) {
+	public static function run(\Speedy\Router $router) {
 		$response	= new Response();
 		$route		= $router->route();
 		
