@@ -74,7 +74,7 @@ class Controller extends Object {
 	 * @param object \Speedy\Request $request
 	 * @param object \Speedy\Response $response
 	 */
-	public function __construct(\Speedy\Request &$request, \Speedy\Response &$response) {
+	public function __construct(\Speedy\Request $request, \Speedy\Response $response) {
 		$params	= $request->params();
 		$this->_format	= new Object();
 		
@@ -184,10 +184,10 @@ class Controller extends Object {
 	 * @param object \Speedy\Request $request
 	 * @return object \Speedy\Controller
 	 */
-	private function setRequest(\Speedy\Request &$request) {
+	private function setRequest(\Speedy\Request $request) {
 		if (isset($this->_request)) return $this;
 		
-		$this->_request =& $request;
+		$this->_request = $request;
 		return $this;
 	}
 	
@@ -196,10 +196,10 @@ class Controller extends Object {
 	 * @param object \Speedy\Response $response
 	 * @return object \Speedy\Controller
 	 */
-	private function setResponse(\Speedy\Response &$response) {
+	private function setResponse(\Speedy\Response $response) {
 		if (isset($this->_response)) return $this;
 		
-		$this->_response	=& $response;
+		$this->_response	= $response;
 		return $this;
 	}
 	
