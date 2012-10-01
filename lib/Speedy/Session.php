@@ -21,7 +21,7 @@ class Session extends Singleton {
 		session_start();
 		
 		$self	= self::instance();
-		$self->addData($_SESSION);
+		$self->data = &$_SESSION;
 	
 		if (!$self->has('ip_address')) {
 			$self->write('ip_address', $_SERVER['REMOTE_ADDR']);
@@ -70,20 +70,6 @@ class Session extends Singleton {
 	
 	public function has($name) {
 		return ($this->read($name)) ? true : false;
-	}
-	
-	protected function addData(&$data) {
-		if (empty($this->_data) && is_array($data)) {
-			$this->_data =& $data;
-		} elseif (is_array($data)) {
-			foreach ($data as $key => $value) {
-				$this->_data[$key]	= $value;
-			}
-		} else {
-			$this->_data[]	= $data;
-		}
-	
-		return $this;
 	}
 	
 }

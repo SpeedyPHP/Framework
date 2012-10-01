@@ -154,8 +154,8 @@ abstract class Base extends Object {
 		return (strpos($name, '/')) ? str_replace('/', DS, $name) : $name; 
 	}
 	
-	public function setParams(&$params) {
-		$this->params	=& $params;
+	public function setParams($params) {
+		$this->params	= $params;
 		return $this;
 	}
 	
