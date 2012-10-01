@@ -39,7 +39,7 @@ if (file_exists($pathToApp)) {
 }
 
 $pathToDefines = APP_ROOT . DS . 'public' . DS . 'defines.php';
-if (file_exists($pathToDefines) {
+if (file_exists($pathToDefines)) {
 	include $pathToDefines;
 }
 
