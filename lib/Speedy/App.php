@@ -234,7 +234,7 @@ namespace Speedy {
 		 */
 		public function router() {
 			if (!$this->_router) {
-				$router	=& Router::instance();
+				$router	= Router::instance();
 				$this->_setRouter($router);
 			}
 			
