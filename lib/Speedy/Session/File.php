@@ -7,7 +7,7 @@ use Speedy\Config;
 
 class File extends Base {
 	
-	use Speedy\Traits\ArrayAccess;
+	use \Speedy\Traits\ArrayAccess;
 	
 	/**
 	 * True if the Session is still valid
