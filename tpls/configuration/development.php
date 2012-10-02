@@ -7,6 +7,8 @@ App::instance()->configure(function(\$conf) {
 	// \$conf->set('short_links', true);
 	
 	\$conf->set('Security.salt', 'salt'); // Change this to your liking
+	\$conf->set('Session.manager', '\\Speedy\\Session\\File');
+	\$conf->set('Config.manager', '\\Speedy\\Cache\\File');
 	
 	date_default_timezone_set('America/Los_Angeles');
 	

@@ -1,5 +1,5 @@
 <?php 
-namespace ActiveRecord\Cache;
+namespace Speedy\Cache;
 
 
 interface CacheInterface {
