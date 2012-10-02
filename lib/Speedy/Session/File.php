@@ -677,7 +677,7 @@ class File extends Base {
 	/**
 	 * Clean up expired session
 	 */
-	public function gc() {
+	public function gc($maxlifetime) {
 		return true;
 	}
 	
