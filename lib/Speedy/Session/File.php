@@ -399,7 +399,8 @@ class File extends Base {
 	 *
 	 * @return void
 	 */
-	public function destroy() {
+	public function destroy($key = null) {
+		if ($key) return $this->delete($key);
 		if ($this->started()) {
 			session_destroy();
 		}
