@@ -50,7 +50,7 @@ class Session {
 	
 	public function manager() {
 		if (!$this->_manager) {
-			$manager = Config::read('Session.manager'));
+			$manager = Config::read('Session.manager');
 			$this->_manager = new $manager;
 		}
 		
