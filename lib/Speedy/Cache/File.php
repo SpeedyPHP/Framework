@@ -32,7 +32,7 @@ class File implements CacheInterface {
 			
 			return;
 		} else {
-			$this->clearAll($path);	
+			$this->flush($path);	
 		}
 	}
 	
@@ -40,7 +40,7 @@ class File implements CacheInterface {
 	 * Clear entire cache for path
 	 * @param string $path
 	 */
-	public function clearAll($path = null) {
+	public function flush($path = null) {
 		$path = $this->path($path);
 		foreach (glob($path . DS . "*") as $filename) {
 			@unlink($filename);

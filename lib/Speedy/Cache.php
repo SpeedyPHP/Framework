@@ -58,8 +58,8 @@ class Cache {
 	 * Clear entire cache for path
 	 * @param string $path
 	 */
-	public function clearAll($path = null) {
-		return self::instance()->manager()->clearAll($path = null);
+	public function flush($path = null) {
+		return self::instance()->manager()->flush($path = null);
 	} 
 	
 }
