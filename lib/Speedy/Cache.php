@@ -1,29 +1,27 @@
 <?php 
 namespace Speedy;
 
-use \Speedy\Singleton;
-use \Speedy\Cache\Exception as CacheException;
 
-class Cache extends Singleton {
+use Speedy\Config;
 
-	const DEF	= 'default';
+class Cache {
+
+	use \Speedy\Traits\Singleton;
 	
-	public $path= array();
-	
+	private $_manager;
 	
 	
 	public function __construct() {
-		$this->_addPath('default', TMP_PATH . DS . 'cache');
+		
 	}
 	
-	/**
-	 * Static add a path
-	 * @param string $name
-	 * @param string $path
-	 * @return \Speedy\Cache
-	 */
-	public static function addPath($name, $path) {
-		return self::instance()->_addPath($name, $path);
+	public function manager() {
+		if (!$this->_manager) {
+			$class	= Config::read('Config.manager');
+			$this->_manager = new $class();
+		}
+		
+		return $this->_manager;
 	}
 	
 	/**
@@ -33,8 +31,8 @@ class Cache extends Singleton {
 	 * @param string $setting (optional)
 	 * @return \Speedy\Cache
 	 */
-	public static function write($name, $data, $setting = self::DEF) {
-		return self::instance()->_write($name, $data, $setting);
+	public static function write($name, $data, $setting = null) {
+		return self::instance()->manager()->write($name, $data, $setting);
 	}
 	
 	/**
@@ -43,8 +41,8 @@ class Cache extends Singleton {
 	 * @param string $setting (optional)
 	 * @return mixed
 	 */
-	public static function read($name, $setting = self::DEF) {
-		return self::instance()->_read($name, $setting);
+	public static function read($name, $setting = null) {
+		return self::instance()->manager()->read($name, $setting);
 	}
 	
 	/**
@@ -52,96 +50,17 @@ class Cache extends Singleton {
 	 * @param string $name
 	 * @param string $setting
 	 */
-	public static function clear($name = null, $path = 'default') {
-		if ($name) {
-			$filepath = self::instance()->path($path) . DS . $name;
-			if (file_exists($filepath)) {
-				@unlink($filepath);
-			}
-			
-			return;
-		} else {
-			self::instance()->clearAll($path);	
-		}
+	public static function clear($name = null, $path = null) {
+		return self::instance()->manager()->clear($name, $path);
 	}
 	
 	/**
 	 * Clear entire cache for path
 	 * @param string $path
 	 */
-	public function clearAll($path) {
-		$path = $this->path($path);
-		foreach (glob($path . DS . "*") as $filename) {
-			@unlink($filename);
-		}
+	public function clearAll($path = null) {
+		return self::instance()->manager()->clearAll($path = null);
 	} 
-	
-	/**
-	 * Read from cache
-	 * @param string $name
-	 * @param string $setting (optional)
-	 * @return mixed
-	 */
-	public function _read($name, $setting = self::DEF) {
-		$data	= @file_get_contents($this->fullPath($name, $setting));
-		if (!$data) return false;
-		
-		return unserialize($data);
-	}
-	
-	/**
-	 * Write to cache
-	 * @param string $name
-	 * @param mixed $data
-	 * @param string $setting (optional)
-	 * @return \Speedy\Cache
-	 */
-	public function _write($name, $data, $setting = self::DEF) { 
-		file_put_contents($this->fullPath($name, $setting), serialize($data));
-		return $this;
-	}
-	
-	/**
-	 * Getter for path
-	 * @param string $path
-	 * @return string
-	 */
-	public function path($path = self::DEF) {
-		if (!$this->hasPath($path))
-			throw new CacheException("No path found for $path in cache settings");
-		
-		return $this->path[$path];
-	}
-	
-	/**
-	 * Checks if a path exists
-	 * @param string $path
-	 * @return boolean
-	 */
-	public function hasPath($path) {
-		return isset($this->path[$path]);
-	}
-	
-	/**
-	 * Get the full path
-	 * @param string $name
-	 * @param string $setting
-	 * @return string
-	 */
-	protected function fullPath($name, $setting = self::DEF) {
-		return $this->path($setting) . DS . $name;
-	}
-	
-	/**
-	 * Add a path
-	 * @param string $name
-	 * @param string $path
-	 * @return \Speedy\Cache
-	 */
-	protected function _addPath($name, $path) {
-		$this->path[$name]	= $path;
-		return $this;
-	}
 	
 }
 ?>
