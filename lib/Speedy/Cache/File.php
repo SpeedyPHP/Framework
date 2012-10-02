@@ -13,7 +13,7 @@ class File implements CacheInterface {
 	
 	
 	public function __construct() {
-		$this->_addPath('default', TMP_PATH . DS . 'cache');
+		$this->addPath('default', TMP_PATH . DS . 'cache');
 	}
 	
 	/**
