@@ -25,7 +25,7 @@ class Session {
 	}
 	
 	public function get($key = null) {
-		return $this->manager()->get($key)
+		return $this->manager()->get($key);
 	}
 	
 	public function delete($key) {
