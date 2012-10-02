@@ -111,7 +111,7 @@ class File extends Base {
 			$this->_userAgent = md5(Request::get('HTTP_USER_AGENT') . Config::read('Security.salt'));
 		}
 		$this->setPath($base)
-			->setHost(\env('HTTP_HOST'));
+			->setHost(Request::get('HTTP_HOST'));
 		$this->start();
 	
 		//register_shutdown_function('session_write_close');
