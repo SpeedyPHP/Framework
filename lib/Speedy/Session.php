@@ -7,7 +7,7 @@ use Speedy\Config;
 
 class Session {
 	
-	use Speedy\Traits\Singleton;
+	use Traits\Singleton;
 	
 	public $flash;
 	
