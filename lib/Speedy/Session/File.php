@@ -395,19 +395,6 @@ class File extends Base {
 	}
 	
 	/**
-	 * Helper method to destroy invalid sessions.
-	 *
-	 * @return void
-	 */
-	public function destroy($key = null) {
-		if ($key) return $this->delete($key);
-		if ($this->started()) {
-			session_destroy();
-		}
-		$this->clear();
-	}
-	
-	/**
 	 * Clears the session, the session id, and renew's the session.
 	 *
 	 * @return void
@@ -662,6 +649,53 @@ class File extends Base {
 		$this->error[$errorNumber] = $errorMessage;
 		$this->lastError = $errorNumber;
 	}
+	
+	/**
+	 * SessionHandlerInterface Class methods
+	 */
+	
+	/**
+	 * Close session
+	 */
+	public function close() {
+		return true;
+	}
+	
+	/**
+	 * Helper method to destroy invalid sessions.
+	 *
+	 * @return void
+	 */
+	public function destroy($key = null) {
+		if ($key) return $this->delete($key);
+		if ($this->started()) {
+			session_destroy();
+		}
+		$this->clear();
+	}
+	
+	/**
+	 * Clean up expired session
+	 */
+	public function gc() {
+		return true;
+	}
+	
+	/**
+	 * Opens a session
+	 */
+	public function open($save_path, $name) {
+		return true;
+	}
+	
+	public function read($session_id) {
+		return $this->get($session_id);
+	}
+	
+	public function write($session_id, $session_data) {
+		return (($this->set($session_id, $session_data)) !== false) ? true : false;
+	}
+	
 }
 
 ?>
