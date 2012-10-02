@@ -39,7 +39,7 @@ class Cache implements CacheInterface {
 	 * Clear entire cache for path
 	 * @param string $path
 	 */
-	public function clearAll($path) {
+	public function clearAll($path = null) {
 		$path = $this->path($path);
 		foreach (glob($path . DS . "*") as $filename) {
 			@unlink($filename);
