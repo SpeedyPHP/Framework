@@ -132,7 +132,7 @@ class File extends Base {
 	protected function setPath($base = null) {
 		if (empty($base)) {
 			$this->path = '/';
-			return;
+			return $this;
 		}
 		if (strpos($base, 'index.php') !== false) {
 			$base = str_replace('index.php', '', $base);
