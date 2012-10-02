@@ -1,6 +1,7 @@
 <?php 
 namespace Speedy\Cache;
 
+
 use Exception as CacheException;
 
 class Cache implements CacheInterface {
