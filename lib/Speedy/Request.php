@@ -166,6 +166,10 @@ class Request extends Singleton {
 		$this->setData('REQUEST_METHOD', strtoupper($method));
 		return $this;
 	}
+	
+	public static function get($name) {
+		return self::instance()->data($name);
+	}
 }
 
 ?>

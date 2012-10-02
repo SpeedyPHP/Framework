@@ -4,6 +4,7 @@ namespace Speedy\Session;
 
 
 use Speedy\Config;
+use Speedy\Request;
 
 class File extends Base {
 	
@@ -106,8 +107,8 @@ class File extends Base {
 		$this->configure();
 		
 		$checkAgent = Config::read('Session.checkAgent');
-		if (($checkAgent === true || $checkAgent === null) && \env('HTTP_USER_AGENT') != null) {
-			$this->_userAgent = \md5(\env('HTTP_USER_AGENT') . Config::read('Security.salt'));
+		if (($checkAgent === true || $checkAgent === null) && Request::get('HTTP_USER_AGENT') != null) {
+			$this->_userAgent = md5(Request::get('HTTP_USER_AGENT') . Config::read('Security.salt'));
 		}
 		$this->setPath($base)
 			->setHost(\env('HTTP_HOST'));
