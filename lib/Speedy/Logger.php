@@ -17,7 +17,7 @@ class Logger {
 	
 	
 	public function __construct() {
-		$this->setLogger(Config::instance()->get('logger'));
+		$this->setLogger(Config::read('logger'));
 	}
 	
 	public static function info($msg) {

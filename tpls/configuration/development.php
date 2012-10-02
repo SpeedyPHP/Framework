@@ -4,7 +4,9 @@ return <<<EOF
 App::instance()->configure(function(\$conf) {
 
 	// Turn on short links
-	// \$this->set('short_links', true);
+	// \$conf->set('short_links', true);
+	
+	\$conf->set('Security.salt', 'salt'); // Change this to your liking
 	
 	date_default_timezone_set('America/Los_Angeles');
 	

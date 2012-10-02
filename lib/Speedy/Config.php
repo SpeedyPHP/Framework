@@ -146,6 +146,14 @@ namespace Speedy {
 		public function get($name) {
 			return $this->data($name);
 		}
+		
+		public static function write($name, $value) {
+			return self::instance()->write($name, $value);
+		}
+		
+		public static function read($name) {
+			return self::instance()->get($name);
+		}
 	
 		/**
 		 * Setter for environment
