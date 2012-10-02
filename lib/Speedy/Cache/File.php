@@ -4,7 +4,7 @@ namespace Speedy\Cache;
 
 use Exception as CacheException;
 
-class Cache implements CacheInterface {
+class File implements CacheInterface {
 
 	const PathDefault	= 'default';
 	
