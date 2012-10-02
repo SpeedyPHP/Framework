@@ -106,11 +106,11 @@ class File extends Base {
 		$this->configure();
 		
 		$checkAgent = Config::read('Session.checkAgent');
-		if (($checkAgent === true || $checkAgent === null) && env('HTTP_USER_AGENT') != null) {
-			$this->_userAgent = md5(env('HTTP_USER_AGENT') . Config::read('Security.salt'));
+		if (($checkAgent === true || $checkAgent === null) && \env('HTTP_USER_AGENT') != null) {
+			$this->_userAgent = \md5(\env('HTTP_USER_AGENT') . Config::read('Security.salt'));
 		}
 		$this->setPath($base)
-			->setHost(env('HTTP_HOST'));
+			->setHost(\env('HTTP_HOST'));
 		$this->start();
 	
 		//register_shutdown_function('session_write_close');
