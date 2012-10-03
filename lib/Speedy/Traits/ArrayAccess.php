@@ -27,6 +27,7 @@ trait ArrayAccess {
 		if (!$array) return;
 		if ($name === null) return;
 		if (!empty($array[$name])) {
+			unset($array[$name]);
 			return;
 		}
 	
