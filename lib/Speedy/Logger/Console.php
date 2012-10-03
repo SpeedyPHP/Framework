@@ -12,7 +12,7 @@ class Console extends Base {
 		echo $msg;
 		$content	= ob_get_clean();
 		
-		fwrite(STDOUT, $content);
+		fwrite(STDOUT, $content . "\n");
 	}
 	
 	public function info($msg) {
