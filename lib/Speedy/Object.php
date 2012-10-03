@@ -83,7 +83,7 @@ class Object {
 				$class = $mixin;
 			} elseif (is_string($mixin)) {
 				import($mixin);
-				$class	= \Speedy\Loader::toClass($mixin);
+				$class	= \Speedy\Loader::instance()->toClass($mixin);
 			} 
 				
 			if (!$class) {
