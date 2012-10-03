@@ -9,8 +9,6 @@ class Session {
 	
 	use Traits\Singleton;
 	
-	public $flash;
-	
 	private $_manager;
 	
 	
@@ -37,7 +35,7 @@ class Session {
 	}
 	
 	public function has($name) {
-		return ($this->manager()->get($name)) ? true : false;
+		return $this->manager()->has($name);
 	}
 	
 	public static function read($name) {

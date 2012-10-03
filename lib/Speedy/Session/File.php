@@ -92,9 +92,17 @@ class File extends Base {
 	 * This feature is only used when config value `Session.autoRegenerate` is set to true.
 	 *
 	 * @var integer
-	 * @see CakeSession::_checkValid()
+	 * @see 
 	 */
 	public static $requestCountdown = 10;
+	
+	/**
+	 * Current flash
+	 * @var array
+	 */
+	public $flash;
+	
+	
 	
 	/**
 	 * Pseudo constructor.
@@ -112,8 +120,11 @@ class File extends Base {
 		}
 		$this->setPath($base)
 			->setHost(Request::get('HTTP_HOST'));
-		$this->start();
-	
+		
+		if ($this->start() && $this->has('flash')) {
+			$this->flash = ['flash' => $this->get('flash')];
+			$this->delete('flash');
+		}
 		//register_shutdown_function('session_write_close');
 	}
 	
@@ -349,10 +360,13 @@ class File extends Base {
 		
 		
 		$result = $this->__dotAccess($name, $_SESSION);
-	
-		if (isset($result)) {
+		if (isset($result)) 
 			return $result;
-		}
+		
+		$result = $this->__dotAccess($name, $this->flash);
+		if (isset($result)) 
+			return $result;
+		
 		$this->setError(2, "$name doesn't exist");
 		return null;
 	}
@@ -393,6 +407,10 @@ class File extends Base {
 		}*/
 		return $this->__dotSetter($name, $value, $_SESSION);
 		// return true;
+	}
+	
+	public function has($key) {
+		return ($this->__dotIsset($key, $_SESSION) || $this->__dotIsset($key, $this->flash));
 	}
 	
 	/**
