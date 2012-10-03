@@ -44,7 +44,7 @@ class Console extends Base {
 	}
 	
 	public function __destruct() {
-		self::add("\n\n\n");
+		self::add("\n\n");
 	}
 	
 	/**
