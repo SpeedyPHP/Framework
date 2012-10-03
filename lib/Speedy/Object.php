@@ -258,7 +258,7 @@ class Object {
 		preg_match_all('/((?:^|[A-Z])[a-z]+)/', $name, $nameParts);
 		$nameParts	= $nameParts[0];
 		$verb		= array_shift($nameParts);
-		$path		= strtolower(implode(ARRAY_ACCESS_DEFAULT_DELIMETER, $nameParts));
+		$path		= strtolower(implode(self::$__aaDelimeter, $nameParts));
 		$property = lcfirst(implode('', $nameParts));
 		switch($verb) {
 			case "has":		
