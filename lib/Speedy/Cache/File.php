@@ -85,7 +85,7 @@ class File implements CacheInterface {
 		if ($path == null) $path = self::PathDefault;
 		
 		if (!$this->hasPath($path))
-			throw new CacheException("No path found for $path in cache settings");
+			$path = self::PathDefault;
 		
 		return $this->path[$path];
 	}
@@ -116,7 +116,7 @@ class File implements CacheInterface {
 	 * @param string $setting
 	 * @return string
 	 */
-	protected function fullPath($name, $setting = self::DEF) {
+	protected function fullPath($name, $setting = self::PathDefault) {
 		return $this->path($setting) . DS . $name;
 	}
 	
