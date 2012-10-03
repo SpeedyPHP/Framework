@@ -246,11 +246,11 @@ class Object {
 	 * Magic methods for magic getters, setters, and methods
 	 */
 	public function __call($name, $args) {
-		if (DEBUG) {
-			print_r($name);
-			print "\n";
-		}
-		
+		// Stupid I know, but have to b/c of stupid PHP limitations in Traits
+		return $this->___call($name, $args);
+	}
+	
+	public function ___call($name, $args) {
 		if (!$this->_loadedMixins()) {
 			$this->_loadMixins();
 		}
@@ -261,7 +261,7 @@ class Object {
 		$path		= strtolower(implode(self::$__aaDelimeter, $nameParts));
 		$property = lcfirst(implode('', $nameParts));
 		switch($verb) {
-			case "has":		
+			case "has":
 				if ($this->includes($property)) {
 					return empty($this->{$property});
 				} else {
@@ -269,7 +269,7 @@ class Object {
 				}
 			case "set":
 				$method = 'set' . implode('', $nameParts);
-        if (property_exists($this, $property)) {
+				if (property_exists($this, $property)) {
 					$this->{$property} = $args[0];
 				} elseif ($this->respondsTo($method)) {
 					$this->{$method}($args[0]);
