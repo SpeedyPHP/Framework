@@ -204,7 +204,7 @@ class Object {
 	 * @return mixed 
 	 */
 	public function data($name = null) {
-		return $this->__dotAccess($name, $this->_data);
+		return @$this->__dotAccess($name, $this->_data);
 	}
 	
 	public function __set($name, $value) {

@@ -458,7 +458,7 @@ trait Html {
 			return $this->linksHelper()->__pathToLink($name, $args);
 		}
 		
-		return $this->___call($name, $args);
+		return parent::__call($name, $args);
 	}
 	
 	public function respondsTo($method) {
