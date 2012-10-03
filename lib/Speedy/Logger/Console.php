@@ -12,7 +12,7 @@ class Console extends Base {
 		echo $msg;
 		$content	= ob_get_clean();
 		
-		fwrite(STDOUT, $content . "\n");
+		fwrite(STDOUT, $content);
 	}
 	
 	public function info($msg) {
@@ -41,6 +41,10 @@ class Console extends Base {
 
 	public function boldText($text) {
 		return chr(27) . '[1m' . $text . chr(27) . '[0m';
+	}
+	
+	public function __destruct() {
+		self::add("\n\n\n");
 	}
 	
 	/**

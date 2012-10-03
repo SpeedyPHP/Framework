@@ -22,7 +22,7 @@ class Request extends Singleton {
 		$this->addData($_SERVER);
 		
 		$this->parseUri();
-		Logger::info("\nStarting new request");
+		Logger::info("Starting new request");
 		Logger::info("REQUEST: " . $this->url());
 		Logger::info("METHOD: " . $this->method());
 	}

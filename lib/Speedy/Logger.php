@@ -22,7 +22,7 @@ class Logger {
 	
 	public static function info($msg) {
 		//if (!self::ready()) return;
-		self::instance()->logger()->debug($msg);
+		self::instance()->logger()->info($msg);
 	}
 	
 	public static function debug($msg) {
