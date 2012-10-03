@@ -14,6 +14,7 @@ require_once 'Traits/Convenience.php';
  * @package Speedy
  */
 class Object {
+	
 	use \Speedy\Traits\ArrayAccess;
 	use \Speedy\Traits\Convenience;
 	

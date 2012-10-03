@@ -2,12 +2,12 @@
 namespace Speedy {
 
 	
-	use \Speedy\Config;
-	use \Speedy\Router;
-	use \Speedy\Utility\Inflector;
-	use \Speedy\Exception\Error as ErrorException;
-	use \Speedy\Middleware\Stack as MiddlewareStack;
-	use \Speedy\Middleware\Asset as MiddlewareAsset;
+	use Speedy\Config;
+	use Speedy\Router;
+	use Speedy\Utility\Inflector;
+	use Speedy\Exception\Error as ErrorException;
+	use Speedy\Middleware\Stack as MiddlewareStack;
+	use Speedy\Middleware\Asset as MiddlewareAsset;
 	
 	class App extends Object {
 		
@@ -261,7 +261,7 @@ namespace Speedy {
 		
 		public function handleError($errno, $errstr = '', $errfile = '', $errline = '') {
 			if ( error_reporting() & $errno ) {
-				throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+				throw new \Speedy\Exception\Error($errstr, $errno, 0, $errfile, $errline);
 			}
 			return true;
 		}
