@@ -199,7 +199,7 @@ namespace Speedy {
 				$this->{$method}();
 			}
 			
-			Router::instance();
+			Router::instance()
 				->setRequest(Request::instance())
 				->draw($this->name() . '\Config\Routes');
 			
