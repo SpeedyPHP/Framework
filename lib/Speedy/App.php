@@ -13,6 +13,11 @@ namespace Speedy {
 		
 		protected static $_instance = null;
 		
+		/**
+		 * 
+		 * @var \Speedy\Request
+		 * @deprecated
+		 */
 		protected $_request;
 		
 		private $_router;
@@ -194,9 +199,8 @@ namespace Speedy {
 				$this->{$method}();
 			}
 			
-			$router	= Router::instance();
-			$router
-				->setRequest($this->_request())
+			Router::instance();
+				->setRequest(Request::instance())
 				->draw($this->name() . '\Config\Routes');
 			
 			return $this;
@@ -217,8 +221,6 @@ namespace Speedy {
 		
 		public function call() {
 			try {
-				$this->_setRequest(Request::instance());
-				
 				$response = Dispatcher::run($this->router());
 				echo $response;
 			} catch (\Exception $e) {
@@ -251,9 +253,10 @@ namespace Speedy {
 		
 		/**
 		 * Getter for request property
+		 * @deprecated
 		 */
 		public function _request() {
-			return $this->_request;
+			return Request::instance();
 		}
 		
 		public function handleError($errno, $errstr = '', $errfile = '', $errline = '') {
