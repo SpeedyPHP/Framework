@@ -108,14 +108,7 @@ namespace Speedy {
 				throw new Exception("Subclass of App needs property \$_name defined.");
 			}
 			
-			$envConfigPath	= CONFIG_PATH . DS . 'environments' . DS . SPEEDY_ENV . '.php';
-			if (file_exists($envConfigPath)) {
-				require_once $envConfigPath;
-			}
-			
-			$this->_setRequest(Request::instance());
 			$this->setNs(Inflector::underscore($this->name()));
-			
 			$loader = Loader::instance();
 			$loader->registerNamespace("{$this->ns()}.config", CONFIG_PATH);
 			$loader->registerNamespace("{$this->ns()}.controllers", [APP_PATH . DS . 'Controllers']);
@@ -135,6 +128,11 @@ namespace Speedy {
 			));
 			
 			self::_setInstance($this);
+			
+			$envConfigPath	= CONFIG_PATH . DS . 'environments' . DS . SPEEDY_ENV . '.php';
+			if (file_exists($envConfigPath)) {
+				require_once $envConfigPath;
+			}
 			
 			$this->setMiddlewareStack(new MiddlewareStack($this));
 			$this->middlewareStack()->add(new MiddlewareAsset($this->middlewareStack()));
@@ -219,6 +217,8 @@ namespace Speedy {
 		
 		public function call() {
 			try {
+				$this->_setRequest(Request::instance());
+				
 				$response = Dispatcher::run($this->router());
 				echo $response;
 			} catch (\Exception $e) {

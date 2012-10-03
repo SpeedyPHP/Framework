@@ -17,31 +17,31 @@ class Logger {
 	
 	
 	public function __construct() {
-		$this->setLogger(Config::read('logger'));
+		//$this->setLogger(Config::read('logger'));
 	}
 	
 	public static function info($msg) {
-		if (!self::ready()) return;
+		//if (!self::ready()) return;
 		self::instance()->logger()->debug($msg);
 	}
 	
 	public static function debug($msg) {
-		if (!self::ready()) return;
+		//if (!self::ready()) return;
 		self::instance()->logger()->debug($msg);
 	}
 	
 	public static function error($msg) {
-		if (!self::ready()) return;
+		//if (!self::ready()) return;
 		self::instance()->logger()->error($msg);
 	}
 	
 	public static function fatal($msg) {
-		if (!self::ready()) return;
+		//if (!self::ready()) return;
 		self::instance()->logger()->fatal($msg);
 	}
 	
 	public static function warn($msg) {
-		if (!self::ready()) return;
+		//if (!self::ready()) return;
 		self::instance()->logger()->warn($msg);
 	}
 	
@@ -59,7 +59,7 @@ class Logger {
 	
 	public function logger() {
 		if (!$this->_loggerObj) {
-			$class	= $this->_logger;
+			$class	= Config::read('logger');
 			$this->_loggerObj = new $class;
 		}
 		
