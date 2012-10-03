@@ -247,12 +247,7 @@ class Object {
 	 * Magic methods for magic getters, setters, and methods
 	 */
 	public function __call($name, $args) {
-		// Stupid I know, but have to b/c of stupid PHP limitations in Traits
-		return $this->___call($name, $args);
-	}
-	
-	public function ___call($name, $args) {
-		if (!$this->_loadedMixins()) {
+	if (!$this->_loadedMixins()) {
 			$this->_loadMixins();
 		}
 		
