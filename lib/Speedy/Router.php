@@ -9,11 +9,6 @@ class Router extends Object {
 	use \Speedy\Traits\Singleton;
 	
 	/**
-	 * Instance of self
-	 */
-	private static $_instance = null;
-	
-	/**
 	 * Holds all routes to be checked at runtime
 	 * @var array of Routes
 	 */
@@ -143,7 +138,7 @@ class Router extends Object {
 		}
 		
 		return $this->_request;
-	},
+	}
 	
 	private function setParam($name, $value) {
 		$this->_params[$name]	= $value;
