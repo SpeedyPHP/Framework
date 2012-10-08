@@ -192,6 +192,14 @@ abstract class Base extends Object {
 	}
 	
 	/**
+	 * Get option
+	 * @param string $name
+	 */
+	public function option($name) {
+		return $this->_options[$name];
+	}
+	
+	/**
 	 * Setter options
 	 * @param array $options
 	 */
