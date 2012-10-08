@@ -74,7 +74,7 @@ class Router extends Object {
 			
 			if ($route->match($request)) {
 				$match = true; 
-				$this->_setMatchedRoute($route->route());
+				$this->_setMatchedRoute(array_merge($this->params(), $route->route()));
 				
 				break;
 			}
