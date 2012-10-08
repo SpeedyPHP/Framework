@@ -200,7 +200,6 @@ namespace Speedy {
 			}
 			
 			Router::instance()
-				->setRequest(Request::instance())
 				->draw($this->name() . '\Config\Routes');
 			
 			return $this;

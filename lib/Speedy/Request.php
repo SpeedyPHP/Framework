@@ -4,7 +4,9 @@ namespace Speedy;
 
 use Speedy\Logger;
 
-class Request extends Singleton {
+class Request extends Object {
+	
+	use \Speedy\Traits\Singleton;
 	
 	const GET	= 'GET';
 	const POST	= 'POST';

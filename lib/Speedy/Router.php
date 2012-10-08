@@ -2,9 +2,12 @@
 namespace Speedy;
 
 
-use \Speedy\Http\Exception as HttpException;
+use Speedy\Http\Exception as HttpException;
 
 class Router extends Object {
+	
+	use \Speedy\Traits\Singleton;
+	
 	/**
 	 * Instance of self
 	 */
@@ -28,28 +31,12 @@ class Router extends Object {
 	 */
 	private $_request;
 	
+	private $_params = [];
 	
 	
-	static private function init() {
-		if (self::$_instance !== null) {
-			throw new Router\Exception("Instance already exists!?");
-		}
-
-		self::$_instance = new Router; 
-		
-		return self::$_instance;
-	}
 	
-	/**
-	 * Get shared instance of router
-	 * @return Speedy\Router
-	 */
-	static public function instance() {
-		if (self::$_instance == null) {
-			self::init();
-		}
-		
-		return self::$_instance;
+	public function __construct() {
+		$this->setParam('url', $this->request()->url());
 	}
 	
 	/**
@@ -57,7 +44,7 @@ class Router extends Object {
 	 * @param \Speedy\Router\Routes\Route $route
 	 */
 	static public function pushRoute($route) {
-		$self	= self::getInstance();
+		$self	= self::instance();
 		return $self->addRoute($route);
 	}
 	
@@ -152,10 +139,19 @@ class Router extends Object {
 	 */
 	public function request() {
 		if (!$this->_request && !($this->_request instanceof \Speedy\Request)) {
-			throw new Exception('Request is null or not instance of \\Speedy\\Request');
+			$this->_request = Request::instance();
 		}
 		
 		return $this->_request;
+	},
+	
+	private function setParam($name, $value) {
+		$this->_params[$name]	= $value;
+		return $this;
+	}
+	
+	public function params() {
+		return $this->_params;
 	}
 	
 }
