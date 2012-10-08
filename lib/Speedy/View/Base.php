@@ -196,7 +196,7 @@ abstract class Base extends Object {
 	 * @param string $name
 	 */
 	public function option($name) {
-		return $this->_options[$name];
+		return (isset($this->_options[$name])) ? $this->_options[$name] : '';
 	}
 	
 	/**
