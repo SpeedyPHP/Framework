@@ -138,7 +138,7 @@ class Router extends Object {
 	 * @return \Speedy\Request
 	 */
 	public function request() {
-		if (!$this->_request && !($this->_request instanceof \Speedy\Request)) {
+		if (!$this->_request) {
 			$this->_request = Request::instance();
 		}
 		
