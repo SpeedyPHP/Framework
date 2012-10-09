@@ -15,9 +15,9 @@ class View extends Object {
 	 * Template variables
 	 * @var array
 	 */
-	public $_vars;
+	public $_vars = [];
 	
-	public $_options;
+	public $_options = [];
 	
 	public $_yields = array();
 	
