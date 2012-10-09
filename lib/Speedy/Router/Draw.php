@@ -86,7 +86,8 @@ class Draw extends Object {
 			],
 			'create'=> [
 				'method'=> self::POST,
-				'type'	=> self::CollectionActionType
+				'type'	=> self::CollectionActionType,
+				'helper'=> "%s_url"
 			],
 			'show'	=> [
 				'baseSuffix'=> '/:id', 
