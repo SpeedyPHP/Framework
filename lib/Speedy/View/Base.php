@@ -74,11 +74,13 @@ abstract class Base extends Object {
 		$vars	= array_merge($this->vars(), $vars);
 		
 		if (is_object($path)) {
+			$this->set('object', $path);
 			$class	= get_class($path);
-		} else {
-			$this->cleanPath($path);
-		}
+			$classArr	= explode('\\', $class);
+			$path	= strtolower(array_pop($classArr));
+		} 
 		
+		$this->cleanPath($path);
 		//return $this->renderTemplate($path, $this->vars());
 		echo View::instance()->render($path, [], $this->vars());
 	}
