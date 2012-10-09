@@ -76,14 +76,14 @@ abstract class Base extends Object {
 		$aPath	= explode('/', $path);
 		$last	= array_pop($aPath);
 		$aPath[]= '_' . $last;
-		$path	= $this->isPartial(implode('/', $aPath));
+		/*$path	= $this->isPartial(implode('/', $aPath));
 		
 		if ($path === false || !file_exists($path)) {
 			throw new HttpException('View found not found at ' . $path);
-		}
+		}*/
 		
 		//return $this->renderTemplate($path, $this->vars());
-		echo View::instance()->render($path, [], $this->vars());
+		echo View::instance()->render(implode('/', $aPath), [], $this->vars());
 	}
 	
 	/**
