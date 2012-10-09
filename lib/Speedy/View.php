@@ -33,7 +33,7 @@ class View extends Object {
 	 * Render the template
 	 * @param string $template
 	 */
-	public function render($file, $options = [], $vars = null, $ext = 'html') {
+	public function render($file, $options = [], $vars = [], $ext = 'html') {
 		if (isset($options['json'])) return $this->toJson($options['json']);
 		
 		$this

@@ -345,10 +345,9 @@ class Controller extends Object {
 		
 		$content = View::instance()
 			->setResponse($this->response())
-			->setVars($this->tplVars())
 			->setData($this->data())
 			->setParams($this->params())
-			->render($relPath, $options, null, $ext);
+			->render($relPath, $options, $this->tplVars(), $ext);
 		
 		$this->response()->setBody($content);
 		$this->rendered();
