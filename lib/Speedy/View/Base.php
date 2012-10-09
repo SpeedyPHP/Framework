@@ -68,19 +68,19 @@ abstract class Base extends Object {
 	abstract public function renderTemplate($path, $vars = []); 
 	
 	public function render($path, $vars = []) {
-		$ns			= \App::instance()->ns();
+		$ns		= \App::instance()->ns();
 		//$options	= $this->options();
 		//$path		= ($path) ? $path : $this->path();
-		$vars		= array_merge($this->vars(), $vars);
+		$vars	= array_merge($this->vars(), $vars);
+		$this->cleanPath($path);
 		
-		$aPath	= explode('/', $path);
-		$last	= array_pop($aPath);
-		$aPath[]= '_' . $last;
-		/*$path	= $this->isPartial(implode('/', $aPath));
-		
-		if ($path === false || !file_exists($path)) {
-			throw new HttpException('View found not found at ' . $path);
-		}*/
+		if (is_object($path)) {
+			$class	= get_class($path);
+		} else {
+			$aPath	= explode('/', $path);
+			$last	= array_pop($aPath);
+			$aPath[]= '_' . $last;
+		}
 		
 		//return $this->renderTemplate($path, $this->vars());
 		echo View::instance()->render(implode('/', $aPath), [], $this->vars());
@@ -129,9 +129,9 @@ abstract class Base extends Object {
 		return;
 	}
 	
-	public function isPartial($path) {
+	public function cleanPath(&$path) {
 		if (preg_match("#/^_(\w)*/#i", $path, $matches)) 
-			return View::instance()->findFile($path);
+			return $path;
 		
 		$controller = $this->param('controller');
 		if (is_array($controller)) $controller = implode('/', $controller);
@@ -139,9 +139,8 @@ abstract class Base extends Object {
 		if (strpos($path, '/') === false && strpos($path, '_') !== 0) {
 			$path	= $controller . "/_" . $path;
 		} 
-		
-		$file = View::instance()->findFile($path);
-		return ($file) ? $file : false;
+
+		return $path;
 	}
 	
 	public function toPath($name) {
