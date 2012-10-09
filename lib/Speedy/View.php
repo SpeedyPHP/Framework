@@ -41,9 +41,10 @@ class View extends Object {
 			->setVars(array_merge($this->vars(), $vars));
 		
 		if (isset($this->_options['layout'])) {
-			$this->setYield('__main__', $this->_render($file, $ext));
+			$tpl = $file;
 			$file = 'layouts' . DS . $this->_options['layout'];
 			unset($this->_options['layout']);
+			$this->setYield('__main__', $this->_render($tpl, $ext));
 		}
 		
 		return $this->_render($file, $ext);;

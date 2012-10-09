@@ -72,18 +72,15 @@ abstract class Base extends Object {
 		//$options	= $this->options();
 		//$path		= ($path) ? $path : $this->path();
 		$vars	= array_merge($this->vars(), $vars);
-		$this->cleanPath($path);
 		
 		if (is_object($path)) {
 			$class	= get_class($path);
 		} else {
-			$aPath	= explode('/', $path);
-			$last	= array_pop($aPath);
-			$aPath[]= '_' . $last;
+			$this->cleanPath($path);
 		}
 		
 		//return $this->renderTemplate($path, $this->vars());
-		echo View::instance()->render(implode('/', $aPath), [], $this->vars());
+		echo View::instance()->render($path, [], $this->vars());
 	}
 	
 	/**
@@ -130,8 +127,16 @@ abstract class Base extends Object {
 	}
 	
 	public function cleanPath(&$path) {
-		if (preg_match("#/^_(\w)*/#i", $path, $matches)) 
-			return $path;
+		//if (preg_match("#/^_(\w)*/#i", $path, $matches)) 
+		//	return $path;
+		
+		if (strpos($path, '/') !== false) {
+			$aPath	= explode('/', $path);
+			$last	= array_pop($aPath);
+			$aPath[]= '_' . $last;
+			$path	= implode('/', $aPath);
+			return;
+		}
 		
 		$controller = $this->param('controller');
 		if (is_array($controller)) $controller = implode('/', $controller);
@@ -140,7 +145,7 @@ abstract class Base extends Object {
 			$path	= $controller . "/_" . $path;
 		} 
 
-		return $path;
+		return;
 	}
 	
 	public function toPath($name) {
