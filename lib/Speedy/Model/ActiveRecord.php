@@ -1,7 +1,7 @@
 <?php 
-namespace Speedy\Model\ActiveRecord;
+namespace Speedy\Model;
 
-class Base extends \ActiveRecord\Model {
+class ActiveRecord extends \ActiveRecord\Model {
 	
 	static $before_save;
 	
@@ -40,6 +40,10 @@ class Base extends \ActiveRecord\Model {
 	}
 	
 	public function _construct() {}
+	
+	public function __toString() {
+		return strtolower(get_class($this));
+	}
 	
 }
 ?>
