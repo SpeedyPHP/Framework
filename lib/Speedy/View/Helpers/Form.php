@@ -23,9 +23,27 @@ class Form extends Object {
 		if (is_array($model)) {
 			$basepathArr	= $model;
 			$model		= array_pop($basepathArr);
-			$basepath	= implode('_', $basepathArr) . '_';
+			//$basepath	= implode('_', $basepathArr) . '_';
+			foreach ($basepathArr as $path) {
+				if (strlen($basepath) > 0) 
+					$basepath .= '/';
+				
+				if (is_object($path)) {
+					$class	= get_class($path);
+					$aClass	= explode('\\', $class);
+					$basepath	.= "{$path}/" . $path->{$path->primary_key};
+				} else {
+					$basepath	.= $path;
+				}
+			}
 		}
 		
+		$basepath	.= $model->__toString();
+		if ($model->id) {
+			$basepath	.= "/" . $model->{$model->primary_key};
+		} 
+		
+		$this->setPath($basepath);
 		$this->setModel($model);
 		
 		$class	= get_class($model);
@@ -35,7 +53,7 @@ class Form extends Object {
 		$this->setName(array_pop($classArr));
 		$this->{$this->name()}	= $model;
 		
-		if ($model->id) {
+		/*if ($model->id) {
 			$actionPath	= $this->name();
 		} else {
 			$actionPath	= \Speedy\Utility\Inflector::pluralize($this->name());
@@ -53,7 +71,7 @@ class Form extends Object {
 		} else {
 			$actionPath	= "{$basepath}{$actionPath}_url";
 			$this->setPath($this->{$actionPath}());
-		}
+		}*/
 	}
 	
 	/**
