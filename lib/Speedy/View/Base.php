@@ -129,7 +129,8 @@ abstract class Base extends Object {
 	}
 	
 	public function isPartial($path) {
-		if (preg_match("#/^_(\w)*/#i", $path, $matches)) return $path;
+		if (preg_match("#/^_(\w)*/#i", $path, $matches)) 
+			return View::instance()->findFile($path);
 		
 		$controller = $this->param('controller');
 		if (is_array($controller)) $controller = implode('/', $controller);
@@ -138,7 +139,8 @@ abstract class Base extends Object {
 			$path	= $controller . "/_" . $path;
 		} 
 		
-		return (View::instance()->findFile($path)) ? $path : false;
+		$file = View::instance()->findFile($path);
+		return ($file) ? $file : false;
 	}
 	
 	public function toPath($name) {
