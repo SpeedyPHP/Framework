@@ -82,7 +82,8 @@ abstract class Base extends Object {
 			throw new HttpException('View found not found at ' . $path);
 		}
 		
-		return $this->renderTemplate($path, $this->vars());
+		//return $this->renderTemplate($path, $this->vars());
+		echo View::instance()->render($path, [], $this->vars());
 	}
 	
 	/**
