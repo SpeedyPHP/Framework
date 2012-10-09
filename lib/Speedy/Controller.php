@@ -343,25 +343,15 @@ class Controller extends Object {
 			$relPath	= $path;
 		}
 		
-		ob_start();
-		$rendered = View::instance()
+		$content = View::instance()
 			->setResponse($this->response())
 			->setVars($this->tplVars())
 			->setData($this->data())
 			->setParams($this->params())
 			->render($relPath, $options, null, $ext);
 		
-		$content	= ob_get_contents();
-		ob_end_clean();
-		
-		if (!$rendered) {
-			$controller	= Inflector::underscore($this->params('controller'));
-			$action		= Inflector::underscore($this->params('action'));
-			throw new HttpException("No view found for $controller#$action");
-		} else {
-			$this->response()->setBody($content);
-			$this->rendered();
-		}
+		$this->response()->setBody($content);
+		$this->rendered();
 	} 
 	
 	/**

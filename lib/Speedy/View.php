@@ -1,20 +1,23 @@
 <?php 
 namespace Speedy;
 
-use \Speedy\Loader;
-use \Speedy\Config;
-use \Speedy\Utility\Inflector;
-use \Speedy\Http\Exception as HttpException;
-use \Speedy\View\Exception as ViewException;
-use \Speedy\Singleton;
+use Speedy\Loader;
+use Speedy\Config;
+use Speedy\Utility\Inflector;
+use Speedy\Http\Exception as HttpException;
+use Speedy\View\Exception as ViewException;
 
-class View extends Singleton {
+class View extends Object {
+	
+	use \Speedy\Traits\Singleton;
 	
 	/**
 	 * Template variables
 	 * @var array
 	 */
 	public $_vars;
+	
+	public $_options;
 	
 	public $_yields = array();
 	
@@ -30,47 +33,42 @@ class View extends Singleton {
 	 * Render the template
 	 * @param string $template
 	 */
-	public function render($file, $options, $vars = null, $ext = 'html') {
+	public function render($file, $options = [], $vars = null, $ext = 'html') {
 		if (isset($options['json'])) return $this->toJson($options['json']);
 		
-		// $viewPaths	= Loader::instance()->path('views');
-		// $renderers	= Config::instance()->renderers();
+		$this
+			->setOptions(array_merge($this->options(), $options))
+			->setVars(array_merge($this->vars(), $vars));
 		
-		/*foreach ($renderers as $type => $renderer) {			
-			foreach ($viewPaths as $path) {
-				$fullPath	= $path . DS . $file . ".{$type}.{$ext}";
-				
-				if (!file_exists($fullPath)) {
-					continue;
-				}
-				
-				$renderer	= $this->renderer($renderer, $options);
-				$renderer
-					->setPath($fullPath)
-					->setOptions($options)
-					->setVars($this->vars())
-					->setData($this->data())
-					->render();
-				return true;
-			}
-		}*/
-		$fullPath	= $this->findFile($file, $ext);  
+		if (isset($this->_options['layout'])) {
+			$this->setYield('__main__', $this->_render($file, $ext));
+			$file = 'layouts' . DS . $this->_options['layout'];
+			unset($this->_options['layout']);
+		}
+		
+		return $this->_render($file, $ext);;
+	}
+	
+	/**
+	 * Does the work of rendering
+	 * @param string $file
+	 * @param string $ext
+	 * @throws ViewException
+	 * @return string rendered content
+	 */
+	public function _render($file, $ext) {
+		$fullPath	= $this->findFile($file, $ext);
+		
 		if (!$fullPath) {
 			throw new ViewException("No view found for $file using builder => '$ext'");
 		}
 		
-		$renderer 	= $this->builder($fullPath); 
-		if (!$renderer) return false; // TODO: Throw exception
+		$renderer 	= $this->builder($fullPath);
+		if (!$renderer) 
+			throw new ViewException("No view renderer found for $file using builder => '$ext'"); 
 		
-		$rendererObj= $this->renderer($renderer, $options);
-		$rendererObj
-			->setPath($fullPath)
-			->setOptions($options)
-			->setVars(array_merge($this->vars(), (array)$vars))
-			->setData($this->data())
-			->render(); 
-		
-		return true;
+		$rendererObj= $this->renderer($renderer);
+		return $rendererObj->renderTemplate($fullPath, $this->vars());
 	}
 	
 	public function renderToString($file, $options, $vars = null, $ext = 'html') {
@@ -205,17 +203,37 @@ class View extends Singleton {
 	}
 	
 	/**
+	 * Getter for options
+	 * @return array
+	 */
+	public function options() {
+		return $this->_options;
+	}
+
+	/**
+	 * Setter for options
+	 * @param array $options
+	 * @return object $this
+	 */
+	public function setOptions($options) {
+		$this->_options	= $options;
+		return $this;
+	}
+	
+	/**
 	 * Accessor for renderer
 	 * @param string $name
 	 * @param array $options (optional)
 	 * @return \Speedy\View\Base
 	 */
-	public function renderer($name, array $options = []) {
+	public function renderer($name) {
 		if (!$this->hasRenderer($name)) {
 			$class	= Loader::instance()->toClass($name);
 			$obj	= new $class();
 			$obj->setParams($this->params())
-				->setOptions($options);
+				->setOptions($this->options())
+				->setVars($this->vars())
+				->setData($this->data());
 			
 			$this->setRenderer($name, $obj);
 		}

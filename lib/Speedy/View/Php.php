@@ -13,9 +13,13 @@ class Php extends Base {
 	 * @param string $path
 	 */
 	public function renderTemplate($path = null, $vars = []) {
+		ob_start();
 		extract($vars);
 		include $path;
-		return;
+		$contents = ob_get_contents();
+		ob_end_clean();
+		
+		return $contents;
 	}
 	
 }

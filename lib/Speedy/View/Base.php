@@ -67,31 +67,22 @@ abstract class Base extends Object {
 	 */
 	abstract public function renderTemplate($path, $vars = []); 
 	
-	public function render($path = null, $vars = []) {
+	public function render($path, $vars = []) {
 		$ns			= \App::instance()->ns();
-		$options	= $this->options();
-		$path		= ($path) ? $path : $this->path();
+		//$options	= $this->options();
+		//$path		= ($path) ? $path : $this->path();
 		$vars		= array_merge($this->vars(), $vars);
 		
-		if (($partialPath = $this->isPartial($path)) !== false) {
-			View::instance()->render($partialPath, $options, $vars);
-			return;
-		}
+		$aPath	= explode('/', $path);
+		$last	= array_pop($aPath);
+		$aPath[]= '_' . $last;
+		$path	= $this->isPartial(implode('/', $aPath));
 		
-		if (!file_exists($path)) {
+		if ($path === false || !file_exists($path)) {
 			throw new HttpException('View found not found at ' . $path);
 		}
 		
-		if (isset($options['layout'])) {
-			$layout	= 'layouts' . DS . $options['layout'];
-			View::instance()->setYield('__main__', $this->toString($path, $vars));
-		
-			unset($options['layout']);
-			View::instance()->render($layout, $options, $vars);
-			return;
-		} else {
-			return $this->renderTemplate($path, $vars);
-		}
+		return $this->renderTemplate($path, $this->vars());
 	}
 	
 	/**

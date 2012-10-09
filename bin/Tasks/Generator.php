@@ -230,11 +230,11 @@ EOF;
 		$headerColumns	= '';
 		$bodyColumns	= '';
 		foreach ($class::table()->columns as $column) {
-			if (strlen($actions) > 0) {
+			/*if (strlen($actions) > 0) {
 				$actions .= "\n\r";
 				$headerColumns	.= "\n\r";
 				$bodyColumns	.= "\n\r";
-			}
+			}*/
 			
 			$fields .= $this->_fieldsTpl($column->name);
 			$headerColumns	.= $this->_headerColumn(Inflector::titleize($column->name));
@@ -251,6 +251,7 @@ EOF;
 		$this->set('headerColumns',	$headerColumns);
 		$this->set('bodyColumns',	$bodyColumns);
 		$this->set('columns',		$class::table()->columns);
+		$this->set('controllerNs',	implode('\\', $nameArray));
 		$content	= $this->getTemplate('BaseController.php');
 	
 		$path	= APP_PATH . DS . self::CONTROLLERS_DIR . DS . implode(DS, $nameArray) . DS . $name . '.php';
