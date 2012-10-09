@@ -70,7 +70,7 @@ class Links extends Singleton {
 		extract($path);
 			
 		if (isset($tokens) && count($args) < count($tokens)) {
-			throw new Exception('No route matches ' . $format);
+			throw new \Speedy\Exception\Utility('No route matches ' . $format);
 		}
 			
 		foreach ($tokens as $token) {
