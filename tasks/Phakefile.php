@@ -11,8 +11,8 @@ if (!include(CONFIG_PATH . DS . 'App.php')) {
 
 App::instance();
 use \Speedy\Utility\Inflector;
-use \Speedy\ActiveRecord\Connection;
-use \Speedy\ActiveRecord\SchemaMigration;
+use \ActiveRecord\Connection;
+use \ActiveRecord\SchemaMigration;
 
 
 group('db', function() {
