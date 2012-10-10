@@ -35,7 +35,7 @@ class Form extends Object {
 			}
 		}
 		
-		$basepath	.= $model->__toString();
+		$basepath	.= "/" . $model->__toString();
 		if ($model->id) {
 			$basepath	.= "/" . $model->{$model->primary_key};
 		} 
