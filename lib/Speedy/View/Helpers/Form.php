@@ -28,7 +28,7 @@ class Form extends Object {
 			foreach ($basepathArr as $path) {
 				if (is_object($path)) {
 					$class	= InflectorUtil::pluralize($path->__toString());
-					$basepath	.= "/{$class}/" . $path->{$path->primary_key};
+					$basepath	.= "/{$class}/" . $path->{$path->get_primary_key(true)};
 				} else {
 					$basepath	.= $path;
 				}
@@ -37,7 +37,7 @@ class Form extends Object {
 		
 		$basepath	.= "/" . $model->__toString();
 		if ($model->id) {
-			$basepath	.= "/" . $model->{$model->primary_key};
+			$basepath	.= "/" . $model->{$model->get_primary_key(true)};
 		} 
 		
 		$this->setPath($basepath);
