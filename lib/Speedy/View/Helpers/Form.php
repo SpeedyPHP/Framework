@@ -26,9 +26,8 @@ class Form extends Object {
 			//$basepath	= implode('_', $basepathArr) . '_';
 			foreach ($basepathArr as $path) {
 				if (is_object($path)) {
-					$class	= get_class($path);
-					$aClass	= explode('\\', $class);
-					$basepath	.= "/{$path}/" . $path->{$path->primary_key};
+					$class	= $path->__toString();
+					$basepath	.= "/{$class}/" . $path->{$path->primary_key};
 				} else {
 					$basepath	.= $path;
 				}
