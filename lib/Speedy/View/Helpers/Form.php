@@ -2,7 +2,8 @@
 namespace Speedy\View\Helpers;
 
 
-use \Speedy\Object;
+use Speedy\Object;
+use Speedy\Utility\Inflector;
 
 class Form extends Object {
 	
@@ -26,7 +27,7 @@ class Form extends Object {
 			//$basepath	= implode('_', $basepathArr) . '_';
 			foreach ($basepathArr as $path) {
 				if (is_object($path)) {
-					$class	= $path->__toString();
+					$class	= Inflector::pluralize($path->__toString());
 					$basepath	.= "/{$class}/" . $path->{$path->primary_key};
 				} else {
 					$basepath	.= $path;
