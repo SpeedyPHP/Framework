@@ -25,13 +25,10 @@ class Form extends Object {
 			$model		= array_pop($basepathArr);
 			//$basepath	= implode('_', $basepathArr) . '_';
 			foreach ($basepathArr as $path) {
-				if (strlen($basepath) > 0) 
-					$basepath .= '/';
-				
 				if (is_object($path)) {
 					$class	= get_class($path);
 					$aClass	= explode('\\', $class);
-					$basepath	.= "{$path}/" . $path->{$path->primary_key};
+					$basepath	.= "/{$path}/" . $path->{$path->primary_key};
 				} else {
 					$basepath	.= $path;
 				}
