@@ -35,7 +35,7 @@ class Form extends Object {
 			}
 		}
 		
-		$basepath	.= "/" . $model->__toString();
+		$basepath	.= "/" . InflectorUtil::pluralize($model->__toString());
 		if ($model->id) {
 			$basepath	.= "/" . $model->{$model->get_primary_key(true)};
 		} 
