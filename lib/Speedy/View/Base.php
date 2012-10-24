@@ -82,7 +82,7 @@ abstract class Base extends Object {
 		
 		$this->cleanPath($path);
 		//return $this->renderTemplate($path, $this->vars());
-		echo View::instance()->render($path, [], $this->vars());
+		echo View::instance()->render($path, [], $vars);
 	}
 	
 	/**
