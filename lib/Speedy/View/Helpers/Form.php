@@ -30,7 +30,7 @@ class Form extends Object {
 					$class	= InflectorUtil::pluralize($path->__toString());
 					$basepath	.= "/{$class}/" . $path->{$path->get_primary_key(true)};
 				} else {
-					$basepath	.= $path;
+					$basepath	.= "/{$path}";
 				}
 			}
 		}
