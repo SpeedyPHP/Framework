@@ -3,7 +3,7 @@ namespace Speedy\Traits;
 
 trait Text {
 
-	public function summarize($content, $more = '...', $strip_tags = true, $allowable_tags = '', $maxLength = 200) {
+	public static function summarize($content, $more = '...', $strip_tags = true, $allowable_tags = '', $maxLength = 200) {
 		if ($strip_tags) 
 			$content = strip_tags($content, $allowable_tags);
 		
