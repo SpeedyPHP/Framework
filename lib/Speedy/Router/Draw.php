@@ -20,6 +20,7 @@ class Draw extends Object {
 	const TYPE_RESOURCE = 1;
 	const TYPE_NS	= 2;
 	
+	const NullActionType = 0;
 	const MemberActionType = 1;
 	const CollectionActionType = 2;
 	
@@ -41,6 +42,12 @@ class Draw extends Object {
 	 * @var array
 	 */
 	private $_currentNamespace;
+	
+	/**
+	 * The current type
+	 * @var integer
+	 */
+	private $_currentType;
 	
 	
 	
@@ -163,11 +170,13 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	public function member($closure) {
+		$this->setCurrentType(self::MemberActionType);
 		$this->setData('controller', $this->buildController());
 		$this->setData('uri_prefix', ':id/');
 		$closure();
 		$this->unsetData('controller');
 		$this->unsetData('uri_prefix');
+		$this->setCurrentType(self::NullActionType);
 		
 		return;
 	}
@@ -179,9 +188,11 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	public function collection($closure) {
+		$this->setCurrentType(self::CollectionActionType);
 		$this->setData('controller', $this->buildController());
 		$closure();
 		$this->unsetData('controller');
+		$this->setCurrentType(self::NullActionType);
 		
 		return;
 	}
@@ -249,6 +260,13 @@ class Draw extends Object {
 	}
 	
 	/**
+	 * Getter for current type
+	 */
+	public function currentType() {
+		return $this->_currentType;
+	}
+	
+	/**
 	 * Gets called on init and draws all routes
 	 */
 	protected function draw() {}
@@ -269,11 +287,14 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	protected function routeFactory($action, $method, $options = []) {
+		$replace = $this->buildHelper($action, ($this->currentType() === self::CollectionActionType) ? false : true);
 		$controller	= $this->data('controller');
 		$prefix	= ($this->hasData('uri_prefix')) ? $this->data('uri_prefix') : '';
 		$uri	= $prefix . $action;
 		
-		$defaults= array();
+		$defaults= array(
+					'name' => ($this->currentType() == self::CollectionActionType) ? "{$replace}_url" : "{$replace}_path";
+				);
 		$params	= array_merge($defaults, $options, array(
 				$uri	=> "$controller#$action",
 				'on'	=> $method
@@ -383,6 +404,11 @@ class Draw extends Object {
 			$return .= $name;
 		
 		return $return;
+	}
+	
+	private function setCurrentType($type) {
+		$this->_currentType = $type;
+		return $this;
 	}
 
 }
