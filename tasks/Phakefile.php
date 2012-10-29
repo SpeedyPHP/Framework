@@ -120,6 +120,23 @@ group('db', function() {
 	});
 });
 
+task('routes', function() {
+	App::instance()->bootstrap();
+	$router = App::instance()->router();
+	
+	$table = new Console_Table();
+	$table->setHeaders(['Helper','Format','Path']);
+	foreach ($router->routes() as $route) {
+		$this->addRow([
+				$route->name(),
+				$route->format(),
+				json_encode($route->params())
+			]);
+	}
+	
+	output($table->getTable());
+});
+
 
 function output($str = "") {
 	fwrite(STDOUT, $str . "\n");
