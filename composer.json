@@ -10,8 +10,8 @@
 	}],
 	"require": {
 		"php": ">=5.4",
-		"SpeedyPHP/Sprockets" : "dev-master",
-		"SpeedyPHP/ActiveRecord" : "dev-speedy",
+		"speedy-php/sprockets" : "dev-master",
+		"speedy-php/active-record" : "dev-speedy",
 		"jaz303/phake" : "dev-master",
 		"pear/Console_Table" : "dev-trunk"
 	},
