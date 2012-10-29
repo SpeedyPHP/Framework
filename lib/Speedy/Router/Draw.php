@@ -295,10 +295,10 @@ class Draw extends Object {
 		$defaults= array(
 					'as' => ($this->currentType() == self::CollectionActionType) ? "{$replace}_url" : "{$replace}_path"
 				);
-		$params	= array_merge($defaults, $options, array(
+		$params	= array_merge(array(
 				$uri	=> "$controller#$action",
 				'on'	=> $method
-		));
+		), $defaults, $options);
 		
 		return $this->match($params);
 	}
