@@ -125,11 +125,12 @@ task('routes', function() {
 	$router = App::instance()->router();
 	
 	$table = new Console_Table();
-	$table->setHeaders(['Helper','Format','Params']);
+	$table->setHeaders(['Helper','Method','Format','Params']);
 	foreach ($router->routes() as $route) {
 		$options = $route->options();
 		$table->addRow([
 				$route->name(),
+				(empty($options['on'])) ? 'GET' : $options['on'],
 				$route->format(),
 				json_encode([
 							'controller'=> $options['controller'],
