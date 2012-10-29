@@ -29,7 +29,7 @@ class Match extends Base {
 		}
 		
 		if (isset($params['as'])) {
-			$this->setName("{$params['name']}_path");
+			$this->setName("{$params['as']}_path");
 		}
 		
 		$this->setFormat($format);
