@@ -1,5 +1,5 @@
 {
-	"name" : "speedy-php/framework",
+	"name" : "SpeedyPHP/Framework",
 	"description" : "SpeedyPHP Framework",
 	"keywords" : ["SpeedyPHP", "RAD Framework"],
 	"license": "MIT",
@@ -10,8 +10,8 @@
 	}],
 	"require": {
 		"php": ">=5.4",
-		"speedy-php/sprockets" : "dev-master",
-		"speedy-php/active-record" : "dev-speedy",
+		"SpeedyPHP/Sprockets" : "dev-master",
+		"SpeedyPHP/ActiveRecord" : "dev-speedy",
 		"jaz303/phake" : "dev-master",
 		"pear/Console_Table" : "dev-trunk"
 	},
