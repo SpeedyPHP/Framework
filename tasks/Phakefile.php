@@ -127,10 +127,14 @@ task('routes', function() {
 	$table = new Console_Table();
 	$table->setHeaders(['Helper','Format','Params']);
 	foreach ($router->routes() as $route) {
+		$options = $route->options();
 		$table->addRow([
 				$route->name(),
 				$route->format(),
-				json_encode($route->options())
+				json_encode([
+							'controller'=> $options['controller'],
+							'action'	=> $options['action']
+						])
 			]);
 	}
 	
