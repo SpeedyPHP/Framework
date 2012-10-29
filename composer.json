@@ -12,8 +12,7 @@
 		"php": ">=5.4",
 		"speedy-php/sprockets" : "dev-master",
 		"speedy-php/active-record" : "dev-speedy",
-		"jaz303/phake" : "dev-master",
-		"pear/Console_Table" : "dev-trunk"
+		"jaz303/phake" : "dev-master"
 	},
 	"autoload":{
 		"psr-0": {
