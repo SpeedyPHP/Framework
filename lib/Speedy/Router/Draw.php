@@ -16,6 +16,7 @@ class Draw extends Object {
 	
 	const NS_CLEAN	= 1;
 	const NS_MEMBER	= 2;
+	const NS_CONTROLLER = 3;
 	
 	const TYPE_RESOURCE = 1;
 	const TYPE_NS	= 2;
@@ -356,11 +357,13 @@ class Draw extends Object {
 		if (!$this->_currentNamespace) return null;
 		$array = array();
 		
-		foreach ($this->_currentNamespace as $key => $val) {
+		foreach ($this->_currentNamespace as $key => $nsType) {
 			$singular	= Inflector::singularize($key);
 			
-			if ($type == self::NS_MEMBER && $val == self::TYPE_RESOURCE) {
+			if ($type == self::NS_MEMBER && $nsType == self::TYPE_RESOURCE) {
 				$key	.= "/:{$singular}_id";
+			} elseif ($type == self::NS_CONTROLLER && $nsType == self::TYPE_RESOURCE) {
+				continue;
 			}
 			
 			$array[]	= $key;
