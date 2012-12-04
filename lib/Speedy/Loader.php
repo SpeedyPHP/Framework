@@ -199,6 +199,10 @@ namespace Speedy {
 		 * @return boolean
 		 */
 		private function load($path) {
+			if (!file_exists($path)) {
+				throw new \Speedy\Loader\Exception("No file found at $path");
+			}
+			
 			if (!require_once($path)) {
 				return false;
 			} else {
