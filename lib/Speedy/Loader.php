@@ -243,8 +243,8 @@ namespace Speedy {
 			if (!strpos($className, $seperator)) return null;
 
 			$aPath = explode($seperator, $className); 
-			$firstSpace = strtolower(array_shift($aPath));
-			$secondSpace= strtolower(array_shift($aPath));
+			$firstSpace = Inflector::underscore(array_shift($aPath));
+			$secondSpace= Inflector::underscore(array_shift($aPath));
 			$ns	= $firstSpace . '.' . $secondSpace;
 				
 			if (!$this->hasNamespace($ns)) {
