@@ -120,6 +120,7 @@ group('db', function() {
 	});
 });
 
+desc('print out currently configured routes')
 task('routes', function() {
 	App::instance()->bootstrap();
 	$router = App::instance()->router();
