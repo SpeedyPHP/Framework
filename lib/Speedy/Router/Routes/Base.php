@@ -154,6 +154,17 @@ abstract class Base {
 	}
 	
 	/**
+	 * Used to find a match
+	 * @param \Speedy\Request $request
+	 */
+	public function isMatch(\Speedy\Request $request) {
+		$on	= $this->option('on');
+		if ($on && strtolower($on) != strtolower($request->method())) return false;
+		
+		return $this->match();
+	}
+	
+	/**
 	 * Add param
 	 * @param string $key
 	 * @param mixed $value
@@ -162,48 +173,6 @@ abstract class Base {
 	protected function addParam($key, $value) {
 		$this->_params[$key]	= $value;
 		return $this;
-	}
-	
-	/**
-	 * Compiles format for route checking
-	 * @param string $uri
-	 * @return boolean
-	 */
-	protected function compile($request) {
-		$on	= $this->option('on');
-		if ($on && strtolower($on) != strtolower($request->method())) return false; 
-		
-		// Find matches
-		$uri	= $request->url();
-		if (!$uri || strlen($uri) < 1) $uri = '/';
-		$success 	= preg_match_all($this->pattern(), $uri, $matches);
-		$base		= array_shift($matches);
-		$params		= array( 'ext' => ($request->hasParam('ext')) ? $request->param('ext') : 'html' );
-		//debug(array($uri, $success, $params, $this->pattern()));
-	
-		// Fail if it doesn't match
-		if (!$success) return false;
-	
-		// Loop the matches to find the token values
-		$i = 0;
-		foreach($matches as $key => $value) {
-			$value = $value[0];
-			if ($i < count($this->token())) {
-				$part	= $this->token($i);
-				$params[$part]	= $value;
-				$i++;
-			}
-		}
-	
-		// On greedy find remaining variables
-		if ($this->greedy() && (strlen($base[0]) < strlen($uri))) {
-			$passed	= substr($uri, strlen($base[0]), strlen($uri));
-			$params['passed'] = explode('/', $passed);
-		}
-	
-		$this->setParams(array_merge($params, $this->options()));
-	
-		return true;
 	}
 	
 	/**

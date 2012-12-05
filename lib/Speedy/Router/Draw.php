@@ -2,11 +2,12 @@
 namespace Speedy\Router;
 
 
-use \Speedy\Router;
-use \Speedy\Router\Routes\Resource;
-use \Speedy\Router\Routes\Match;
-use \Speedy\Object;
-use \Speedy\Utility\Inflector;
+use Speedy\Router;
+use Speedy\Router\Routes\Resource;
+use Speedy\Router\Routes\Match;
+use Speedy\Router\Routes\Regex;
+use Speedy\Object;
+use Speedy\Utility\Inflector;
 
 class Draw extends Object {
 	const GET	= "GET";
@@ -318,8 +319,16 @@ class Draw extends Object {
 	 * @param array $params
 	 */
 	protected function rootTo($toString, $params) {
-		$params	= array_merge(array('/' => $toString), $params);
-		return $this->pushRoute(new Match($params));
+		$params	= array_merge(array('^/?$' => $toString), $params);
+		return $this->regex($params);
+	}
+	
+	/**
+	 * Regex route match
+	 * @param array $options
+	 */
+	protected function regex(array $options) {
+		return $this->pushRoute(new Regex($params));
 	}
 	
 	/**
