@@ -198,7 +198,7 @@ class Form extends Object {
 	public function collectionSelect($name, $collection, $key, $value, $defaultSelected = null, $attrs = []) {
 		return $this->select(
 				$name, 
-				$this->optionsFromCollectionForSelect($collection), 
+				$this->optionsFromCollectionForSelect($collection, $key, $value), 
 				$defaultSelected, 
 				$attrs);
 	}
