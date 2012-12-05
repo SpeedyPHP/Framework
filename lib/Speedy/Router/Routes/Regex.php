@@ -9,7 +9,7 @@ class Regex extends Match {
 	 * @return object $this
 	 */
 	protected function processFormat() {
-		$format	= preg_quote($this->format(), '#');
+		$format	= "#" . $this->format() . "#";
 		$this->setPattern($format);
 		return $this;
 	}
