@@ -161,7 +161,7 @@ abstract class Base {
 		$on	= $this->option('on');
 		if ($on && strtolower($on) != strtolower($request->method())) return false;
 		
-		return $this->match();
+		return $this->match($request);
 	}
 	
 	/**
