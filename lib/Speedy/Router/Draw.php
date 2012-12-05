@@ -113,12 +113,14 @@ class Draw extends Object {
 			'update'=> [
 				'baseSuffix'=> '/:id',	
 				'method'=> self::PUT,
-				'type'	=> self::MemberActionType 
+				'type'	=> self::MemberActionType, 
+				'helper'=> "%s_path"
 			],
 			'destroy'	=> [
 				'baseSuffix'=> '/:id', 
 				'method'=> self::DELETE,
-				'type'	=> self::MemberActionType
+				'type'	=> self::MemberActionType,
+				'helper'=> "%s_path"
 			]
 		];
 		
