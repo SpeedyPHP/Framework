@@ -328,7 +328,7 @@ class Draw extends Object {
 	 * @param array $options
 	 */
 	protected function regex(array $options) {
-		return $this->pushRoute(new Regex($params));
+		return $this->pushRoute(new Regex($options));
 	}
 	
 	/**
