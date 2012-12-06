@@ -291,13 +291,13 @@ class Draw extends Object {
 	 * @return object $this
 	 */
 	protected function routeFactory($action, $method, $options = []) {
-		$replace = $this->buildHelper($action, ($this->currentType() === self::CollectionActionType) ? false : true);
+		$replace = $this->buildHelper("", ($this->currentType() === self::CollectionActionType) ? false : true);
 		$controller	= $this->data('controller');
 		$prefix	= ($this->hasData('uri_prefix')) ? $this->data('uri_prefix') : '';
 		$uri	= $prefix . $action;
 		
 		$defaults= array(
-					'name' => ($this->currentType() == self::CollectionActionType) ? "{$replace}_url" : "{$replace}_path"
+					'name' => ($this->currentType() == self::CollectionActionType) ? "{$action}_{$replace}url" : "{$action}_{$replace}path"
 				);
 		$params	= array_merge(array(
 				$uri	=> "$controller#$action",
@@ -375,6 +375,8 @@ class Draw extends Object {
 				$key	.= "/:{$singular}_id";
 			} elseif ($type == self::NS_CONTROLLER && $nsType == self::TYPE_RESOURCE) {
 				continue;
+			} elseif ($this->currentType() == self::MemberActionType) {
+				$key = $singular;
 			}
 			
 			$array[]	= $key;
@@ -411,7 +413,7 @@ class Draw extends Object {
 		$ns		= $this->currentNamespace('_');
 		if ($ns)
 			$return .= $ns . '_';
-		
+
 		if ($member) 
 			$return	.= Inflector::singularize(strtolower($name));
 		else 
