@@ -7,10 +7,10 @@ defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
 class Console extends Base {
 	
 	public function add($msg) {
-		$msg	= $this->cleanInput($msg);
-		ob_start();
-		echo $msg;
-		$content	= ob_get_clean();
+		$content	= $this->cleanInput($msg);
+		//ob_start();
+		//echo $msg;
+		//$content	= ob_get_clean();
 		
 		fwrite(STDOUT, $content . "\n");
 	}
