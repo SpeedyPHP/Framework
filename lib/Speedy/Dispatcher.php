@@ -47,6 +47,7 @@ class Dispatcher extends Object {
 		}
 		
 		$router->request()->addParams($route);
+		\Speedy\Logger::info("PARAMS: " . json_encode($router->request()->params()));
 		$controllerObj	= new $fullName($router->request(), $response);
 		if (!method_exists($controllerObj, $route['action'])) {
 			// TODO: Error action not found in controller

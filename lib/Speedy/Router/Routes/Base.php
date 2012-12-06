@@ -258,7 +258,7 @@ abstract class Base {
 		// then loop matches to build regex match
 		// for matching the format to the uri
 		$this->setGreedy((strpos($format, '*') === strlen($format) - 1) ? true : false);
-		preg_match_all('#:?([A-Za-z0-9]+[\_\-A-Z0-9a-z]*)#', $format, $matches);\Speedy\Logger::info([$format, $matches]);
+		preg_match_all('#:?([A-Za-z0-9]+[\_\-A-Z0-9a-z]*)#', $format, $matches);
 		
 		$tokens	= array();
 		$regex	= "#";
