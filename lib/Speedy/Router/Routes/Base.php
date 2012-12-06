@@ -252,13 +252,13 @@ abstract class Base {
 	 * @return \Speedy\Router\Router\Routes\Route
 	 */
 	protected function processFormat() {
-		$format	= preg_quote($this->format(), '#');
+		$format	= $this->format();
 		
 		// is the format greedy and get tokens
 		// then loop matches to build regex match
 		// for matching the format to the uri
 		$this->setGreedy((strpos($format, '*') === strlen($format) - 1) ? true : false);
-		preg_match_all('#:?([A-Za-z0-9_-]+[A-Z0-9a-z]*)#', $format, $matches);
+		preg_match_all('#:?([A-Za-z0-9]+[\_\-A-Z0-9a-z]*)#', $format, $matches);\Speedy\Logger::info([$format, $matches]);
 		
 		$tokens	= array();
 		$regex	= "#";
