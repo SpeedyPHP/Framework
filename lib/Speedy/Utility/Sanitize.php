@@ -14,7 +14,7 @@
  * Removal of alphanumeric characters, SQL-safe slash-added strings, HTML-friendly strings,
  * and all of the above on arrays.
  */
-namespace Speedy;
+namespace Speedy\Utility;
 
 
 class Sanitize {
