@@ -18,6 +18,7 @@ class Draw extends Object {
 	const NS_CLEAN	= 1;
 	const NS_MEMBER	= 2;
 	const NS_CONTROLLER = 3;
+	const NS_HELPER = 4;
 	
 	const TYPE_RESOURCE = 1;
 	const TYPE_NS	= 2;
@@ -375,7 +376,7 @@ class Draw extends Object {
 				$key	.= "/:{$singular}_id";
 			} elseif ($type == self::NS_CONTROLLER && $nsType == self::TYPE_RESOURCE) {
 				continue;
-			} elseif ($this->currentType() == self::MemberActionType) {
+			} elseif ($this->currentType() == self::MemberActionType && $type == self::NS_HELPER) {
 				$key = $singular;
 			}
 			
@@ -410,7 +411,7 @@ class Draw extends Object {
 	
 	protected function buildHelper($name, $member = false) {
 		$return	= '';
-		$ns		= $this->currentNamespace('_');
+		$ns		= $this->currentNamespace('_', self::NS_HELPER);
 		if ($ns)
 			$return .= $ns . '_';
 
