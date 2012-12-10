@@ -58,5 +58,19 @@ class File {
 		return rmdir($dirname);
 	}
 	
+	/**
+	 * Makes a directory recursively
+	 * 
+	 * @param string $path
+	 * @param int $mode
+	 */
+	public static function mkdir_p($path, $mode = 0777) {
+	   if (!is_dir($path))
+	   {
+			mkdir_p(dirname($path), $mode);
+			mkdir($path, $mode);
+	   }
+	}
+	
 }
 ?>

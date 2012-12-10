@@ -3,6 +3,7 @@ namespace Speedy\Cache;
 
 
 use Exception as CacheException;
+use Speedy\Utility\File as FileUtility;
 
 class File implements CacheInterface {
 
@@ -86,6 +87,11 @@ class File implements CacheInterface {
 		
 		if (!$this->hasPath($path))
 			$path = self::PathDefault;
+		
+		// if the path doesn't exist attempt to create it
+		if (!file_exists($this->path[$path])) {
+			FileUtility::mkdir_p($this->path[$path], 0755);
+		}
 		
 		return $this->path[$path];
 	}
