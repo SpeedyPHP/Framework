@@ -67,7 +67,7 @@ class File {
 	public static function mkdir_p($path, $mode = 0777) {
 	   if (!is_dir($path))
 	   {
-			mkdir_p(dirname($path), $mode);
+			self::mkdir_p(dirname($path), $mode);
 			mkdir($path, $mode);
 	   }
 	}
