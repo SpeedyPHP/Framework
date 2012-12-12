@@ -274,8 +274,7 @@ class View extends Object {
 			->setHeader('Expires', date('r'))
 			->setHeader('Content-Type', 'application/json');
 	
-		echo json_encode($mixed);
-		return true;
+		return json_encode($mixed);
 	}
 	
 	/**
