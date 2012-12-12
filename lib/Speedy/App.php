@@ -304,11 +304,31 @@ namespace Speedy {
 			'</div>',
 			'<div class="description"><p>[Error Number: %s] %s in %s on line %s</p></div>',
 			'<div class="stack"><pre>%s</pre></div>',
+			'<div class="params">',
+			'<h2>Parameters</h2>',
+			'<h3>GET</h3>',
+			'<pre>%s</pre>',
+			'<h3>POST</h3>',
+			'<pre>%s</pre>',
+			'<h3>FILES</h3>',
+			'<pre>%s</pre>',
+			'<h3>SERVER</h3>',
+			'<pre>%s</pre>',
+			'</div>',
 			'</body>',
 			'</html>'
 			];
 			$html = implode("\n", $html);
-			return sprintf($html, $e->getCode(), $e->getMessage(), $e->getFile(), $e->getLine(), $e->getTraceAsString());
+			return sprintf($html, 
+					$e->getCode(), 
+					$e->getMessage(), 
+					$e->getFile(), 
+					$e->getLine(), 
+					$e->getTraceAsString(),
+					print_r($_GET, true),
+					print_r($_POST, true),
+					print_r($_FILES, true),
+					print_r($_SERVER, true));
 		}
 		
 		protected function cleanBuffer() {
