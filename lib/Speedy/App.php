@@ -8,6 +8,7 @@ namespace Speedy {
 	use Speedy\Exception\Error as ErrorException;
 	use Speedy\Middleware\Stack as MiddlewareStack;
 	use Speedy\Middleware\Asset as MiddlewareAsset;
+	use Speedy\Logger;
 	
 	class App extends Object {
 		
@@ -223,6 +224,8 @@ namespace Speedy {
 				$response = Dispatcher::run($this->router());
 				echo $response;
 			} catch (\Exception $e) {
+				Logger::error($e->getMessage());
+				
 				$this->cleanBuffer();
 				header("HTTP/1.0 500 Internal Server Error");
 				echo $this->exceptionFormat($e);
