@@ -38,7 +38,7 @@ class Regex extends Match {
 			$params[]	= $value;
 		}
 		
-		$this->setParams($params);
+		$this->setParams(array_merge($params, $this->options()));
 		return true;
 	}
 	
