@@ -32,7 +32,6 @@ class Regex extends Match {
 		if (!$success) return false;
 		
 		// Loop the matches to find the token values
-		$params = [];
 		foreach($matches as $key => $value) {
 			$value = $value[0];
 			$params[]	= $value;
