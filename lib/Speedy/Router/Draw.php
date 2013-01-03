@@ -321,7 +321,7 @@ class Draw extends Object {
 	 * Draw root path to this location
 	 * @param array $params
 	 */
-	protected function rootTo($toString, $params) {
+	protected function rootTo($toString, $params = []) {
 		$params	= array_merge(array('^/?$' => $toString), $params);
 		return $this->regex($params);
 	}
