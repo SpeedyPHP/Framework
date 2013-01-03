@@ -112,6 +112,15 @@ class Controller extends Object {
 	}
 	
 	/**
+	 * Isset for params
+	 * @param string $name
+	 * @return bool
+	 */
+	public function hasParam($name) {
+		return $this->__dotIsset($name, $this->_params);
+	}
+	
+	/**
 	 * Getter for template variables
 	 * @return array
 	 */
