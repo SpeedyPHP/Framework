@@ -79,7 +79,7 @@ class Draw extends Object {
 		$base	= $this->buildBase($name, true);
 		$controller	= $this->buildController($name); 
 		
-		$only	= (isset($options['only']) && count($options['only']) > 0) ? $options['only'] : null;
+		$only	= (isset($options['only'])) ? $options['only'] : null;
 		$except	= (isset($options['except']) && count($options['except']) > 0) ? $options['except'] : null;
 		$defaultActions= [
 			'index' => [
@@ -370,6 +370,10 @@ class Draw extends Object {
 		$array = array();
 		
 		foreach ($this->_currentNamespace as $key => $nsType) {
+			if (strlen($key) < 1) {
+				continue;
+			}
+			
 			$singular	= Inflector::singularize($key);
 			
 			if ($type == self::NS_MEMBER && $nsType == self::TYPE_RESOURCE) {
