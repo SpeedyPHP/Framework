@@ -296,9 +296,10 @@ class Draw extends Object {
 		$controller	= $this->data('controller');
 		$prefix	= ($this->hasData('uri_prefix')) ? $this->data('uri_prefix') : '';
 		$uri	= $prefix . $action;
+		$helperAction	= (strlen($action) > 0) ? $action . '_' : '';
 		
 		$defaults= array(
-					'name' => ($this->currentType() == self::CollectionActionType) ? "{$action}_{$replace}url" : "{$action}_{$replace}path"
+					'name' => ($this->currentType() == self::CollectionActionType) ? "{$helperAction}{$replace}url" : "{$helperAction}{$replace}path"
 				);
 		$params	= array_merge(array(
 				$uri	=> "$controller#$action",
@@ -370,10 +371,6 @@ class Draw extends Object {
 		$array = array();
 		
 		foreach ($this->_currentNamespace as $key => $nsType) {
-			if (strlen($key) < 1) {
-				continue;
-			}
-			
 			$singular	= Inflector::singularize($key);
 			
 			if ($type == self::NS_MEMBER && $nsType == self::TYPE_RESOURCE) {
