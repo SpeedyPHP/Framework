@@ -41,11 +41,5 @@ class ActiveRecord extends \ActiveRecord\Model {
 	
 	public function _construct() {}
 	
-	public function __toString() {
-		$class	= get_class($this);
-		$aClass	= explode('\\', $class);
-		return strtolower(array_pop($aClass));
-	}
-	
 }
 ?>
