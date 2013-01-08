@@ -39,6 +39,10 @@ class ActiveRecord extends \ActiveRecord\Model {
 		parent::__construct($attributes, $guard_attributes, $instantiating_via_find, $new_record);
 	}
 	
+	
+	/**
+	 * Optional override constructor
+	 */
 	public function _construct() {}
 	
 }
