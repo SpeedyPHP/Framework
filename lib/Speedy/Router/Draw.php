@@ -194,7 +194,10 @@ class Draw extends Object {
 	 */
 	public function collection($closure) {
 		$this->setCurrentType(self::CollectionActionType);
-		$this->setData('controller', $this->buildController());
+		
+		$keys	= array_keys($this->_currentNamespace);
+		$this->setData('controller', $this->buildController(end($keys)));
+		
 		$closure();
 		$this->unsetData('controller');
 		$this->setCurrentType(self::NullActionType);
