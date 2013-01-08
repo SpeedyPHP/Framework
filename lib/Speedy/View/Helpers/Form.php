@@ -78,7 +78,8 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function textArea($name, $attrs = array()) {
-		return $this->textAreaTag($this->formatName($name), $this->model()->{$name}, $attrs);
+		$text = isset($this->model()->{$name}) ? $this->model()->{$name} : '';
+		return $this->textAreaTag($this->formatName($name), $text, $attrs);
 	}
 	
 	/**
