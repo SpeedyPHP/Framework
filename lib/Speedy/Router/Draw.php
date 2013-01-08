@@ -403,7 +403,7 @@ class Draw extends Object {
 	
 	protected function buildController($name = null) {
 		$return = '';
-		$ns		= $this->currentNamespace('/');
+		$ns		= $this->currentNamespace('/', self::NS_CONTROLLER);
 		if ($ns)
 			$return	.= ($name) ? $ns . '/' : $ns;
 		
