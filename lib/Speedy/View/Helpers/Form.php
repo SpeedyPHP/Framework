@@ -210,7 +210,8 @@ class Form extends Object {
 	 * @param mixed $defaultSelected
 	 */
 	public function select($name, array $options, $defaultSelected = null, $attrs = []) {
-		$selected = (isset($this->model()->{$name})) ? $this->model()->{$name} : $defaultSelected;
+		$selected = (!isset($defaultSelected) && isset($this->model()->{$name})) ? 
+				$this->model()->{$name} : $defaultSelected;
 		return $this->selectTag(
 								$this->formatName($name), 
 								$this->optionsForSelect($options, $selected), 
