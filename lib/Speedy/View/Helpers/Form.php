@@ -149,7 +149,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function checkBox($name, $attrs = array()) {
-		if (isset($this->model()->{$name})) {
+		if (!empty($this->model()->{$name})) {
 			$attrs['checked']	= 'checked';
 		}
 		return $this->checkBoxTag($this->formatName($name), $attrs);
