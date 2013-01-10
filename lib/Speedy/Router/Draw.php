@@ -79,7 +79,7 @@ class Draw extends Object {
 		$base	= $this->buildBase($name, true);
 		$controller	= $this->buildController($name); 
 		
-		$only	= (isset($options['only']) && count($options['only']) > 0) ? $options['only'] : null;
+		$only	= (isset($options['only'])) ? $options['only'] : null;
 		$except	= (isset($options['except']) && count($options['except']) > 0) ? $options['except'] : null;
 		$defaultActions= [
 			'index' => [
@@ -194,7 +194,10 @@ class Draw extends Object {
 	 */
 	public function collection($closure) {
 		$this->setCurrentType(self::CollectionActionType);
-		$this->setData('controller', $this->buildController());
+		
+		$keys	= array_keys($this->_currentNamespace);
+		$this->setData('controller', $this->buildController(end($keys)));
+		
 		$closure();
 		$this->unsetData('controller');
 		$this->setCurrentType(self::NullActionType);
@@ -296,9 +299,10 @@ class Draw extends Object {
 		$controller	= $this->data('controller');
 		$prefix	= ($this->hasData('uri_prefix')) ? $this->data('uri_prefix') : '';
 		$uri	= $prefix . $action;
+		$helperAction	= (strlen($action) > 0) ? $action . '_' : '';
 		
 		$defaults= array(
-					'name' => ($this->currentType() == self::CollectionActionType) ? "{$action}_{$replace}url" : "{$action}_{$replace}path"
+					'name' => ($this->currentType() == self::CollectionActionType) ? "{$helperAction}{$replace}url" : "{$helperAction}{$replace}path"
 				);
 		$params	= array_merge(array(
 				$uri	=> "$controller#$action",
@@ -402,7 +406,7 @@ class Draw extends Object {
 	
 	protected function buildController($name = null) {
 		$return = '';
-		$ns		= $this->currentNamespace('/');
+		$ns		= $this->currentNamespace('/', self::NS_CONTROLLER);
 		if ($ns)
 			$return	.= ($name) ? $ns . '/' : $ns;
 		

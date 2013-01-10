@@ -39,13 +39,11 @@ class ActiveRecord extends \ActiveRecord\Model {
 		parent::__construct($attributes, $guard_attributes, $instantiating_via_find, $new_record);
 	}
 	
-	public function _construct() {}
 	
-	public function __toString() {
-		$class	= get_class($this);
-		$aClass	= explode('\\', $class);
-		return strtolower(array_pop($aClass));
-	}
+	/**
+	 * Optional override constructor
+	 */
+	public function _construct() {}
 	
 }
 ?>

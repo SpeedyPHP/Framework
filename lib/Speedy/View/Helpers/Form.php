@@ -78,7 +78,8 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function textArea($name, $attrs = array()) {
-		return $this->textAreaTag($this->formatName($name), $this->model()->{$name}, $attrs);
+		$text = isset($this->model()->{$name}) ? $this->model()->{$name} : '';
+		return $this->textAreaTag($this->formatName($name), $text, $attrs);
 	}
 	
 	/**
@@ -148,7 +149,7 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function checkBox($name, $attrs = array()) {
-		if (isset($this->model()->{$name})) {
+		if (!empty($this->model()->{$name})) {
 			$attrs['checked']	= 'checked';
 		}
 		return $this->checkBoxTag($this->formatName($name), $attrs);
@@ -210,7 +211,8 @@ class Form extends Object {
 	 * @param mixed $defaultSelected
 	 */
 	public function select($name, array $options, $defaultSelected = null, $attrs = []) {
-		$selected = (isset($this->model()->{$name})) ? $this->model()->{$name} : $defaultSelected;
+		$selected = (!isset($defaultSelected) && isset($this->model()->{$name})) ? 
+				$this->model()->{$name} : $defaultSelected;
 		return $this->selectTag(
 								$this->formatName($name), 
 								$this->optionsForSelect($options, $selected), 
