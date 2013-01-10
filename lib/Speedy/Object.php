@@ -66,7 +66,7 @@ class Object {
 	 */
 	protected function _loadMixins() {
 		if ($this->_loadedMixins()) return $this;
-		if ($this->respondsTo('__loadMixins')) {
+		if (method_exists($this, '__loadMixins')) {
 			$this->_mixins	= array_merge($this->_mixins, (array) $this->__loadMixins());
 		}
 		

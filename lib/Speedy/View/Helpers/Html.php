@@ -1,13 +1,13 @@
 <?php 
 namespace Speedy\View\Helpers;
 
-use \Speedy\View\Exception as ViewException;
-use \Speedy\View\Helpers\Exception;
-use \Speedy\View\Helpers\Form;
-use \Speedy\Router;
-use \Speedy\Router\Draw;
-use \Speedy\Utility\Inflector;
-use \Speedy\Utility\Links;
+use Speedy\View\Exception as ViewException;
+use Speedy\View\Helpers\Exception;
+use Speedy\View\Helpers\Form;
+use Speedy\Router;
+use Speedy\Router\Draw;
+use Speedy\Utility\Inflector;
+use Speedy\Utility\Links;
 use \App;
 
 trait Html {
