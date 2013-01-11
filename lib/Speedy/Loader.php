@@ -94,9 +94,9 @@ namespace Speedy {
 		 * @return \Speedy\Loader
 		 */
 		public function addAlias($alias, $namespace) {
-			if ($this->hasNamespace($namespace)) return $this;
+			if (!$this->hasNamespace($namespace)) return $this;
 			
-			$this->_aliases[$alias]	= $namespace;
+			$this->_aliases[$alias][]	= $namespace;
 			return $this;
 		}
 		
