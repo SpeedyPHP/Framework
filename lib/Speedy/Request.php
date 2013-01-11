@@ -137,6 +137,7 @@ class Request extends Object {
 		if (strpos($url, '?') !== false) {
 			$aUrl	= explode('?', $url);
 			$url	= array_shift($aUrl);	
+			$this->setParam('url', $url);
 		}
 		
 		$urlParts	= explode("/", $url);
