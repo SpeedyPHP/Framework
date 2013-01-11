@@ -144,12 +144,12 @@ task('routes', function() {
 });
 
 
-group('cache', function() {
-	desc('Flushed the cache');
+group('tmp', function() {
+	desc('Flushs the cache');
 	task('flush', function() {
 		Speedy\Utility\File::rm_rf(TMP_PATH . DS . 'cache');
 	});
-})
+});
 
 function output($str = "") {
 	fwrite(STDOUT, $str . "\n");
