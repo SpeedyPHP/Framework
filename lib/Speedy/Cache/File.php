@@ -73,7 +73,13 @@ class File implements CacheInterface {
 	public function write($name, $data, $setting = null) {
 		if ($setting == null) $setting = self::PathDefault;
 		
-		file_put_contents($this->fullPath($name, $setting), serialize($data));
+		$fullPath = $this->fullPath($name, $setting);
+		$parts = pathinfo($fullPath);
+
+		if (!file_exists($parts['dirname']))
+			FileUtility::mkdir_p($parts['dirname']);
+
+		file_put_contents($fullPath, serialize($data));
 		return $this;
 	}
 	
