@@ -55,7 +55,7 @@ class File {
 				unlink($file);
 		}
 		
-		return rmdir($dirname);
+		return @rmdir($dirname);
 	}
 	
 	/**
