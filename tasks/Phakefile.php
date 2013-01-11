@@ -144,6 +144,15 @@ task('routes', function() {
 });
 
 
+group('cache', function() {
+	desc('Flushed the cache');
+	task('flush', function() {
+		use Speedy\Utility\File;
+
+		File::rm_rf(TMP_PATH . DS . 'cache');
+	});
+})
+
 function output($str = "") {
 	fwrite(STDOUT, $str . "\n");
 }
