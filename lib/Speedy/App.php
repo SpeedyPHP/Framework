@@ -126,11 +126,11 @@ namespace Speedy {
 			//$loader->registerNamespace('sprockets', VENDOR_PATH . DS . 'SpeedyPHP' . DS . 'Sprockets'); 
 			
 			$loader->setAliases(array(
-				'views'			=> ["{$this->ns()}.views"],
-				'helpers'		=> ["{$this->ns()}.helpers"],
-				'controllers'	=> ["{$this->ns()}.controllers"],
-				'models'		=> ["{$this->ns()}.models"],
-				'assets'		=> ["{$this->ns()}.assets"],
+				'views'			=> "{$this->ns()}.views",
+				'helpers'		=> "{$this->ns()}.helpers",
+				'controllers'	=> "{$this->ns()}.controllers",
+				'models'		=> "{$this->ns()}.models",
+				'assets'		=> "{$this->ns()}.assets",
 			));
 			
 			self::_setInstance($this);
