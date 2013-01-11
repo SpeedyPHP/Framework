@@ -234,6 +234,24 @@ class Inflector
         preg_replace('/([A-Z]+)([A-Z][a-z])/','\1_\2',$word))));
     }
 
+    /**
+     * Converts a word "into-it-slug-version"
+     * 
+     * Convert any "CamelCased" or "ordinary Word" into an
+     * "underscored-word".
+     * 
+     * This can be really useful for creating friendly URLs.
+     * 
+     * @access public
+     * @static
+     * @param    string    $word    Word to underscore
+     * @return string sluged word
+     */
+    public static function slugize($word)
+    {
+        return  str_replace('_', '-', self::underscore($word));
+    }
+
     // }}}
     // {{{ humanize()
 
