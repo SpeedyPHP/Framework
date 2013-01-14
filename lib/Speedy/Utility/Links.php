@@ -81,12 +81,12 @@ class Links extends Singleton {
 			
 		if (!empty($args)) {
 			$queryParams = [];
-
+			\Speedy\Logger::debug($args);
 			foreach ($args as $key => $value) {
 				if (is_int($key)) {
-					$format .= "/{$value}";
-				} else {
 					$queryParams[] .= Sanitize::url($key) . "=" . Sanitize::url($value);
+				} else {
+					$format .= "/{$value}";
 				}
 			}
 			
