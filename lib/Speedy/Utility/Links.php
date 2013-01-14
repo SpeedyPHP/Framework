@@ -79,10 +79,10 @@ class Links extends Singleton {
 			$format	= str_replace(":{$token}", (is_object($value)) ? $value->id : $value, $format);
 		}
 			
-		if (!empty($args)) {
+		if (!empty($args[0])) {
 			$queryParams = [];
 			\Speedy\Logger::debug($args);
-			foreach ($args as $key => $value) {
+			foreach ($args[0] as $key => $value) {
 				if (is_int($key)) {
 					$queryParams[] .= Sanitize::url($key) . "=" . Sanitize::url($value);
 				} else {
