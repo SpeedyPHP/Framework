@@ -83,6 +83,10 @@ class Links extends Singleton {
 			$queryParams = [];
 			
 			foreach ($args[0] as $key => $value) {
+				if (empty($value)) {
+					continue;
+				}
+				
 				if (is_int($key)) {
 					$queryParams[] .= Sanitize::url($key) . "=" . Sanitize::url($value);
 				} else {
