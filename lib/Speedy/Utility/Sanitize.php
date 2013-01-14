@@ -249,4 +249,12 @@ class Sanitize {
 		}
 	}
 
+	/**
+	 * Sanitize data for inclusion in url
+	 * @return string
+	 */	
+	public static function url($data, $options = []) {
+		return urlencode($data);
+	}
+
 }
