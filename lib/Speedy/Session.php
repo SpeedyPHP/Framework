@@ -31,7 +31,7 @@ class Session {
 	}
 	
 	public function destroy() {
-		return $this->maanger()->destroy();
+		return $this->manager()->destroy();
 	}
 	
 	public function has($name) {

@@ -159,12 +159,29 @@ abstract class Base extends Object {
 		return $this;
 	}
 	
+	/**
+	 * Alias for param and getter for params property
+	 * 
+	 * @param optional mixed $name
+	 * @return mixed
+	 */
+	public function params($name = null) {
+		return (isset($name)) ? $this->param($name) : $this->params;
+	}
+
+	/**
+	 * Getter key in params
+	 * 
+	 * @param mixed $name
+	 * @return mixed
+	 */
 	public function param($name) {
 		return $this->__dotAccess($name, $this->params);
 	}
 	
 	/**
 	 * Setter for template path
+	 * 
 	 * @param string $path
 	 * @return \Speedy\View\Base
 	 */

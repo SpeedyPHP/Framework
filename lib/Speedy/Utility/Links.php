@@ -1,9 +1,10 @@
 <?php 
 namespace Speedy\Utility;
 
-use \Speedy\Singleton;
-use \Speedy\Router;
-use \Speedy\App;
+use Speedy\Singleton;
+use Speedy\Router;
+use Speedy\App;
+use Speedy\Utility\Sanitize;
 
 class Links extends Singleton {
 
@@ -78,9 +79,23 @@ class Links extends Singleton {
 			$format	= str_replace(":{$token}", (is_object($value)) ? $value->id : $value, $format);
 		}
 			
-		if (!empty($args)) {
-			while($param = array_shift($args)) {
-				$format .= "/{$param}";
+		if (!empty($args[0])) {
+			$queryParams = [];
+			
+			foreach ($args[0] as $key => $value) {
+				if (empty($value)) {
+					continue;
+				}
+
+				if (is_int($key)) {
+					$format .= "/{$value}";
+				} else {
+					$queryParams[] .= Sanitize::url($key) . "=" . Sanitize::url($value);
+				}
+			}
+			
+			if (count($queryParams) > 0) {
+				$format .= '?' . implode('&', $queryParams);
 			}
 		}
 		

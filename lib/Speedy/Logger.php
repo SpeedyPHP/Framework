@@ -20,27 +20,27 @@ class Logger {
 		//$this->setLogger(Config::read('logger'));
 	}
 	
-	public static function info($msg) {
+	public static function info($msg = '') {
 		//if (!self::ready()) return;
 		self::instance()->logger()->info($msg);
 	}
 	
-	public static function debug($msg) {
+	public static function debug($msg = '') {
 		//if (!self::ready()) return;
 		self::instance()->logger()->debug($msg);
 	}
 	
-	public static function error($msg) {
+	public static function error($msg = '') {
 		//if (!self::ready()) return;
 		self::instance()->logger()->error($msg);
 	}
 	
-	public static function fatal($msg) {
+	public static function fatal($msg = '') {
 		//if (!self::ready()) return;
 		self::instance()->logger()->fatal($msg);
 	}
 	
-	public static function warn($msg) {
+	public static function warn($msg = '') {
 		//if (!self::ready()) return;
 		self::instance()->logger()->warn($msg);
 	}
