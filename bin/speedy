@@ -13,6 +13,11 @@ define("APP_PATH", APP_ROOT . DS . 'app');
 define('VENDOR_PATH', APP_ROOT . DS . 'vendor');
 defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
 
+$pathToDefines = APP_ROOT . DS . 'public' . DS . 'defines.php';
+if (file_exists($pathToDefines)) {
+	include $pathToDefines;
+}
+
 if (file_exists(VENDOR_PATH . DS . 'autoload.php')) {
   require_once VENDOR_PATH . DS . 'autoload.php';
 } elseif (file_exists(SPEEDY_PATH . DS . "lib")) {
@@ -36,11 +41,6 @@ function output($str = "") {
 $pathToApp	= CONFIG_PATH . DS . 'App.php';
 if (file_exists($pathToApp)) {
 	include $pathToApp;
-}
-
-$pathToDefines = APP_ROOT . DS . 'public' . DS . 'defines.php';
-if (file_exists($pathToDefines)) {
-	include $pathToDefines;
 }
 
 if (class_exists('App')) {
