@@ -511,6 +511,12 @@ trait Html {
 				
 			if (is_array($value)) {
 				$html .= $this->buildAttributes($value, $name);
+			} elseif(is_bool($value)) {
+				if (!$value) {
+					continue;
+				}
+
+				$html .= " $name";
 			} else {
 				$html .= ' ' . $name . '="' . $value . '"';
 			}
