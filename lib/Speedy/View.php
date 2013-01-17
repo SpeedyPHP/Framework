@@ -99,17 +99,13 @@ class View extends Object {
 	 * @return mixed string fullpath/false on failure
 	 */
 	public function findFile($file, $ext = 'html') {
-		if (strpos($file, '/') === false) {
-			
-		}
-		
 		$viewPaths	= Loader::instance()->path('views');
 		$renderers	= Config::instance()->renderers();
 		
 		foreach ($renderers as $type => $renderer) {
 			foreach ($viewPaths as $path) {
 				$fullPath	= $path . DS . $file . ".{$ext}.{$type}";
-		
+				
 				if (file_exists($fullPath)) {
 					return $fullPath;
 				}
