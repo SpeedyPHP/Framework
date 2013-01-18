@@ -87,8 +87,8 @@ trait Html {
 		
 		ob_start();
 		if ($model->id) {
-			$form->hidden('id');
-			$this->hiddenFieldTag('_method', Draw::PUT);
+			echo $form->hidden('id');
+			echo $this->hiddenFieldTag('_method', Draw::PUT);
 		}
 		$closure($form);
 		$content	= ob_get_clean();
@@ -443,8 +443,8 @@ trait Html {
 			$html	.= ">$text</$tag>";
 		}
 		
-		echo ($nl) ? $html . "\n" : $html;
-		return;
+		return ($nl) ? $html . "\n" : $html;
+		//return;
 	}
 	
 	public function toLabel($string) {

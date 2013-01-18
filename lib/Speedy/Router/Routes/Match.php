@@ -56,7 +56,7 @@ class Match extends Base {
 		$success 	= preg_match_all($this->pattern(), $uri, $matches);
 		$base		= array_shift($matches);
 		$params		= array( 'ext' => ($request->hasParam('ext')) ? $request->param('ext') : 'html' );
-		//debug(array($uri, $success, $params, $this->pattern()));
+		//\Speedy\Logger::debug(array($uri, $success, $params, $this->pattern()));
 	
 		// Fail if it doesn't match
 		if (!$success) return false;

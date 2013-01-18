@@ -88,7 +88,7 @@ class Links extends Singleton {
 				}
 
 				if (is_int($key)) {
-					$format .= "/{$value}";
+					$format .= "/" . Sanitize::url($value);
 				} else {
 					$queryParams[] .= Sanitize::url($key) . "=" . Sanitize::url($value);
 				}

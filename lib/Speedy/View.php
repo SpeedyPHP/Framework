@@ -185,8 +185,8 @@ class View extends Object {
 	 * Getter for vars
 	 * @return array
 	 */
-	public function vars() {
-		return $this->_vars;
+	public function vars($name = null) {
+		return ($name) ? $this->_vars[$name]: $this->_vars;
 	}
 	
 	/**

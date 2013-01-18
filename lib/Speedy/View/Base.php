@@ -82,7 +82,7 @@ abstract class Base extends Object {
 		
 		$this->cleanPath($path);
 		//return $this->renderTemplate($path, $this->vars());
-		echo View::instance()->render($path, [], $vars);
+		return View::instance()->render($path, [], $vars);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ abstract class Base extends Object {
 	 * @param string $name
 	 */
 	public function yield($name = "__main__") {
-		echo "\n" . \Speedy\View::instance()->yield($name) . "\n";
+		return "\n" . \Speedy\View::instance()->yield($name) . "\n";
 	}
 	
 	/**
