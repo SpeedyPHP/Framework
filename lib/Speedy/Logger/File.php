@@ -2,9 +2,25 @@
 namespace Speedy\Logger;
 
 
-defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
+use Speedy\Utility\File as FileUtility;
 
-class Console extends Base {
+class File extends Base {
+
+	private $_resource;
+
+	
+	public function __construct() {
+		$dir = TMP_PATH . DS . 'log';
+		if (!file_exists($dir)) {
+			FileUtility::mkdir_p($dir);
+		}
+		
+		$file = $dir . DS . SPEEDY_ENV;
+		$this->_resource = fopen($file, 'w');
+		if (!$this->_resource) {
+			throw new Exception('Unable to open log file for writing');
+		}
+	}
 
 	public function add($msg) {
 		$content	= $this->cleanInput($msg);
@@ -12,7 +28,7 @@ class Console extends Base {
 		//echo $msg;
 		//$content	= ob_get_clean();
 		
-		fwrite(STDOUT, $content . "\n");
+		fwrite($this->_resource, $content . "\n");
 	}
 	
 	public function info($msg) {
