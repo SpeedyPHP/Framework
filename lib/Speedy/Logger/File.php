@@ -2,9 +2,25 @@
 namespace Speedy\Logger;
 
 
-defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
+use Speedy\Utility\File as FileUtility;
 
-class Console extends Base {
+class File extends Base {
+
+	private $_resource;
+
+	
+	public function __construct() {
+		$dir = TMP_PATH . DS . 'log';
+		if (!file_exists($dir)) {
+			FileUtility::mkdir_p($dir);
+		}
+		
+		$file = $dir . DS . SPEEDY_ENV;
+		$this->_resource = fopen($file, 'a');
+		if (!$this->_resource) {
+			throw new Exception('Unable to open log file for writing');
+		}
+	}
 
 	public function add($msg) {
 		$content	= $this->cleanInput($msg);
@@ -12,7 +28,7 @@ class Console extends Base {
 		//echo $msg;
 		//$content	= ob_get_clean();
 		
-		fwrite(STDOUT, $content . "\n");
+		fwrite($this->_resource, $content . "\n");
 	}
 	
 	public function info($msg) {
@@ -21,26 +37,22 @@ class Console extends Base {
 	
 	public function debug($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->add($this->boldText('[DEBUG] ') . $msg);	
+		$this->add('[DEBUG] ' . $msg);	
 	}
 	
 	public function error($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->add($this->boldText('[ERROR] ') . $msg);
+		$this->add('[ERROR] ' . $msg);
 	}
 	
 	public function fatal($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->add($this->boldText('[FATAL] ') . $msg);
+		$this->add('[FATAL] ' . $msg);
 	}
 	
 	public function warn($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->add($this->boldText('[WARN] ') . $msg);
-	}
-
-	public function boldText($text) {
-		return chr(27) . '[1m' . $text . chr(27) . '[0m';
+		$this->add('[WARN] ' . $msg);
 	}
 	
 	public function __destruct() {
