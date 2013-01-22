@@ -202,7 +202,7 @@ namespace Speedy {
 			
 			Router::instance()
 				->draw($this->name() . '\Config\Routes');
-			
+
 			return $this;
 		}
 		

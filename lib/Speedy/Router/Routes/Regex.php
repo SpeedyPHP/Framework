@@ -27,7 +27,7 @@ class Regex extends Match {
 		$base		= array_shift($matches);
 		$params		= array( 'ext' => ($request->hasParam('ext')) ? $request->param('ext') : 'html' );
 		//debug(array($uri, $success, $params, $this->pattern()));
-		
+		//\Speedy\Logger::debug([$success, $base, $params, $uri]);
 		// Fail if it doesn't match
 		if (!$success) return false;
 		

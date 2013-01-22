@@ -25,6 +25,12 @@ class Asset extends MiddlewareBase {
 		if ($this->has($this->request()->scriptName()) !== false) {
 			$this->render();
 			exit;
+		} elseif ($this->has($this->request()->uri()) !== false) {
+			$this->render();
+			exit;
+		} elseif ($this->has($this->request()->originalUrl()) !== false) {
+			$this->render();
+			exit;
 		}
 		
 		$this->next()->call();
@@ -46,7 +52,7 @@ class Asset extends MiddlewareBase {
 		foreach ($paths	as $path) {
 			foreach ($this->types as $type) {
 				$file	= $path . DS . $type . $asset;
-				if (!file_exists($file)) {
+				if (!file_exists($file) || is_dir($file)) {
 					continue;
 				}
 				

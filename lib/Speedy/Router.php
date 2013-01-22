@@ -73,6 +73,7 @@ class Router extends Object {
 			}
 			
 			if ($route->isMatch($request)) {
+				//\Speedy\Logger::debug($route->route());
 				$match = true; 
 				$this->_setMatchedRoute(array_merge($this->params(), $route->route()));
 				
