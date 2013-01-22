@@ -52,7 +52,7 @@ class Asset extends MiddlewareBase {
 		foreach ($paths	as $path) {
 			foreach ($this->types as $type) {
 				$file	= $path . DS . $type . $asset;
-				if (!file_exists($file)) {
+				if (!file_exists($file) ||  is_dir($file)) {
 					continue;
 				}
 				
