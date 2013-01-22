@@ -17,7 +17,8 @@ class Logger {
 	
 	
 	public function __construct() {
-		//$this->setLogger(Config::read('logger'));
+		$class	= Config::read('logger');
+		$this->setLogger($class);
 	}
 	
 	public static function info($msg = '') {
@@ -58,11 +59,6 @@ class Logger {
 	}
 	
 	public function logger() {
-		if (!$this->_loggerObj) {
-			$class	= Config::read('logger');
-			$this->setLogger($class);
-		}
-		
 		return $this->_loggerObj;
 	}
 	

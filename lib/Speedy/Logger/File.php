@@ -16,7 +16,7 @@ class File extends Base {
 		}
 		
 		$file = $dir . DS . SPEEDY_ENV;
-		$this->_resource = fopen($file, 'w');
+		$this->_resource = fopen($file, 'a');
 		if (!$this->_resource) {
 			throw new Exception('Unable to open log file for writing');
 		}
@@ -37,26 +37,22 @@ class File extends Base {
 	
 	public function debug($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->add($this->boldText('[DEBUG] ') . $msg);	
+		$this->add('[DEBUG] ' . $msg);	
 	}
 	
 	public function error($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->add($this->boldText('[ERROR] ') . $msg);
+		$this->add('[ERROR] ' . $msg);
 	}
 	
 	public function fatal($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->add($this->boldText('[FATAL] ') . $msg);
+		$this->add('[FATAL] ' . $msg);
 	}
 	
 	public function warn($msg) {
 		$msg	= $this->cleanInput($msg);
-		$this->add($this->boldText('[WARN] ') . $msg);
-	}
-
-	public function boldText($text) {
-		return chr(27) . '[1m' . $text . chr(27) . '[0m';
+		$this->add('[WARN] ' . $msg);
 	}
 	
 	public function __destruct() {
