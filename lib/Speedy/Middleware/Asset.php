@@ -25,6 +25,9 @@ class Asset extends MiddlewareBase {
 		if ($this->has($this->request()->scriptName()) !== false) {
 			$this->render();
 			exit;
+		} elseif ($this->has($this->request()->uri()) !== false) {
+			$this->render();
+			exit;
 		}
 		
 		$this->next()->call();
