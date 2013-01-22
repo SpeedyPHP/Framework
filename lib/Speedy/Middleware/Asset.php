@@ -28,7 +28,7 @@ class Asset extends MiddlewareBase {
 		} elseif ($this->has($this->request()->uri()) !== false) {
 			$this->render();
 			exit;
-		} elseif ($this->has($this->request()->url()) !== false) {
+		} elseif ($this->has($this->request()->originalUrl()) !== false) {
 			$this->render();
 			exit;
 		}
