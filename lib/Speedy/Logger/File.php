@@ -56,7 +56,7 @@ class File extends Base {
 	}
 	
 	public function __destruct() {
-		self::add("\n\n");
+		$this->add("\r\n");
 	}
 	
 	/**

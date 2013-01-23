@@ -80,9 +80,9 @@ abstract class Base extends Object {
 			$path	= strtolower(array_pop($classArr));
 		} 
 		
-		$this->cleanPath($path);
+		$cPath = $this->cleanPath($path);
 		//return $this->renderTemplate($path, $this->vars());
-		return View::instance()->render($path, [], $vars);
+		return View::instance()->render($cPath, [], $vars);
 	}
 	
 	/**
@@ -132,12 +132,8 @@ abstract class Base extends Object {
 		//if (preg_match("#/^_(\w)*/#i", $path, $matches)) 
 		//	return $path;
 		
-		if (strpos($path, '/') !== false) {
-			$aPath	= explode('/', $path);
-			$last	= array_pop($aPath);
-			$aPath[]= '_' . $last;
-			$path	= implode('/', $aPath);
-			return;
+		if (($pos = strrpos($path, '/')) !== false) {
+			return substr_replace($path, '_', $pos + 1, 0);
 		}
 		
 		$controller = $this->param('controller');
