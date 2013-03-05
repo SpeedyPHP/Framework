@@ -47,7 +47,7 @@ class View extends Object {
 			$this->setYield('__main__', $this->_render($tpl, $ext));
 		}
 		
-		return $this->_render($file, $ext);;
+		return $this->_render($file, $ext);
 	}
 	
 	/**
