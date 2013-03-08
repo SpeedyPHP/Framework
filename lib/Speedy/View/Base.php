@@ -79,7 +79,7 @@ abstract class Base extends Object {
 			$classArr	= explode('\\', $class);
 			$path	= strtolower(array_pop($classArr));
 		} 
-		
+
 		$cPath = $this->cleanPath($path);
 		//return $this->renderTemplate($path, $this->vars());
 		return View::instance()->render($cPath, [], $vars);
@@ -128,7 +128,7 @@ abstract class Base extends Object {
 		return;
 	}
 	
-	public function cleanPath(&$path) {
+	public function cleanPath($path) {
 		//if (preg_match("#/^_(\w)*/#i", $path, $matches)) 
 		//	return $path;
 		
@@ -143,7 +143,7 @@ abstract class Base extends Object {
 			$path	= $controller . "/_" . $path;
 		} 
 
-		return;
+		return $path;
 	}
 	
 	public function toPath($name) {

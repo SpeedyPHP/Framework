@@ -60,7 +60,7 @@ class File implements CacheInterface {
 		$data	= @file_get_contents($this->fullPath($name, $setting));
 		if (!$data) return false;
 		
-		return unserialize($data);
+		return unserialize(base64_decode($data));
 	}
 	
 	/**
@@ -79,7 +79,7 @@ class File implements CacheInterface {
 		if (!file_exists($parts['dirname']))
 			FileUtility::mkdir_p($parts['dirname']);
 
-		file_put_contents($fullPath, serialize($data));
+		file_put_contents($fullPath, base64_encode(serialize($data)));
 		return $this;
 	}
 	
