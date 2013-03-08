@@ -52,7 +52,7 @@ abstract class Base {
 	 * @param Speedy\Request $request
 	 * @return boolean
 	 */
-	abstract public function match(\Speedy\Request $request);
+	abstract public function match($request);
 	
 	/**
 	 * Returns route for request

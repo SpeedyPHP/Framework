@@ -19,7 +19,7 @@ class Regex extends Match {
 	 * @param \Speedy\Request $request
 	 * @return boolean
 	 */
-	public function match(\Speedy\Request $request) {
+	public function match($request) {
 		// Find matches
 		$uri	= $request->url();
 		if (!$uri || strlen($uri) < 1) $uri = '/';

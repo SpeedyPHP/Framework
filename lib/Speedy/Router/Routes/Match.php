@@ -36,7 +36,7 @@ class Match extends Base {
 		$this->setOptions($params);
 	}
 	
-	public function match(\Speedy\Request $request) {
+	public function match($request) {
 		return $this->compile($request);
 	}
 	

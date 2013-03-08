@@ -4,8 +4,8 @@ namespace Speedy;
 
 use Speedy\Http\Exception as HttpException;
 
-class Router extends Object {
-	
+class Router {
+
 	use \Speedy\Traits\Singleton;
 	
 	/**

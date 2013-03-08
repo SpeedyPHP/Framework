@@ -3,7 +3,9 @@ namespace Speedy {
 	use Speedy\Config\Exception as CException;
 	
 	
-	class Config extends Singleton {
+	class Config extends Object {
+
+		use \Speedy\Traits\Singleton;
 	
 		/**
 		 * Database configurations

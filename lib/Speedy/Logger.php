@@ -5,7 +5,7 @@ namespace Speedy;
 use Speedy\Config;
 
 class Logger {
-	
+
 	use \Speedy\Traits\Singleton;
 	
 	private $_logger;

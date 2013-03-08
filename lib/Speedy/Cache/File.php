@@ -42,7 +42,9 @@ class File implements CacheInterface {
 	 * @param string $path
 	 */
 	public function flush($path = null) {
-		$path = $this->path($path);
+		if ($this->hasPath($path))
+			$path = $this->path($path);
+		
 		foreach (glob($path . DS . "*") as $filename) {
 			@unlink($filename);
 		}
