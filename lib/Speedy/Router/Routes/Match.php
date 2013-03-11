@@ -74,7 +74,8 @@ class Match extends Base {
 	
 		// On greedy find remaining variables
 		if ($this->greedy() && (strlen($base[0]) < strlen($uri))) {
-			$passed	= substr($uri, strlen($base[0]), strlen($uri));
+			$lenBase = strlen($base[0]) + 2;
+			$passed	= substr($uri, $lenBase, strlen($uri) - $lenBase);
 			$params['passed'] = explode('/', $passed);
 		}
 	
