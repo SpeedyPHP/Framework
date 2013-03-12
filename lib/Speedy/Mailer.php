@@ -68,9 +68,27 @@ class Mailer extends Object {
 
 	/**
 	 * Sets up a mailer
-	 * @return object instance of Speedy\Mailer
+	 * @return Speedy\Mailer $this
 	 */
-	public static function mail($hash) {
+	public static function mail($hash, $data = []) {
+		$class = get_called_class();
+		return $class::instance()->sendMail($hash, $data);
+	}
+
+	/**
+	 * Add data to the object
+	 * @return Speedy\Mailer $this
+	 */
+	protected function setData($data, $value = null) {
+		$this->_data = $data;
+		return $this;
+	}
+
+	/**
+	 * Business end of setting up mailer
+	 * @return boolean
+	 */
+	public function sendMail($hash, $data = []) {
 		$options = array_merge($this->default, $hash);
 		extract($options);
 
@@ -80,23 +98,25 @@ class Mailer extends Object {
 		if (!isset($from)) 
 			throw new MailerException("Missing from address", 3);
 
-
+		$this->setData($data);
 		$this->_to = $to;
 		$this->_from	= $from;
 		$this->_subject = (isset($subject)) ? $subject : '';
 		$this->_headers = [];
 
 		$trace = debug_backtrace();
-		$this->_method = $trace[1]['function'];
-		$this->_class 	= Inflector::underscore($trace[1]['class']);
+		$this->_method = Inflector::underscore($trace[2]['function']);
 
-		$class = get_called_class();
-		return $class::instance();
+		$aClass	= explode('\\', $trace[2]['class']);
+		$class 	= array_pop($aClass);
+		$this->_class = Inflector::underscore($class);
+
+		return $this->deliver();
 	}
 
 	/**
 	 * Delivers the current setup mailer
-	 * @return bool;
+	 * @return boolean
 	 */
 	public function deliver() {
 		if (!isset($this->_to))
@@ -131,7 +151,9 @@ class Mailer extends Object {
 	 * @return string
 	 */
 	private function render($type) {
-		return View::instance()->render("{$this->_class}/{$this->_method}", [], $this->data(), $type);
+		return View::instance()
+					->setData($this->data())
+					->render("{$this->_class}/{$this->_method}", [], [], $type);
 	}
 
 	/**
@@ -144,7 +166,7 @@ class Mailer extends Object {
 			if (is_int($key)) {
 				$headers .= $val;
 			} else {
-				$headers .= "{$key}: {$value}\r\n";
+				$headers .= "{$key}: {$val}\r\n";
 			}
 		}
 

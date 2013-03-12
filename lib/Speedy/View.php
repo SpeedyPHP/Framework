@@ -138,7 +138,7 @@ class View extends Object {
 	 * @param array $params
 	 */
 	public function setParams($params) {
-		$this->params	= $params;
+		$this->_params	= $params;
 		return $this;
 	}
 	
@@ -147,7 +147,7 @@ class View extends Object {
 	 * @return array
 	 */
 	public function params() {
-		return $this->params;
+		return $this->_params;
 	}
 	
 	public function param($name) {
