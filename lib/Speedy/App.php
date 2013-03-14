@@ -122,6 +122,7 @@ namespace Speedy {
 			$loader->registerNamespace("{$this->ns()}.helpers", 	[APP_PATH . DS . 'Helpers']);
 			$loader->registerNamespace("{$this->ns()}.assets", 		[APP_PATH . DS . 'Assets']);
 			$loader->registerNamespace("{$this->ns()}.views", 		[APP_PATH . DS . 'Views']);
+			$loader->registerNamespace("{$this->ns()}.mailers", 		[APP_PATH . DS . 'Mailers']);
 			$loader->registerNamespace($this->ns(), APP_PATH);
 			//$loader->registerNamespace('sprockets', VENDOR_PATH . DS . 'SpeedyPHP' . DS . 'Sprockets'); 
 			
@@ -131,6 +132,7 @@ namespace Speedy {
 				'controllers'	=> "{$this->ns()}.controllers",
 				'models'		=> "{$this->ns()}.models",
 				'assets'		=> "{$this->ns()}.assets",
+				'mailers'		=> "{$this->ns()}.mailers"
 			));
 			
 			self::_setInstance($this);
@@ -334,7 +336,7 @@ namespace Speedy {
 					print_r($_SERVER, true));
 		}
 		
-		protected function cleanBuffer() {
+		public function cleanBuffer() {
 			if ( ob_get_level() !== 0 ) {
 				ob_clean();
 			}

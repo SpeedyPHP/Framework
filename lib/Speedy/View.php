@@ -35,6 +35,7 @@ class View extends Object {
 	 */
 	public function render($file, $options = [], $vars = [], $ext = 'html') {
 		if (isset($options['json'])) return $this->toJson($options['json']);
+		if (isset($options['text'])) return $options['json'];
 		
 		$this
 			->setOptions(array_merge($this->options(), $options))
@@ -265,6 +266,7 @@ class View extends Object {
 	 * @return string json representation
 	 */
 	protected function toJson($mixed) {
+		App::instance()->cleanBuffer();
 		$this->response()
 			->setHeader('Cache-Control', 'no-cache, must-revalidate')
 			->setHeader('Expires', date('r'))

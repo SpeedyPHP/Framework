@@ -64,6 +64,12 @@ class Mailer extends Object {
 	 */
 	private $_method;
 
+	/**
+	 * End of line
+	 * @var string
+	 */
+	private $_eol;
+
 
 
 	/**
@@ -82,6 +88,14 @@ class Mailer extends Object {
 	protected function setData($data, $value = null) {
 		$this->_data = $data;
 		return $this;
+	}
+
+	/**
+	 * Getter for php end of line
+	 * @return string PHP_EOL
+	 */
+	public function eol() {
+		return PHP_EOL;
 	}
 
 	/**
@@ -130,7 +144,7 @@ class Mailer extends Object {
 		$this->setPlainMessage($this->render('text'));
 		$this->setHtmlMessage($this->render('html'));
 
-		return mail($this->_to, $this->_subject, $this->_message, $this->headers());
+		return mail($this->_to, $this->_subject, $this->message(), $this->headers());
 	}
 
 	/**
@@ -144,6 +158,14 @@ class Mailer extends Object {
 		else
 			$this->_headers[]	= $name;
 		return $this;
+	}
+
+	/**
+	 * Getter for end message
+	 * @return string _message property with appended boundary
+	 */
+	public function message() {
+		return $this->_message . "--" . $this->multiPartBoundary() . "--" . $this->eol() . $this->eol();
 	}
 
 	/**
@@ -166,7 +188,7 @@ class Mailer extends Object {
 			if (is_int($key)) {
 				$headers .= $val;
 			} else {
-				$headers .= "{$key}: {$val}\r\n";
+				$headers .= "{$key}: {$val}" . $this->eol();
 			}
 		}
 
@@ -178,9 +200,10 @@ class Mailer extends Object {
 	 * @return object instance of Speedy\Mailer
 	 */
 	public function setHtmlMessage($html) {
-		$this->_message .= "\r\n\r\n--" . $this->multiPartBoundary() . "--";
-		$this->_message .= "Content-type: text/html;charset=utf-8\r\n";
-		$this->_message .= $html;
+		$this->_message .= $this->eol() . $this->eol() . "--" . $this->multiPartBoundary() . $this->eol();
+		$this->_message .= "Content-type: text/html; charset=utf-8" . $this->eol();
+		$this->_message .= "Content-Transfer-Encoding: quoted-printable" . $this->eol() . $this->eol();
+		$this->_message .= $html . $this->eol() . $this->eol();
 		return $this;
 	}
 
@@ -189,9 +212,10 @@ class Mailer extends Object {
 	 * @return object instance of Speedy\Mailer
 	 */
 	public function setPlainMessage($plain) {
-		$this->_message .= "\r\n\r\n--" . $this->multiPartBoundary() . "\r\n";
-		$this->_message .= "Content-type: text/plain;charset=utf-8\r\n\r\n";
-		$this->_message .= $plain;
+		$this->_message .= $this->eol() . $this->eol() . "--" . $this->multiPartBoundary() . $this->eol();
+		$this->_message .= "Content-type: text/plain; charset=utf-8" . $this->eol();
+		$this->_message .= "Content-Transfer-Encoding: 8bit" . $this->eol() . $this->eol();
+		$this->_message .= $plain . $this->eol() . $this->eol();
 		return $this;
 	}
 
