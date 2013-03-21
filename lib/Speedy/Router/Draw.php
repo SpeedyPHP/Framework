@@ -176,7 +176,8 @@ class Draw extends Object {
 	 */
 	public function member($closure) {
 		$this->setCurrentType(self::MemberActionType);
-		$this->setData('controller', $this->buildController());
+		$keys	= array_keys($this->_currentNamespace);
+		$this->setData('controller', $this->buildController(end($keys)));
 		$this->setData('uri_prefix', ':id/');
 		$closure();
 		$this->unsetData('controller');
