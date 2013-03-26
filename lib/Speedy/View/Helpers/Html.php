@@ -77,16 +77,19 @@ trait Html {
 		$attrs['method']	= Draw::POST;
 		$form	= new Form($model);
 		$form->setData($this->data());
-		
-		if (!isset($attrs['action']))
+		$dynAction = true;
+
+		if (!isset($attrs['action'])) {
 			$attrs['action']	= $form->path();
+			$dynAction = false;
+		}
 		
 		if (is_array($model)) {
 			$model	= array_pop($model);
 		}
 		
 		ob_start();
-		if ($model->id) {
+		if ($model->id && $dynAction) {
 			echo $form->hidden('id');
 			echo $this->hiddenFieldTag('_method', Draw::PUT);
 		}
