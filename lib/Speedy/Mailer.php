@@ -129,14 +129,14 @@ class Mailer extends Object {
 		if (!isset($from)) 
 			throw new MailerException("Missing from address", 3);
 
-		$this->setData($data);
 		$this->_to = $to;
 		$this->_from	= $from;
 		$this->_subject = (isset($subject)) ? $subject : '';
 		$this->_headers = [];
 
 		$trace = debug_backtrace();
-		$this->_method = $this->action = Inflector::underscore($trace[2]['function']);
+		$this->_method = $data['action'] = Inflector::underscore($trace[2]['function']);
+		$this->setData($data);
 
 		$aClass	= explode('\\', $trace[2]['class']);
 		$class 	= array_pop($aClass);
@@ -190,6 +190,8 @@ class Mailer extends Object {
 	 * @return string
 	 */
 	private function render($type) {
+		\Speedy\Logger::debug('DATA');
+		\Speedy\Logger::debug($this->data());
 		return View::instance()
 					->setData($this->data())
 					->setParams($this->data())
