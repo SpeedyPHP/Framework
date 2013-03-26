@@ -26,4 +26,14 @@ class Enum {
 		return array_values($reflect->getConstants());
 	}
 
+	/**
+	 * Get value at index
+	 * @return mixed
+	 */
+	public static function value($index) {
+		$values = self::values();
+
+		return $values[$index];
+	}
+
 }
