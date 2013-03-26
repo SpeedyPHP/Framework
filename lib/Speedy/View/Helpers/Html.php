@@ -77,11 +77,11 @@ trait Html {
 		$attrs['method']	= Draw::POST;
 		$form	= new Form($model);
 		$form->setData($this->data());
-		$dynAction = true;
+		$dynAction = false;
 
 		if (!isset($attrs['action'])) {
 			$attrs['action']	= $form->path();
-			$dynAction = false;
+			$dynAction = true;
 		}
 		
 		if (is_array($model)) {
