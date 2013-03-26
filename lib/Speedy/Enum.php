@@ -36,4 +36,12 @@ class Enum {
 		return $values[$index];
 	}
 
+	/**
+	 * Convenience method for value
+	 * @see value method
+	 */
+	public static function _($index) {
+		return self::value($index);
+	}
+
 }

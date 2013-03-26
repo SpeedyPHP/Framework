@@ -78,6 +78,23 @@ class Mailer extends Object {
 	 */
 	public static function mail($hash, $data = []) {
 		$class = get_called_class();
+		if (strpos($class, '\\')) {
+			$aClass = explode('\\', $class);
+			array_shift($aClass);
+			array_shift($aClass);
+
+			array_walk($aClass, function(&$item, $key) {
+				$item = Inflector::underscore($item);
+			});
+			$class_path = implode(DS, $aClass);
+		} else {
+			$class_path = Inflector::underscore($class);
+		}
+
+		$data = array_merge($data, [
+				'controller' => $class_path
+			]);
+
 		return $class::instance()->sendMail($hash, $data);
 	}
 
@@ -119,7 +136,7 @@ class Mailer extends Object {
 		$this->_headers = [];
 
 		$trace = debug_backtrace();
-		$this->_method = Inflector::underscore($trace[2]['function']);
+		$this->_method = $this->action = Inflector::underscore($trace[2]['function']);
 
 		$aClass	= explode('\\', $trace[2]['class']);
 		$class 	= array_pop($aClass);
@@ -175,7 +192,8 @@ class Mailer extends Object {
 	private function render($type) {
 		return View::instance()
 					->setData($this->data())
-					->render("{$this->_class}/{$this->_method}", [], [], $type);
+					->setParams($this->data())
+					->render("{$this->controller}/{$this->action}", [], [], $type);
 	}
 
 	/**
