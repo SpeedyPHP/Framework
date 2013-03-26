@@ -33,7 +33,7 @@ class Enum {
 	public static function value($index) {
 		$values = self::values();
 
-		return $values[$index];
+		return isset($values[$index]) ? $values[$index] : null;
 	}
 
 	/**
