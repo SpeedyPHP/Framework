@@ -78,7 +78,7 @@ trait Html {
 		$form	= new Form($model);
 		$form->setData($this->data());
 		$dynAction = false;
-
+		
 		if (!isset($attrs['action'])) {
 			$attrs['action']	= $form->path();
 			$dynAction = true;

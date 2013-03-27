@@ -82,6 +82,7 @@ class File implements CacheInterface {
 			FileUtility::mkdir_p($parts['dirname']);
 
 		file_put_contents($fullPath, base64_encode(serialize($data)));
+		chmod($fullPath, 0775);
 		return $this;
 	}
 	
