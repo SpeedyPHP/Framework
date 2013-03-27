@@ -74,11 +74,9 @@ class Links extends Singleton {
 			throw new \Speedy\Exception\Utility('No route matches ' . $format);
 		}
 			
-		if (!empty($tokens)) {
-			foreach ($tokens as $token) {
-				$value	= array_shift($args);
-				$format	= str_replace(":{$token}", (is_object($value)) ? $value->id : $value, $format);
-			}
+		foreach ($tokens as $token) {
+			$value	= array_shift($args);
+			$format	= str_replace(":{$token}", (is_object($value)) ? $value->id : $value, $format);
 		}
 			
 		if (!empty($args[0])) {
