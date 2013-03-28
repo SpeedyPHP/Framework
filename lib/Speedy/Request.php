@@ -103,6 +103,14 @@ class Request extends Object {
 	public function queryString() {
 		return $this->data('QUERY_STRING');
 	}
+
+	/**
+	 * Getter for HTTP_REFERER
+	 * @return string
+	 */
+	public function referer() {
+		return $this->data('HTTP_REFERER');
+	}
 	
 	/**
 	 * Getter for URI

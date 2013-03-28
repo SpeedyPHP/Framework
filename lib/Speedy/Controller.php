@@ -108,7 +108,9 @@ class Controller extends Object {
 	 * @return mixed default null
 	 */
 	public function params($name = null) {
-		return $this->__dotAccess($name, $this->_params);
+		$value = $this->__dotAccess($name, $this->_params);
+
+		return is_string($value) ? urldecode($value) : $value;
 	}
 	
 	/**
