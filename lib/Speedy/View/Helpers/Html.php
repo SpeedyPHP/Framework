@@ -15,7 +15,8 @@ trait Html {
 	private $_selfClosing	= array(
 		'input',
 		'img',
-		'link'
+		'link',
+		'meta'
 	);
 	
 	private $_jsShorts	= array(
@@ -36,7 +37,7 @@ trait Html {
 	 * @param string $text
 	 * @param string $path
 	 * @param array $attributes
-	 * @return void
+	 * @return string
 	 */
 	public function linkTo($text, $path, $attributes = array()) {
 		if (is_string($path)) {
@@ -104,7 +105,7 @@ trait Html {
 	 * @param string $action
 	 * @param array $attrs
 	 * @param closure $closure
-	 * @return void
+	 * @return string
 	 */
 	public function formTag($action, $attrs = null, $closure) {
 		// TODO: Fix by removing the action parameter
@@ -124,7 +125,7 @@ trait Html {
 	 * @param string $text
 	 * @param array $attrs
 	 * @throws Exception
-	 * @return void
+	 * @return string
 	 */
 	public function textAreaTag($name, $text, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -150,7 +151,7 @@ trait Html {
 	 * Email field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function emailField($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -167,7 +168,7 @@ trait Html {
 	 * Url field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function urlField($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -184,7 +185,7 @@ trait Html {
 	 * Telephone field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function telephoneField($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -201,7 +202,7 @@ trait Html {
 	 * Search field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function searchField($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -219,7 +220,7 @@ trait Html {
 	 * @param string $name
 	 * @param string $value
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function hiddenFieldTag($name, $value, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -237,7 +238,7 @@ trait Html {
 	 * Password field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function passwordFieldTag($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -254,7 +255,7 @@ trait Html {
 	 * Text field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function textFieldTag($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -272,7 +273,7 @@ trait Html {
 	 * @param string $name
 	 * @param string $content
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function selectTag($name, $content = '', $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -325,7 +326,7 @@ trait Html {
 	 * File field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function fileFieldTag($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -342,7 +343,7 @@ trait Html {
 	 * Radio button field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function radioButtonTag($name, $value, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -360,7 +361,7 @@ trait Html {
 	 * Checkbox field helper
 	 * @param string $name
 	 * @param array $attrs
-	 * @return void
+	 * @return string
 	 */
 	public function checkBoxTag($name, $attrs = array()) {
 		if (!isset($attrs['id'])) {
@@ -378,7 +379,7 @@ trait Html {
 	 * Label tag helper
 	 * @param string $input
 	 * @param string $label
-	 * @return void
+	 * @return string
 	 */
 	public function labelTag($input, $label = null, $attrs = null) {
 		$attrs = array_merge(
@@ -391,7 +392,7 @@ trait Html {
 	 * Submit form helper
 	 * 
 	 * @param string $label
-	 * @return void
+	 * @return string
 	 */
 	public function submit($label = 'Submit', $options	= array()) {
 		$options	= array_merge(array( 'type' => 'submit', 'value' => $label ), $options);
@@ -401,7 +402,7 @@ trait Html {
 	/**
 	 * Javascript element builder
 	 * @param string $file
-	 * @return void
+	 * @return string
 	 */
 	public function javascript($file, $attributes = array()) {
 		$attrs	= array( 'type' => 'text/javascript' );
@@ -417,7 +418,7 @@ trait Html {
 	 * Stylesheet element builder
 	 * @param string $file
 	 * @param array $attributes (optional)
-	 * @return void
+	 * @return string
 	 */
 	public function stylesheet($file, $attributes = array()) {
 		$attributes['rel']	= 'stylesheet';
@@ -425,13 +426,27 @@ trait Html {
 		
 		return $this->element('link', '', $attributes, true);
 	}
+
+	/**
+	 * Builds a meta element
+	 * @param string $name
+	 * @param string $content
+	 * @return string
+	 */
+	public function meta($name, $content) {
+		$attributes = [
+			'name' => $name,
+			'content'	=> $content
+		];
+		return $this->element('meta', '', $attributes, true);
+	}
 	
 	/**
 	 * Generates html element that requires closing tag
 	 * @param string $tag
 	 * @param string $text
 	 * @param array $attributes
-	 * @return void
+	 * @return string
 	 */
 	public function element($tag, $text = '', $attributes = array(), $nl = false) {
 		$html	= "<$tag";
