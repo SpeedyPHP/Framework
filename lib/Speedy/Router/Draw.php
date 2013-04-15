@@ -74,9 +74,10 @@ class Draw extends Object {
 	 * @return $this
 	 */
 	public function resources($name, $options = null, $closure = null) {
-		$member	= $this->buildHelper($name, true);
-		$col	= $this->buildHelper($name);
-		$base	= $this->buildBase($name, true);
+		$alias 	= isset($options['as']) ? $options['alias'] : $name;
+		$member	= $this->buildHelper($alias, true);
+		$col	= $this->buildHelper($alias);
+		$base	= $this->buildBase($alias, true);
 		$controller	= $this->buildController($name); 
 		
 		$only	= (isset($options['only'])) ? $options['only'] : null;

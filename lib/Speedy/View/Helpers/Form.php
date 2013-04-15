@@ -119,7 +119,8 @@ class Form extends Object {
 	 * @param array $attrs
 	 */
 	public function hidden($name, $value = null, $attrs = array()) {
-		$value	= ($value) ? $value : $this->model()->{$name};
+		$value	= $value ? $value : 
+					(isset($this->model()->{$name}) ? $this->model()->{$name} : null);
 		return $this->hiddenFieldTag($this->formatName($name), $value, $attrs);
 	}
 	
@@ -147,9 +148,10 @@ class Form extends Object {
 	 * Checkbox builder
 	 * @param string $name
 	 * @param array $attrs
+	 * @param bool $checked
 	 */
-	public function checkBox($name, $attrs = array()) {
-		if (!empty($this->model()->{$name})) {
+	public function checkBox($name, $attrs = array(), $checked = false) {
+		if (!empty($this->model()->{$name}) || $checked) {
 			$attrs['checked']	= 'checked';
 		}
 		return $this->checkBoxTag($this->formatName($name), $attrs);

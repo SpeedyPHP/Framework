@@ -203,12 +203,13 @@ EOF;
 			output('Must be in the application directory');
 			return 1;
 		}
-	
+		
 		$app		= App::instance();
 		$name		= $this->data(1);
 		$nameArray	= $this->_cleanName($name);
 		$name		= array_pop($nameArray);
 	
+		// Create deep directories if namespaced
 		if (count($nameArray)) {
 			$this->_recurseMkdir($nameArray, array(
 				self::CONTROLLERS_DIR,
@@ -218,12 +219,13 @@ EOF;
 		}
 	
 		//$views		= (count($nameArray)) ? self::VIEWS_DIR . DS .implode(DS, $nameArray) : self::VIEWS_DIR;
+		// Determine view path and create directory
 		$viewPath	= $nameArray;
-		$viewPath[]	= strtolower($name);
+		$viewPath[]	= Inflector::underscore($name);
 	
 		$this->_recurseMkdir($viewPath, self::VIEWS_DIR);
 		
-		$modelLc	= strtolower(Inflector::singularize($name));
+		$modelLc	= Inflector::underscore(Inflector::singularize($name));
 	
 		$class	= "\\{$app->name()}\\Models\\" . Inflector::singularize($name);
 		$fields = '';
@@ -241,9 +243,10 @@ EOF;
 			$bodyColumns	.= $this->_bodyColumn($modelLc, $column->name);
 		}
 		
+		$controllerNs  = (!empty($nameArray)) ? '\\' . implode('\\', $nameArray) : '';
 		$this->set('modelName',		Inflector::singularize($name));
 		$this->set('modelLc',		$modelLc);
-		$this->set('modelPlural',	strtolower(Inflector::pluralize($name)));
+		$this->set('modelPlural',	Inflector::underscore(Inflector::pluralize($name)));
 		$this->set('namespace', 	$app->name());
 		$this->set('controller',	$name);
 		$this->set('actions',		$this->getScaffoldActions());
@@ -251,9 +254,10 @@ EOF;
 		$this->set('headerColumns',	$headerColumns);
 		$this->set('bodyColumns',	$bodyColumns);
 		$this->set('columns',		$class::table()->columns);
-		$this->set('controllerNs',	implode('\\', $nameArray));
+		$this->set('controllerNs',	$controllerNs);
 		$content	= $this->getTemplate('BaseController.php');
 	
+		// Create controller
 		$path	= APP_PATH . DS . self::CONTROLLERS_DIR . DS . implode(DS, $nameArray) . DS . $name . '.php';
 		if (!file_exists($path)) {
 			output("Create {$name}.php");
@@ -262,8 +266,9 @@ EOF;
 		else
 			output("Skipping {$name}.php");
 		
+		// Create views
 		$viewPath	= APP_PATH . DS . self::VIEWS_DIR . DS;
-		$viewPath	.= (count($nameArray) > 0) ? implode(DS, $nameArray) . DS . $name : $name;
+		$viewPath	.= (count($nameArray) > 0) ? implode(DS, $nameArray) . DS . Inflector::underscore($name) : Inflector::underscore($name);
 
 		$viewTplsPath	= "views" . DS . 'scaffold';
 		$views	= array('edit', '_form', 'index', 'new', 'show');
@@ -272,6 +277,7 @@ EOF;
 		output('Creating views');
 		foreach ($views as $view) {
 			$toPath	= $viewPath . DS . "{$view}.html.php";
+			
 			if (file_exists($toPath)) {
 				output("Skipping {$view}.html.php");
 				continue;
@@ -380,7 +386,7 @@ EOF;
 		
 		// Loop the parts, check if already exists, then make
 		foreach ($pathArr as $part) {
-			$current .= DS . strtolower($part);
+			$current .= DS . Inflector::underscore($part);
 			
 			// if the directory already exists, then skip the loop and continue
 			if (is_dir($rootPath . $subDir . $current)) {

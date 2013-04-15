@@ -1,7 +1,7 @@
 <?php 
 $content = <<<EOF
 <?php
-namespace {$namespace}\Controllers\{$controllerNs};
+namespace {$namespace}\Controllers{$controllerNs};
 
 
 EOF;
