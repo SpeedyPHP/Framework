@@ -128,7 +128,7 @@ class Links extends Singleton {
 				continue;
 			} 
 				
-			$key = ($prefix) ? $prefix . '[' . $key . ']';
+			$key = ($prefix) ? $prefix . '[' . $key . ']' : $key;
 			if (is_array($value)) {
 				$queryParams[] = $this->toQueryParams($value, $key);
 				continue;
