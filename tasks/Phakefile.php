@@ -1,14 +1,6 @@
 <?php 
 defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
 
-if (!include(VENDOR_PATH . DS . "autoload.php")) {
-	trigger_error("Missing required files!? Try running 'composer install' first");
-}
-
-if (!include(CONFIG_PATH . DS . 'App.php')) {
-	trigger_error("Could not find App class for current application, please check that app file is in CONFIG_PATH/App.php");
-}
-
 App::instance();
 use \Speedy\Utility\Inflector;
 use \ActiveRecord\Connection;
