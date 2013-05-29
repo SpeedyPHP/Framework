@@ -5,6 +5,8 @@ namespace Speedy;
 use \ReflectionClass;
 
 class Enum {
+
+	public static $labels = [];
 	
 	/**
 	 * Getter for all values in enum
@@ -31,9 +33,7 @@ class Enum {
 	 * @return mixed
 	 */
 	public static function value($index) {
-		$values = self::values();
-
-		return isset($values[$index]) ? $values[$index] : null;
+		return isset(self::$labels[$index]) ? $values[$index] : null;
 	}
 
 	/**

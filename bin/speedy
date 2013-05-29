@@ -38,11 +38,6 @@ function output($str = "") {
 	fwrite(STDOUT, $str . "\n");
 }
 
-$pathToApp	= CONFIG_PATH . DS . 'App.php';
-if (file_exists($pathToApp)) {
-	include $pathToApp;
-}
-
 if (class_exists('App')) {
   App::instance();
 	define("APP_LOADED", true);
