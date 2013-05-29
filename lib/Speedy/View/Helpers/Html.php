@@ -369,8 +369,9 @@ trait Html {
 		}
 		
 		$attrs['type']	= 'checkbox';
-		$attrs['value']	= 1;
 		$attrs['name']	= $this->toName($name);
+		if (!isset($attrs['value']))
+			$attrs['value']	= 1;
 		
 		return $this->element('input', null, $attrs);
 	}
