@@ -601,4 +601,3 @@ trait Html {
 		return $this;
 	}
 }
-?>
