@@ -33,7 +33,7 @@ class Enum {
 	 * @return mixed
 	 */
 	public static function value($index) {
-		return isset(self::$labels[$index]) ? $values[$index] : null;
+		return isset(static::$labels[$index]) ? static::$labels[$index] : null;
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Enum {
 	 * @see value method
 	 */
 	public static function _($index) {
-		return self::value($index);
+		return static::value($index);
 	}
 
 }
