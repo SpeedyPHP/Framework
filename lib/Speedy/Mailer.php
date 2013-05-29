@@ -190,8 +190,8 @@ class Mailer extends Object {
 	 * @return string
 	 */
 	private function render($type) {
-		\Speedy\Logger::debug('DATA');
-		\Speedy\Logger::debug($this->data());
+		//\Speedy\Logger::debug('DATA');
+		//\Speedy\Logger::debug($this->data());
 		return View::instance()
 					->setData($this->data())
 					->setParams($this->data())
