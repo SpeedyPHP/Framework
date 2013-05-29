@@ -560,11 +560,20 @@ trait Html {
 	private function toName($string) {
 		if (strpos($string, '.') === false) return $string;
 		
+		$group = false;
+		if (strpos($string, '[]') == (strlen($string) - 2)) {
+			$group = true;
+			$string = substr($string, 0, strlen($string) - 2);
+		}
+
 		$stringArr	= explode('.', $string);
 		$name	= array_shift($stringArr);
 		while ($part = array_shift($stringArr)) {
 			$name	.= "[$part]";
 		}
+
+		if ($group)
+			$name .= "[]";
 		
 		return $name;
 	}
