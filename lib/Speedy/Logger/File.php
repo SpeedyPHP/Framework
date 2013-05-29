@@ -73,7 +73,7 @@ class File extends Base {
 		} else {
 			ob_start();
 			var_dump($msg);
-			$msg	= ob_end_clean();
+			$msg	= ob_get_clean();
 		}
 		
 		return $msg;

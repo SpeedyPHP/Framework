@@ -369,8 +369,9 @@ trait Html {
 		}
 		
 		$attrs['type']	= 'checkbox';
-		$attrs['value']	= 1;
 		$attrs['name']	= $this->toName($name);
+		if (!isset($attrs['value']))
+			$attrs['value']	= 1;
 		
 		return $this->element('input', null, $attrs);
 	}
@@ -560,11 +561,20 @@ trait Html {
 	private function toName($string) {
 		if (strpos($string, '.') === false) return $string;
 		
+		$group = false;
+		if (strpos($string, '[]') == (strlen($string) - 2)) {
+			$group = true;
+			$string = substr($string, 0, strlen($string) - 2);
+		}
+
 		$stringArr	= explode('.', $string);
 		$name	= array_shift($stringArr);
 		while ($part = array_shift($stringArr)) {
 			$name	.= "[$part]";
 		}
+
+		if ($group)
+			$name .= "[]";
 		
 		return $name;
 	}

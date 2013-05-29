@@ -28,9 +28,9 @@ class Match extends Base {
 			$this->setName($params['name']);
 		}
 		
-		if (isset($params['as'])) {
+		/*if (isset($params['as'])) {
 			$this->setName("{$params['as']}_path");
-		}
+		}*/
 		
 		$this->setFormat($format);
 		$this->setOptions($params);

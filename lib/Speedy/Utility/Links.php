@@ -106,6 +106,39 @@ class Links extends Singleton {
 	public function shortLinks() {
 		return App::instance()->config()->get('short_links');
 	}
+
+	/**
+	 * Transform array of params to array string
+	 * 
+	 * @param array $params
+	 * @return string
+	 */
+	private function toQueryParams($params, $prefix = null) {
+		// TODO: Implement
+		$queryParams = [];
+		$url_prefix = '';
+			
+		foreach ($params as $key => $value) {
+			if (empty($value)) {
+				continue;
+			}
+
+			if (is_int($key)) {
+				$url_prefix .= "/" . Sanitize::url($value);
+				continue;
+			} 
+				
+			$key = ($prefix) ? $prefix . '[' . $key . ']' : $key;
+			if (is_array($value)) {
+				$queryParams[] = $this->toQueryParams($value, $key);
+				continue;
+			}
+
+			$queryParams[] = Sanitize::url($key) . "=" . Sanitize::url($value);
+		}
+
+		return implode('&', $queryParams);
+	}
 	
 	/**
 	 * Loads all the route paths
