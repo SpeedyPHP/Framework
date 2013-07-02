@@ -1,7 +1,7 @@
 <?php 
 return <<<EOF
 <?php
-namespace $namespace\Config;
+namespace Config;
 
 
 use \Speedy\Router\Draw as SpeedyDraw;
