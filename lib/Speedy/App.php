@@ -115,24 +115,11 @@ namespace Speedy {
 			}
 			
 			$this->setNs(Inflector::underscore($this->name()));
+
 			$loader = Loader::instance();
-			$loader->registerNamespace("{$this->ns()}.config", CONFIG_PATH);
-			$loader->registerNamespace("{$this->ns()}.controllers", [APP_PATH . DS . 'Controllers']);
-			$loader->registerNamespace("{$this->ns()}.models", 		[APP_PATH . DS . 'Models']);
-			$loader->registerNamespace("{$this->ns()}.helpers", 	[APP_PATH . DS . 'Helpers']);
-			$loader->registerNamespace("{$this->ns()}.assets", 		[APP_PATH . DS . 'Assets']);
-			$loader->registerNamespace("{$this->ns()}.views", 		[APP_PATH . DS . 'Views']);
-			$loader->registerNamespace($this->ns(), APP_PATH);
-			//$loader->registerNamespace('sprockets', VENDOR_PATH . DS . 'SpeedyPHP' . DS . 'Sprockets'); 
-			
-			$loader->setAliases(array(
-				'views'			=> "{$this->ns()}.views",
-				'helpers'		=> "{$this->ns()}.helpers",
-				'controllers'	=> "{$this->ns()}.controllers",
-				'models'		=> "{$this->ns()}.models",
-				'assets'		=> "{$this->ns()}.assets",
-			));
-			
+			$loader->registerNamespace('config', CONFIG_PATH);
+
+			$this->addPackage($this->name());
 			self::_setInstance($this);
 			
 			$envConfigPath	= CONFIG_PATH . DS . 'environments' . DS . SPEEDY_ENV . '.php';
@@ -145,6 +132,27 @@ namespace Speedy {
 			if (!empty($this->_middlewares)) {
 				$this->middlewareStack()->addFromArray($this->_middlewares);
 			}
+		}
+
+		public function addPackage($name) {
+			$inflected = Inflector::underscore($name);
+
+			$loader = Loader::instance();
+			$loader->pushPathToNamespace("$inflected.controllers",	APP_PATH . DS . $name . DS . 'Controllers');
+			$loader->pushPathToNamespace("$inflected.models", 		APP_PATH . DS . $name . DS . 'Models');
+			$loader->pushPathToNamespace("$inflected.helpers", 		APP_PATH . DS . $name . DS . 'Helpers');
+			$loader->pushPathToNamespace("$inflected.assets", 		APP_PATH . DS . $name . DS . 'Assets');
+			$loader->pushPathToNamespace("$inflected.views", 		APP_PATH . DS . $name . DS . 'Views');
+			$loader->pushPathToNamespace($inflected, APP_PATH . DS . $name);
+			//$loader->registerNamespace('sprockets', VENDOR_PATH . DS . 'SpeedyPHP' . DS . 'Sprockets'); 
+			
+			$loader->setAliases(array(
+				'views'			=> ["$inflected.views"],
+				'helpers'		=> ["$inflected.helpers"],
+				'controllers'	=> ["$inflected.controllers"],
+				'models'		=> ["$inflected.models"],
+				'assets'		=> ["$inflected.assets"],
+			));
 		}
 		
 		/**
@@ -201,7 +209,7 @@ namespace Speedy {
 			}
 			
 			Router::instance()
-				->draw($this->name() . '\Config\Routes');
+				->draw('\Config\Routes');
 			
 			return $this;
 		}
