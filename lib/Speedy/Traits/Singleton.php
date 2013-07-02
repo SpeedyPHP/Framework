@@ -5,21 +5,6 @@ trait Singleton {
 
 	private static $_instance;
 
-
-	/**
-	 * Inits the class as singleton
-	 * @throws Exception
-	 
-	private static function init() {
-		if (self::$_instance !== null) {
-			throw new Exception("Singleton $class already instanted");
-		}
-
-		self::$_instance	= new $class();
-
-		return self::$_instance;
-	}*/
-
 	/**
 	 * Getter for shared singleton instance
 	 */
@@ -43,4 +28,3 @@ trait Singleton {
 	}
 
 }
-?>

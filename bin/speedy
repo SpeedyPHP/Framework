@@ -2,8 +2,8 @@
 <?php
 defined("DS") or define("DS", DIRECTORY_SEPARATOR);
 defined('SPEEDY_ENV')  or define("SPEEDY_ENV", (getenv("SPEEDY_ENV")) ? getenv('SPEEDY_ENV') : 'development');
-defined('ROOT') or define('ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App
-define("SPEEDY_PATH", (getenv('SPEEDY_PATH')) ? getenv('SPEEDY_PATH') : ROOT);
+defined('BIN_ROOT') or define('BIN_ROOT', dirname(dirname(__FILE__)));	// Define the root directory of App
+define("SPEEDY_PATH", (getenv('SPEEDY_PATH')) ? getenv('SPEEDY_PATH') : BIN_ROOT);
 define("SPEEDY_TEMPLATES", dirname(dirname(__FILE__)) . DS . "tpls" . DS);
 define("SPEEDY_CLI", dirname(__FILE__));
 
@@ -12,6 +12,11 @@ define("CONFIG_PATH", APP_ROOT . DS . 'config');
 define("APP_PATH", APP_ROOT . DS . 'app');
 define('VENDOR_PATH', APP_ROOT . DS . 'vendor');
 defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
+
+$pathToDefines = APP_ROOT . DS . 'public' . DS . 'defines.php';
+if (file_exists($pathToDefines)) {
+	include $pathToDefines;
+}
 
 if (file_exists(VENDOR_PATH . DS . 'autoload.php')) {
   require_once VENDOR_PATH . DS . 'autoload.php';
@@ -36,11 +41,6 @@ function output($str = "") {
 $pathToApp	= CONFIG_PATH . DS . 'App.php';
 if (file_exists($pathToApp)) {
 	include $pathToApp;
-}
-
-$pathToDefines = APP_ROOT . DS . 'public' . DS . 'defines.php';
-if (file_exists($pathToDefines)) {
-	include $pathToDefines;
 }
 
 if (class_exists('App')) {

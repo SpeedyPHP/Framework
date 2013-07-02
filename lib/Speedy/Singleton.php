@@ -26,6 +26,7 @@ abstract class Singleton extends Object {
 	final public static function instance() {
 		$args	= func_get_args();
 		$class	= get_called_class();
+		
 		if (!isset(self::$_instances[$class])) {
 			self::$_instances[$class]	= new $class($args);
 		}

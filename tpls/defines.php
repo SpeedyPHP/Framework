@@ -9,17 +9,22 @@ defined('APP_PATH') or define('APP_PATH', ROOT . DS . 'app');	// Define path to 
 defined('CONFIG_PATH') or define('CONFIG_PATH', ROOT . DS . 'config');	// Define path to the config directory
 defined('LIB_PATH') or define('LIB_PATH', ROOT . DS . 'lib');	// Define path to the lib directory
 defined('TMP_PATH') or define('TMP_PATH', ROOT . DS . 'tmp');	// Define path to the tmp directory
-define('VENDOR_PATH', ROOT . DS . 'vendor');
+defined('UPLOAD_PATH') or define('UPLOAD_PATH', TMP_PATH . DS . 'uploads');
+defined('VENDOR_PATH') or define('VENDOR_PATH', ROOT . DS . 'vendor');
+defined('PUBLIC_UPLOADS_DIR') or define('PUBLIC_UPLOADS_DIR', PUBLIC_DIR . DS . 'uploads');
+//defined('SPEEDY_PATH') or define('SPEEDY_PATH', VENDOR_PATH . DS . 'SpeedyPHP' . );
 
-defined('SPEEDY_PATH') or define('SPEEDY_PATH', getenv('SPEEDY_PATH'));
+defined('MODULES_PATH') or define('MODULES_PATH', ROOT . DS . 'modules'); // Not part of Speedy
 
 if (function_exists('ini_set') && 
-	ini_set('include_path', SPEEDY_PATH . DS . 'speedy' . PATH_SEPARATOR . APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
-	define('CORE_PATH', null);
-} else {
-	define('CORE_PATH', ROOT . DS);
-}
+	ini_set('include_path', APP_PATH . PATH_SEPARATOR . ini_get('include_path'))) {
+} 
 
-?>
+
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . "vendor" . DIRECTORY_SEPARATOR . "autoload.php";
+
+if (!include(CONFIG_PATH . DS . 'App.php')) {
+	trigger_error("Could not find App class for current application, please check that app file is in CONFIG_PATH/App.php");
+}
 EOF;
 ?>

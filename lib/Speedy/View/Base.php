@@ -79,10 +79,10 @@ abstract class Base extends Object {
 			$classArr	= explode('\\', $class);
 			$path	= strtolower(array_pop($classArr));
 		} 
-		
-		$this->cleanPath($path);
+
+		$cPath = $this->cleanPath($path);
 		//return $this->renderTemplate($path, $this->vars());
-		echo View::instance()->render($path, [], $vars);
+		return View::instance()->render($cPath, [], $vars);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ abstract class Base extends Object {
 	 * @param string $name
 	 */
 	public function yield($name = "__main__") {
-		echo "\n" . \Speedy\View::instance()->yield($name) . "\n";
+		return "\n" . \Speedy\View::instance()->yield($name) . "\n";
 	}
 	
 	/**
@@ -128,16 +128,12 @@ abstract class Base extends Object {
 		return;
 	}
 	
-	public function cleanPath(&$path) {
+	public function cleanPath($path) {
 		//if (preg_match("#/^_(\w)*/#i", $path, $matches)) 
 		//	return $path;
 		
-		if (strpos($path, '/') !== false) {
-			$aPath	= explode('/', $path);
-			$last	= array_pop($aPath);
-			$aPath[]= '_' . $last;
-			$path	= implode('/', $aPath);
-			return;
+		if (($pos = strrpos($path, '/')) !== false) {
+			return substr_replace($path, '_', $pos + 1, 0);
 		}
 		
 		$controller = $this->param('controller');
@@ -147,7 +143,7 @@ abstract class Base extends Object {
 			$path	= $controller . "/_" . $path;
 		} 
 
-		return;
+		return $path;
 	}
 	
 	public function toPath($name) {

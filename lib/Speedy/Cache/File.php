@@ -42,7 +42,9 @@ class File implements CacheInterface {
 	 * @param string $path
 	 */
 	public function flush($path = null) {
-		$path = $this->path($path);
+		if ($this->hasPath($path))
+			$path = $this->path($path);
+		
 		foreach (glob($path . DS . "*") as $filename) {
 			@unlink($filename);
 		}
@@ -60,7 +62,7 @@ class File implements CacheInterface {
 		$data	= @file_get_contents($this->fullPath($name, $setting));
 		if (!$data) return false;
 		
-		return unserialize($data);
+		return unserialize(base64_decode($data));
 	}
 	
 	/**
@@ -79,7 +81,8 @@ class File implements CacheInterface {
 		if (!file_exists($parts['dirname']))
 			FileUtility::mkdir_p($parts['dirname']);
 
-		file_put_contents($fullPath, serialize($data));
+		file_put_contents($fullPath, base64_encode(serialize($data)));
+		chmod($fullPath, 0775);
 		return $this;
 	}
 	

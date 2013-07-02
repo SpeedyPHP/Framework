@@ -4,8 +4,8 @@ namespace Speedy;
 
 use Speedy\Http\Exception as HttpException;
 
-class Router extends Object {
-	
+class Router {
+
 	use \Speedy\Traits\Singleton;
 	
 	/**
@@ -73,6 +73,7 @@ class Router extends Object {
 			}
 			
 			if ($route->isMatch($request)) {
+				//\Speedy\Logger::debug($route->route());
 				$match = true; 
 				$this->_setMatchedRoute(array_merge($this->params(), $route->route()));
 				

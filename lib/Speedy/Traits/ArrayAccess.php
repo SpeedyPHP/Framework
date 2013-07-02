@@ -91,10 +91,10 @@ trait ArrayAccess {
 			
 			return $res;
 		}
-	
+		
 		$parts = explode(self::$__aaDelimeter, $name);
 		$return =& $array;
-	
+
 		for ($i = 0; $i < count($parts)-1; $i++) {
 			if (isset($return[$parts[$i]]) && is_array($return[$parts[$i]])) {
 				$return =& $return[$parts[$i]];
@@ -168,7 +168,7 @@ trait ArrayAccess {
 	
 		$mutated = [];
 		foreach ($data as $item) {
-			$keys   = explode("/", $item[$key]);
+			$keys   = explode(self::$__aaDelimeter, $item[$key]);
 			$total  = count($keys);
 			$current        =& $mutated;
 	
@@ -192,4 +192,3 @@ trait ArrayAccess {
 		return $mutated;
 	}
 }
-?>

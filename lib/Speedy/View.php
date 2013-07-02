@@ -35,6 +35,7 @@ class View extends Object {
 	 */
 	public function render($file, $options = [], $vars = [], $ext = 'html') {
 		if (isset($options['json'])) return $this->toJson($options['json']);
+		if (isset($options['text'])) return $options['json'];
 		
 		$this
 			->setOptions(array_merge($this->options(), $options))
@@ -47,7 +48,7 @@ class View extends Object {
 			$this->setYield('__main__', $this->_render($tpl, $ext));
 		}
 		
-		return $this->_render($file, $ext);;
+		return $this->_render($file, $ext);
 	}
 	
 	/**
@@ -99,17 +100,13 @@ class View extends Object {
 	 * @return mixed string fullpath/false on failure
 	 */
 	public function findFile($file, $ext = 'html') {
-		if (strpos($file, '/') === false) {
-			
-		}
-		
 		$viewPaths	= Loader::instance()->path('views');
 		$renderers	= Config::instance()->renderers();
 		
 		foreach ($renderers as $type => $renderer) {
 			foreach ($viewPaths as $path) {
 				$fullPath	= $path . DS . $file . ".{$ext}.{$type}";
-		
+				
 				if (file_exists($fullPath)) {
 					return $fullPath;
 				}
@@ -142,7 +139,7 @@ class View extends Object {
 	 * @param array $params
 	 */
 	public function setParams($params) {
-		$this->params	= $params;
+		$this->_params	= $params;
 		return $this;
 	}
 	
@@ -151,7 +148,7 @@ class View extends Object {
 	 * @return array
 	 */
 	public function params() {
-		return $this->params;
+		return $this->_params;
 	}
 	
 	public function param($name) {
@@ -189,8 +186,8 @@ class View extends Object {
 	 * Getter for vars
 	 * @return array
 	 */
-	public function vars() {
-		return $this->_vars;
+	public function vars($name = null) {
+		return ($name) ? $this->_vars[$name]: $this->_vars;
 	}
 	
 	/**
@@ -269,6 +266,7 @@ class View extends Object {
 	 * @return string json representation
 	 */
 	protected function toJson($mixed) {
+		App::instance()->cleanBuffer();
 		$this->response()
 			->setHeader('Cache-Control', 'no-cache, must-revalidate')
 			->setHeader('Expires', date('r'))

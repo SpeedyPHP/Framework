@@ -118,7 +118,6 @@ namespace Speedy {
 
 			$loader = Loader::instance();
 			$loader->registerNamespace('config', CONFIG_PATH);
-
 			$this->addPackage($this->name());
 			self::_setInstance($this);
 			
@@ -342,7 +341,7 @@ namespace Speedy {
 					print_r($_SERVER, true));
 		}
 		
-		protected function cleanBuffer() {
+		public function cleanBuffer() {
 			if ( ob_get_level() !== 0 ) {
 				ob_clean();
 			}
@@ -401,12 +400,19 @@ namespace {
 	}
 	
 	function rglob($pattern='*', $flags = 0, $path='') {
-		$paths	= glob($path.'*', GLOB_MARK|GLOB_ONLYDIR|GLOB_NOSORT|GLOB_BRACE);
-		$files	= glob($path.$pattern, $flags);
-		foreach ($paths as $path) {
-			$files	= array_merge($files,rglob($pattern, $flags, $path));
-		}
-		return $files;
+		$paths  = glob($path.'*', GLOB_MARK|GLOB_ONLYDIR|GLOB_NOSORT|GLOB_BRACE);
+        $files  = glob($path.$pattern, $flags);
+        if (!is_array($files))
+		    $files  = [];
+
+        foreach ($paths as $path) {
+            $add    = rglob($pattern, $flags, $path);
+			if (!is_array($add))
+  			   	$add = [];
+
+            $files  = array_merge($files,$add);
+        }
+        return $files;
 	}
 	
 	function is_hash($var) {

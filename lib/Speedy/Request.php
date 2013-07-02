@@ -5,7 +5,7 @@ namespace Speedy;
 use Speedy\Logger;
 
 class Request extends Object {
-	
+
 	use \Speedy\Traits\Singleton;
 	
 	const GET	= 'GET';
@@ -103,6 +103,14 @@ class Request extends Object {
 	public function queryString() {
 		return $this->data('QUERY_STRING');
 	}
+
+	/**
+	 * Getter for HTTP_REFERER
+	 * @return string
+	 */
+	public function referer() {
+		return $this->data('HTTP_REFERER');
+	}
 	
 	/**
 	 * Getter for URI
@@ -122,6 +130,10 @@ class Request extends Object {
 	public function scriptName() {
 		return $this->data('SCRIPT_NAME');
 	}
+
+	public function originalUrl() {
+		return $this->hasParam('originalUrl') ? $this->param('originalUrl') : null;
+	}
 	
 	/**
 	 * Getter for url
@@ -133,6 +145,7 @@ class Request extends Object {
 	
 	public function parseUri() {
 		$url = $this->url();
+		$this->setParam('originalUrl', $url);
 		
 		if (strpos($url, '?') !== false) {
 			$aUrl	= explode('?', $url);

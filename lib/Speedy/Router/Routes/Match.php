@@ -28,15 +28,15 @@ class Match extends Base {
 			$this->setName($params['name']);
 		}
 		
-		if (isset($params['as'])) {
+		/*if (isset($params['as'])) {
 			$this->setName("{$params['as']}_path");
-		}
+		}*/
 		
 		$this->setFormat($format);
 		$this->setOptions($params);
 	}
 	
-	public function match(\Speedy\Request $request) {
+	public function match($request) {
 		return $this->compile($request);
 	}
 	
@@ -56,7 +56,7 @@ class Match extends Base {
 		$success 	= preg_match_all($this->pattern(), $uri, $matches);
 		$base		= array_shift($matches);
 		$params		= array( 'ext' => ($request->hasParam('ext')) ? $request->param('ext') : 'html' );
-		//debug(array($uri, $success, $params, $this->pattern()));
+		//\Speedy\Logger::debug(array($uri, $success, $params, $this->pattern()));
 	
 		// Fail if it doesn't match
 		if (!$success) return false;
@@ -74,7 +74,8 @@ class Match extends Base {
 	
 		// On greedy find remaining variables
 		if ($this->greedy() && (strlen($base[0]) < strlen($uri))) {
-			$passed	= substr($uri, strlen($base[0]), strlen($uri));
+			$lenBase = strlen($base[0]) + 1;
+			$passed	= substr($uri, $lenBase, strlen($uri) - $lenBase);
 			$params['passed'] = explode('/', $passed);
 		}
 	

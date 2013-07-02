@@ -18,7 +18,7 @@ $tpl	.= <<<TPL
 		<th></th>
 	</tr>
 	
-	<?php \$this->{$modelPlural}->each(function(\${$modelLc}) { ?>
+	<?php echo \$this->{$modelPlural}->each(function(\${$modelLc}) { ?>
 		<tr>
 TPL;
 
@@ -27,16 +27,16 @@ foreach ($columns as $column) {
 	$tpl	.= "\t\t\t<td><?php echo \${$modelLc}->{$column->name}; ?></td>\n";
 }
 $tpl	.= <<<TPL
-			<td><?php \$this->linkTo('Show', \$this->{$modelLc}_path(\${$modelLc}->id)); ?></td>
-			<td><?php \$this->linkTo('Edit', \$this->edit_{$modelLc}_path(\${$modelLc}->id)); ?></td>
-			<td><?php \$this->linkTo('Destroy', \$this->{$modelLc}_path(\${$modelLc}->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete' )); ?></td>
+			<td><?php echo \$this->linkTo('Show', \$this->{$modelLc}_path(\${$modelLc}->id)); ?></td>
+			<td><?php echo \$this->linkTo('Edit', \$this->edit_{$modelLc}_path(\${$modelLc}->id)); ?></td>
+			<td><?php echo \$this->linkTo('Destroy', \$this->{$modelLc}_path(\${$modelLc}->id), array( 'confirm' => 'Are you sure?', 'method' => 'delete' )); ?></td>
 		</tr>
 	<?php }); ?>
 </table>
 			
 <br>
 			
-<?php \$this->linkTo("New {$modelPlural}", \$this->new_{$modelLc}_path()); ?>
+<?php echo \$this->linkTo("New {$modelPlural}", \$this->new_{$modelLc}_path()); ?>
 TPL;
 
 return $tpl;

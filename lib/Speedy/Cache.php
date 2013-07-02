@@ -11,12 +11,8 @@ class Cache {
 	private $_manager;
 	
 	
-	public function __construct() {
-		
-	}
-	
 	public function manager() {
-		if (!$this->_manager) {
+		if (!isset($this->_manager)) {
 			$class	= Config::read('Config.manager');
 			$this->_manager = new $class();
 		}
