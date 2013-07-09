@@ -7,7 +7,12 @@ use \Speedy\Utility\Inflector;
 class Dispatcher extends Object {
 
 	public static function run(\Speedy\Router $router) {
-		$response	= new Response();
+		$ext = strtolower($router->request()>param('ext'));
+		$responseClass = "\\Speedy\\Response\\" . ucfirst($ext);
+		if (!class_exists($responseClass))
+			$responseClass = "Response";
+
+		$response	= new $responseClass();
 		$route		= $router->route();
 		
 		$required	= array( 'controller', 'action' );

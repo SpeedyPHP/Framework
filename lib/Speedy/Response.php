@@ -7,6 +7,8 @@ class Response extends Object {
 	private $_headers	= array();
 
 	private $_headersPrinted	= false;
+
+	protected $_contentType = "text/html";
 	
 	public $body;
 	
@@ -37,6 +39,7 @@ class Response extends Object {
 		if ($this->_headersPrinted == true) return $this;
 		
 		$headers	= $this->headers();
+		header("Content-Type: $this->_contentType");
 		
 		if (empty($headers)) return $this;
 		foreach ($headers as $name => $value) {

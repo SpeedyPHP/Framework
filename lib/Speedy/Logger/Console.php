@@ -67,4 +67,3 @@ class Console extends Base {
 		return $msg;
 	}
 }
-?>
