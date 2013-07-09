@@ -192,4 +192,3 @@ trait ArrayAccess {
 		return $mutated;
 	}
 }
-?>

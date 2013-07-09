@@ -176,7 +176,6 @@ namespace Speedy {
 			$this->_db	= $db;
 			return $this;
 		}
-	
 	}	
 }
 
@@ -195,4 +194,3 @@ namespace {
 	
 }
 
-?>

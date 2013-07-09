@@ -96,7 +96,11 @@ namespace Speedy {
 		public function addAlias($alias, $namespace) {
 			if (!$this->hasNamespace($namespace)) return $this;
 			
-			$this->_aliases[$alias]	= $namespace;
+			if (isset($this->_aliases[$alias])) 
+				$this->_aliases[$alias][] = $namespace;	
+			else
+				$this->_aliases[$alias]	= [$namespace];
+
 			return $this;
 		}
 		
@@ -178,7 +182,16 @@ namespace Speedy {
 		 * @return string of path
 		 */
 		public function path($namespace) {
-			if ($this->hasAlias($namespace)) return $this->path($this->alias($namespace));
+			if ($this->hasAlias($namespace)) {
+				$spaces = $this->alias($namespace);
+				$paths = [];
+
+				foreach ($spaces as $space) {
+					$paths = array_merge($paths, $this->path($space));
+				}
+
+				return $paths;
+			}
 			
 			return ($this->hasNamespace($namespace)) ? $this->_namespaces[$namespace] : null;
 		}
