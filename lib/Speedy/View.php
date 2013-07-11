@@ -266,12 +266,7 @@ class View extends Object {
 	 * @return string json representation
 	 */
 	protected function toJson($mixed) {
-		App::instance()->cleanBuffer();
-		$this->response()
-			->setHeader('Cache-Control', 'no-cache, must-revalidate')
-			->setHeader('Expires', date('r'))
-			->setHeader('Content-Type', 'application/json');
-	
+		//App::instance()->cleanBuffer();
 		return json_encode($mixed);
 	}
 	
