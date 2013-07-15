@@ -2,7 +2,8 @@
 namespace Speedy;
 
 
-use \Speedy\Utility\Inflector;
+use Speedy\Utility\Inflector;
+use Symfony\Component\Yaml\Yaml;
 
 class Dispatcher extends Object {
 
@@ -44,7 +45,7 @@ class Dispatcher extends Object {
 		}
 		
 		$router->request()->addParams($route);
-		\Speedy\Logger::info("PARAMS: " . json_encode($router->request()->params()));
+		\Speedy\Logger::info("PARAMS: " . Yaml::dump($router->request()->params()));
 		$controllerObj	= new $fullName($router->request(), $response);
 		if (!method_exists($controllerObj, $route['action'])) {
 			// TODO: Error action not found in controller

@@ -13,7 +13,8 @@
 		"speedy-php/sprockets" : "dev-master",
 		"speedy-php/active-record" : "dev-speedy",
 		"jaz303/phake" : "dev-master",
-		"speedy-php/console-table": "dev-trunk"
+		"speedy-php/console-table": "dev-trunk",
+		"symfony/yaml": "v2.2.4"
 	},
 	"autoload":{
 		"psr-0": {
