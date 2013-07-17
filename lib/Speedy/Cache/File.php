@@ -59,7 +59,11 @@ class File implements CacheInterface {
 	public function read($name, $setting = null) {
 		if ($setting == null) $setting = self::PathDefault;
 			
-		$data	= @file_get_contents($this->fullPath($name, $setting));
+		$path 	= $this->fullPath($name, $setting);
+		if (!file_exists($path))
+			return false;
+		
+		$data	= @file_get_contents($path);
 		if (!$data) return false;
 		
 		return unserialize(base64_decode($data));

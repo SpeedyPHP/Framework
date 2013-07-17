@@ -9,19 +9,27 @@ namespace Speedy {
 	use Speedy\Middleware\Stack as MiddlewareStack;
 	use Speedy\Middleware\Asset as MiddlewareAsset;
 	use Speedy\Logger;
+	use Speedy\Error;
 	
 	class App extends Object {
 		
 		protected static $_instance = null;
 		
 		/**
-		 * 
-		 * @var \Speedy\Request
+		 * @var Speedy\Request
 		 * @deprecated
 		 */
 		protected $_request;
 		
+		/**
+		 * @var Speedy\Router
+		 */
 		private $_router;
+
+		/**
+		 * @var Whoops/Run
+		 */
+		private $_whoops;
 		
 		/**
 		 * Define the name which will be the namespace of the app
@@ -222,21 +230,41 @@ namespace Speedy {
 		}
 		
 		public function run() {
-			set_error_handler([$this, 'handleError']);
-			$this->stack()->run();
+			$errorReporting = $this->config('errors.report');
+			$errorLevel = $this->config('errors.reporting_level');
+			if ($errorReporting) {
+				error_reporting(!empty($errorLevel) ? $errorLevel : E_ALL ^ E_NOTICE);
+
+				$this->_whoops = new \Whoops\Run();
+				$pageHandler = new \Whoops\Handler\PrettyPageHandler();
+				$pageHandler->addDataTable("Request Params", $this->request()->params());
+				$this->_whoops->pushHandler($pageHandler);
+				$this->_whoops->register();
+			} else {
+				error_reporting(0);
+			}
+
+			try {
+				$this->stack()->run();
+			} catch (\Exception $e) {
+				Logger::error($e->getMessage());
+				new Error($e);
+			}
+		}
+
+		/**
+		 * Exception handler
+		 * @param $e Exception
+		 */
+		private function handleExceptions($e) {
+			// Check environment
+			// Check
+			throw $e;
 		}
 		
 		public function call() {
-			try {
-				$response = Dispatcher::run($this->router());
-				echo $response;
-			} catch (\Exception $e) {
-				Logger::error($e->getMessage());
-				
-				$this->cleanBuffer();
-				header("HTTP/1.0 500 Internal Server Error");
-				echo $this->exceptionFormat($e);
-			}
+			$response = Dispatcher::run($this->router());
+			echo $response;
 		}
 		
 		/**

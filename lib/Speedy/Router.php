@@ -82,7 +82,7 @@ class Router {
 		}
 		
 		if ($match === false) {
-			throw new HttpException("No route matches request '{$this->request()->scriptName()}' for {$this->request()->method()}");
+			throw new HttpException("No route matches request '{$this->request()->scriptName()}' for {$this->request()->method()}", 404);
 		}
 		
 		return $this->matchedRoute();

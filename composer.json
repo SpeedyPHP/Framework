@@ -14,7 +14,8 @@
 		"speedy-php/active-record" : "dev-speedy",
 		"jaz303/phake" : "dev-master",
 		"speedy-php/console-table": "dev-trunk",
-		"symfony/yaml": "v2.2.4"
+		"symfony/yaml": "v2.2.4",
+		"filp/whoops": "1.*"
 	},
 	"autoload":{
 		"psr-0": {
