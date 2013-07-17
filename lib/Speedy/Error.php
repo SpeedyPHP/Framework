@@ -16,6 +16,10 @@ class Error {
 	protected $error;
 
 
+	/**
+	 * Flag for reporting errors
+	 * @var bool
+	 */
 	protected $report = false;
 
 
@@ -51,6 +55,10 @@ class Error {
 		http_response_code(500);
 	}
 
+	/**
+	 * Handle HTTP Exceptions
+	 * @return null
+	 */
 	protected function handleHttpException() {
 		$code = $this->error()->getCode();
 		http_response_code($code);
@@ -63,6 +71,10 @@ class Error {
 		echo View::instance()->render($viewFile);
 	}
 
+	/**
+	 * Default 404
+	 * @return null
+	 */
 	protected function default404() {
 		$html = [
 			'<html>',
@@ -103,10 +115,6 @@ class Error {
 	 */
 	public function error() {
 		return $this->error;
-	}
-
-	public function handleException() {
-
 	}
 
 }
