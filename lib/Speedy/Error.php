@@ -68,7 +68,12 @@ class Error {
 			return $this->default404(); // Default view
 		}
 
-		echo View::instance()->render($viewFile);
+		echo View::instance()->setParams([
+				'controller' => ['error'],
+				'action'	=> '404'
+			])->render($viewFile, [
+				'layout' => (View::instance()->findFile('layouts' . DS . 'error')) ? 'error' : null
+			]);
 	}
 
 	/**
