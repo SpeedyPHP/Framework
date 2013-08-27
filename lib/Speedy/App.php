@@ -264,6 +264,12 @@ namespace Speedy {
 		
 		public function call() {
 			$response = Dispatcher::run($this->router());
+
+			// Clear output buffer to ensure the response formatting is maintained
+			if ( ob_get_level() !== 0 ) {
+				ob_clean();
+			}
+
 			echo $response;
 		}
 		
