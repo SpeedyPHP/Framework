@@ -188,7 +188,7 @@ class Mailer extends Object {
 		foreach ($this->_messages as $type => $message) {
 			$messages .= $this->eol() . $this->multiPartBoundary() . $this->eol();
 			$messages .= "Content-Type: text/$type; charset=utf-8" . $this->eol() . $this->eol();
-			$messages .= $message;
+			$messages .= $message . $this->eol();
 		}
 
 		$messages .= $this->eol() . $this->multiPartBoundary() . '--';
