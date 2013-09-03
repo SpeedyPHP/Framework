@@ -186,12 +186,12 @@ class Mailer extends Object {
 		$messages = '';
 
 		foreach ($this->_messages as $type => $message) {
-			$messages .= $this->eol() . $this->multiPartBoundary() . $this->eol();
+			$messages .= $this->eol() . '--' . $this->multiPartBoundary() . $this->eol();
 			$messages .= "Content-Type: text/$type; charset=utf-8" . $this->eol() . $this->eol();
 			$messages .= $message . $this->eol();
 		}
 
-		$messages .= $this->eol() . $this->multiPartBoundary() . '--';
+		$messages .= $this->eol() . '--' . $this->multiPartBoundary() . '--';
 
 		return $messages;
 	}
@@ -268,7 +268,7 @@ class Mailer extends Object {
 	 */
 	private function multiPartBoundary() {
 		if (!$this->_multiPartBoundary) {
-			$this->_multiPartBoundary = '--' . uniqid('np');
+			$this->_multiPartBoundary = uniqid('np');
 		}	
 
 		return $this->_multiPartBoundary;
