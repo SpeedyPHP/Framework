@@ -213,7 +213,7 @@ class Mailer extends Object {
 	 * Returns the string of headers for mail send
 	 * @return string
 	 */
-	private function headers() {
+	public function headers() {
 		$headers = '';
 		foreach ($this->_headers as $key => $val) {
 			if (is_int($key)) {
