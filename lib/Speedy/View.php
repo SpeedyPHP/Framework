@@ -70,6 +70,7 @@ class View extends Object {
 			throw new ViewException("No view renderer found for $file using builder => '$ext'"); 
 		
 		$rendererObj= $this->renderer($renderer);
+		$rendererObj->ext = $ext;
 		return $rendererObj->renderTemplate($fullPath, $this->vars());
 	}
 	

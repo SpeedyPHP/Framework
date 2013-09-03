@@ -67,7 +67,7 @@ abstract class Base extends Object {
 	 */
 	abstract public function renderTemplate($path, $vars = []); 
 	
-	public function render($path, $vars = []) {
+	public function render($path, $vars = [], $ext = null) {
 		$ns		= \App::instance()->ns();
 		//$options	= $this->options();
 		//$path		= ($path) ? $path : $this->path();
@@ -82,7 +82,10 @@ abstract class Base extends Object {
 
 		$cPath = $this->cleanPath($path);
 		//return $this->renderTemplate($path, $this->vars());
-		return View::instance()->render($cPath, [], $vars);
+
+		if (!isset($ext)) 
+			$ext = $this->ext;
+		return View::instance()->render($cPath, [], $vars, $ext);
 	}
 	
 	/**
