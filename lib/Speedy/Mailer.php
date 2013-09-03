@@ -48,9 +48,9 @@ class Mailer extends Object {
 
 	/**
 	 * Message 
-	 * @var string
+	 * @var array
 	 */
-	private $_message = '';
+	private $_messages = [];
 
 	/**
 	 * Current class name
@@ -149,8 +149,8 @@ class Mailer extends Object {
 	 * Delivers the current setup mailer
 	 * @return boolean
 	 */
-	public function deliver() {
-		if (!isset($this->_to))
+	public function deliver($skipDeliver = false) {
+		if (!isset($this->_to) && !$skipDeliver)
 			throw new MailerException('Missing to address', 1);
 
 		$this->addHeader('MIME-Version', '1.0')
@@ -158,11 +158,12 @@ class Mailer extends Object {
 			->addHeader('Content-Type', "multipart/alternative;boundary=" . $this->multiPartBoundary());
 
 
-		$this->setPlainMessage($this->render('text'));
-		$this->setHtmlMessage($this->render('html'));
+		$this->setMessage('plain', $this->render('text'))
+			->setMessage('html', $this->render('html'));
 
-		return mail($this->_to, $this->_subject, $this->message(), $this->headers());
+		return !$skipDeliver ? mail($this->_to, $this->_subject, $this->message(), $this->headers()) : false;
 	}
+
 
 	/**
 	 * Add a header for the current mailer
@@ -182,7 +183,17 @@ class Mailer extends Object {
 	 * @return string _message property with appended boundary
 	 */
 	public function message() {
-		return $this->_message . "--" . $this->multiPartBoundary() . "--" . $this->eol() . $this->eol();
+		$messages = '';
+
+		foreach ($this->_messages as $type => $message) {
+			$messages .= $this->eol() . $this->multiPartBoundary() . $this->eol();
+			$messages .= "Content-Type: text/$type; charset=utf-8" . $this->eol() . $this->eol();
+			$messages .= $message;
+		}
+
+		$messages .= $this->eol() . $this->multiPartBoundary() . '--';
+
+		return $messages;
 	}
 
 	/**
@@ -216,6 +227,18 @@ class Mailer extends Object {
 	}
 
 	/**
+	 * Add multipart message
+	 * 
+	 * @param string
+	 * @param string
+	 * @return Speedy\Mailer
+	 */
+	public function setMessage($type, $message) {
+		$this->_messages[$type] = $message;
+		return $this;
+	}
+
+	/**
 	 * Add html message
 	 * @return object instance of Speedy\Mailer
 	 */
@@ -245,7 +268,7 @@ class Mailer extends Object {
 	 */
 	private function multiPartBoundary() {
 		if (!$this->_multiPartBoundary) {
-			$this->_multiPartBoundary = uniqid('np');
+			$this->_multiPartBoundary = '--' . uniqid('np');
 		}	
 
 		return $this->_multiPartBoundary;
