@@ -149,8 +149,8 @@ class Mailer extends Object {
 	 * Delivers the current setup mailer
 	 * @return boolean
 	 */
-	public function deliver($skipDeliver = false) {
-		if (!isset($this->_to) && !$skipDeliver)
+	public function deliver($deliver = true) {
+		if (!isset($this->_to) && $deliver)
 			throw new MailerException('Missing to address', 1);
 
 		$this->addHeader('MIME-Version', '1.0')
@@ -161,7 +161,7 @@ class Mailer extends Object {
 		$this->setMessage('plain', $this->render('text'))
 			->setMessage('html', $this->render('html'));
 
-		return !$skipDeliver ? mail($this->_to, $this->_subject, $this->message(), $this->headers()) : false;
+		return $deliver ? mail($this->_to, $this->_subject, $this->message(), $this->headers()) : false;
 	}
 
 
