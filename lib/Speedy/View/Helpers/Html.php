@@ -499,7 +499,7 @@ trait Html {
 	 * @param string $el
 	 */
 	protected function selfClosing($el) {
-		return isset($this->_selfClosing[strtolower($el)]); 
+		return in_array(strtolower($el), $this->_selfClosing); 
 	}
 	
 	/**
