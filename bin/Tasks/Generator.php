@@ -45,6 +45,8 @@ Commands:
 test			-- Generators test
 controller		-- Generate controller
 scaffold_controller	-- Generate scaffold controller and views
+model 			-- Generate model
+migration 		-- Generate migration
 EOF;
 		output($help);
 	}

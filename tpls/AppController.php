@@ -9,6 +9,6 @@ class Application extends Controller {
 
 }
 
-?>
+
 EOF;
 ?>

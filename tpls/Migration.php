@@ -12,6 +12,6 @@ class $name extends Migration {
 
 }
 
-?>
+
 EOF;
 ?>
