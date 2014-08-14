@@ -10,6 +10,7 @@ class Speedy extends Speedy\Task {
 -h/--help		This help menu
 test			Test unit
 g			Generators
+new 			Generate new project
 EOF;
 		output($help);
 	}
@@ -112,4 +113,3 @@ if (php_sapi_name() == 'cli') {
 	exit($return);
 }
 
-?>

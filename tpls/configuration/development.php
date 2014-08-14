@@ -12,7 +12,7 @@ App::instance()->configure(function(\$conf) {
 	
 	date_default_timezone_set('America/Los_Angeles');
 	
-	Loader::instance()->registerNamespace("\{\$this->ns()}.lib", LIB_PATH);
+	\Speedy\Loader::instance()->registerNamespace("\{\$this->ns()}.lib", LIB_PATH);
 	//import('active_record.utils');
 	//import('active_record.exceptions');
 	//import('active_record.logger.runtime');

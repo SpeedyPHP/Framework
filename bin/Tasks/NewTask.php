@@ -26,7 +26,7 @@ EOF;
 	}
 	
 	public function defaultTask() {
-		$dir	= $this->getData(0);
+		$dir	= $this->data(0);
 		$base	= basename($dir);
 		$namespace	= ucfirst(strtolower($base));
 		$this->set('namespace',		$namespace);
@@ -44,6 +44,10 @@ EOF;
 		output("Create Phakefile");
 		$phakeContents	= $this->getTemplate("Phakefile.php");
 		file_put_contents($dir . DS . 'Phakefile', $phakeContents);
+
+		// $composerContents = $this->getTemplate('composer.json.php');
+		// file_put_contents($dir . DS . 'composer.json', $composerContents);
+		copy(SPEEDY_TEMPLATES . 'composer.json', $dir . DS . 'composer.json');
 		
 		$dir	.= DS;
 		foreach ($this->_requiredPaths() as $type => $subDir) {
@@ -143,9 +147,7 @@ EOF;
 			)
 		);
 		
-		return ($dir) ? $files[$dir] : $files;
+		return ($dir && isset($files[$dir])) ? $files[$dir] : null;
 	}
 	
 }
-
-?>

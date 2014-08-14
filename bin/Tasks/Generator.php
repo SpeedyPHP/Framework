@@ -55,7 +55,7 @@ EOF;
 	 * @return boolean
 	 */
 	public function hasGenerator($name) {
-		return ($this->_generators[$name]) ? true : false;
+		return (isset($this->_generators[$name])) ? true : false;
 	}
 	
 	/**
