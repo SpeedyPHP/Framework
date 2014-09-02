@@ -1,0 +1,15 @@
+{
+	"name" : "speedy-app/speedy-app",
+	"description" : "A SpeedyPHP Application",
+	"keywords" : ["SpeedyPHP Application"],
+	"require": {
+		"php": ">=5.4",
+		"jaz303/phake" : "dev-master",
+		"filp/whoops": "1.*",
+		"symfony/yaml": ">=v2.2.4",
+		"speedy-php/console-table": "dev-trunk",
+		"speedy-php/sprockets" : "dev-master",
+		"speedy-php/active-record" : "dev-speedy",
+		"speedy-php/framework" : "dev-master"
+	}
+}
