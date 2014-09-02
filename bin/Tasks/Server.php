@@ -11,7 +11,7 @@ class Server extends Speedy\Task {
 		$port	= 8000;
 		$docroot= $curDir . DS . 'public';
 		// $index	= $docroot . DS . 'index.php';
-		$router	= $docroot . DS . 'router.php';
+		$router	= $docroot . DS . 'debug.php';
 		 
 		$cmd	= "{$php} -S {$host}:{$port} -t {$docroot} {$router}";
 

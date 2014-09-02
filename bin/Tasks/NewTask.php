@@ -1,5 +1,8 @@
 <?php 
 
+use Speedy\Utility\Inflector;
+
+
 class NewTask extends Speedy\Task {
 
 	public $alias = "new";
@@ -75,6 +78,10 @@ EOF;
 		return $this;
 	}
 	
+	public function get($name) {
+		return (isset($this->_variables[$name])) ? $this->_variables[$name] : null;
+	}
+
 	private function set($name, $value) {
 		$this->_variables[$name] = $value;
 		return $this;
@@ -87,6 +94,10 @@ EOF;
 	
 	public function variables() {
 		return $this->_variables;
+	}
+
+	public function getNamespace() {
+		return $this->get('namespace');
 	}
 	
 	public function dir() {
@@ -103,12 +114,12 @@ EOF;
 	private function _requiredPaths() {
 		return array(
 			'app' => 'app',
-			'assets'		=> 'app' . DS . 'assets',
-			'controllers' 	=> 'app' . DS . 'controllers',
-			'helpers'		=> 'app' . DS . 'helpers',
-			'models'		=> 'app' . DS . 'models',
-			'views'			=> 'app' . DS . 'views',
-			'layouts'		=> 'app' . DS . 'views' . DS . 'layouts',
+			'assets'		=> 'app' . DS . $this->getNamespace() . DS . 'Assets',
+			'controllers' 	=> 'app' . DS . $this->getNamespace() . DS . 'Controllers',
+			'helpers'		=> 'app' . DS . $this->getNamespace() . DS . 'Helpers',
+			'models'		=> 'app' . DS . $this->getNamespace() . DS . 'Models',
+			'views'			=> 'app' . DS . $this->getNamespace() . DS . 'Views',
+			'layouts'		=> 'app' . DS . $this->getNamespace() . DS . 'Views' . DS . 'layouts',
 			'config'		=> 'config',
 			'environments'	=> 'config' . DS . 'environments',
 			'db'	=> 'db',
@@ -137,7 +148,8 @@ EOF;
 			),
 			'public'	=> array(
 				'index.php'	=> 'index.php',
-				'defines.php' => 'defines.php'
+				'defines.php' => 'defines.php',
+				'debug.php' => 'debug.php'
 			),
 			'controllers' => array(
 				'Application.php'	=> 'AppController.php'

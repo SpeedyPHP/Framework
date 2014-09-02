@@ -45,6 +45,10 @@ class Session {
 	public static function write($name, $value) {
 		return self::instance()->set($name, $value);
 	}
+
+	public static function start() {
+		return self::instance();
+	}
 	
 	public function manager() {
 		if (!$this->_manager) {

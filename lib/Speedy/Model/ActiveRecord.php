@@ -46,4 +46,4 @@ class ActiveRecord extends \ActiveRecord\Model {
 	public function _construct() {}
 	
 }
-?>
+
