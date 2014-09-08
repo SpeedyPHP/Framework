@@ -77,6 +77,10 @@ class Stack implements \ArrayAccess {
 	public function offsetUnset($offset) {
 		unset($this->_stack[$offset]);
 	}
+
+	public function total() {
+		return count($this->_stack);
+	}
 	
 }
-?>
+

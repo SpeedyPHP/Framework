@@ -135,10 +135,10 @@ namespace Speedy {
 			}
 			
 			$this->setMiddlewareStack(new MiddlewareStack($this));
-			$this->middlewareStack()->add(new MiddlewareAsset($this->middlewareStack()));
 			if (!empty($this->_middlewares)) {
 				$this->middlewareStack()->addFromArray($this->_middlewares);
 			}
+			$this->middlewareStack()->add(new MiddlewareAsset($this->middlewareStack()));
 		}
 
 		public function addPackage($name) {

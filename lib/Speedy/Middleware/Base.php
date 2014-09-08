@@ -11,7 +11,8 @@ abstract class Base {
 	
 
 	public function __construct(\Speedy\Middleware\Stack $stack) {
-		$this->setStack($stack)->add($this);
+		$this->setStack($stack);
+		
 		return $this;
 	}
 	

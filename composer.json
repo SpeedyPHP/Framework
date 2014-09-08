@@ -10,7 +10,8 @@
 	}],
 	"require": {
 		"php": ">=5.4",
-		"speedy-php/console-table": "dev-trunk"
+		"speedy-php/console-table": "dev-trunk",
+		"wp-cli/php-cli-tools": "dev-master"
 	},
 	"autoload":{
 		"psr-0": {

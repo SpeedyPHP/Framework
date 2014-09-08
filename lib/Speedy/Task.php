@@ -2,38 +2,30 @@
 namespace Speedy;
 
 
-class Task extends Object {
+class Task {
 	
 	public $name;
+
+	/**
+	 * @var \cli\Arguments
+	 */
 	protected $args;
 	
 
-	public function __construct($args = null) {
-		if ($args && count($args)) {
-			array_shift($args);
-			$this->args = $args;
-			$this->_setArgs($args);
-		}
-			
+	public function __construct(\cli\Arguments $args) {
 		$this->name	= strtolower(get_class());
-		
-		$this->_setup($args);
+		$this->args = $args;
+		$this->setup();
 	}
 	
 	/**
 	 * Overwrite this function when subclassing
 	 */
-	public function setup() {
-		
-	}
+	public function setup() {}
 	
-	public function help() {
-		
-	}
+	public function help() {}
 	
-	public function defaultTask() {
-		
-	}
+	public function defaultTask() {}
 	
 	public function run() {
 		$command = $this->data(1) . "Task";
@@ -71,19 +63,6 @@ class Task extends Object {
 	}
 	
 	/**
-	 * Removes args and adds args
-	 * @param array $args
-	 * @return $this
-	 */
-	private function _setup($args = array()) {
-		$this->setData($args);
-		
-		$this->setup();
-		
-		return $this;
-	}
-	
-	/**
 	 * Get current classes tasks
 	 * @return array 
 	 */
@@ -106,4 +85,4 @@ class Task extends Object {
 	
 }
 
-?>
+

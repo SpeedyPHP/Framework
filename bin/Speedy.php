@@ -12,19 +12,17 @@ test			Test unit
 g			Generators
 new 			Generate new project
 EOF;
-		output($help);
+		\cli\output($help);
 	}
 	
 	public function main() {
-		$out = <<<EOF
-------------------------------------------------
------------------- SpeedyPHP -------------------
-------------------------------------------------	
-EOF;
-		output($out);
+		\cli\line('------------------------------------------------');
+		\cli\line('------------------ SpeedyPHP -------------------');
+		\cli\line('------------------------------------------------');
+
 		if (APP_LOADED) $this->_loadApp();
 		$this->_loadTasks();
-		output();
+		// output();
 		
 		if ($this->argsCount() < 1) {
 			$this->help();
@@ -44,7 +42,7 @@ EOF;
 	 */
 	private function _loadApp() {
 		$app	= App::instance();
-		output("Loaded {$app->name()} from path " . CONFIG_PATH);
+		\cli\out("Loaded {$app->name()} from path " . CONFIG_PATH);
 	}
 	
 	private function _loadTasks() {
@@ -106,7 +104,9 @@ function fecho($str) {
 }
 
 if (php_sapi_name() == 'cli') {
-	$self = new Speedy($argv);
+	$strict = in_array('--strict', $_SERVER['argv']);
+	$arguments = new \cli\Arguments(compact('strict'));
+	$self = new Speedy($arguments);
 
 	$return = $self->main();
 

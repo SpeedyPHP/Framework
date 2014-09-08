@@ -20,7 +20,7 @@ defined("STDOUT") or define("STDOUT", fopen("php://stdout", "w"));
 
 
 if (file_exists(VENDOR_PATH . DS . 'autoload.php')) {
-  require_once VENDOR_PATH . DS . 'autoload.php';
+  	require_once VENDOR_PATH . DS . 'autoload.php';
 } elseif (file_exists(SPEEDY_PATH . DS . "lib")) {
   require_once SPEEDY_PATH . DS . "lib" . DS . "Speedy" . DS . "Loader.php";
   \Speedy\Loader::instance()->registerNamespace('speedy', SPEEDY_PATH . DS . "lib" . DS . "Speedy");
