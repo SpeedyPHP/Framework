@@ -11,7 +11,7 @@
 	"require": {
 		"php": ">=5.4",
 		"speedy-php/console-table": "dev-trunk",
-		"wp-cli/php-cli-tools": "dev-master"
+		"cilex/cilex": "1.0.*@dev"
 	},
 	"autoload":{
 		"psr-0": {

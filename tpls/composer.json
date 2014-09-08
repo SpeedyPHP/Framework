@@ -7,7 +7,7 @@
 		"jaz303/phake" : "dev-master",
 		"filp/whoops": "1.*",
 		"symfony/yaml": ">=v2.2.4",
-		"wp-cli/php-cli-tools": "dev-master",
+		"cilex/cilex": "1.0.*@dev",
 		"speedy-php/console-table": "dev-trunk",
 		"speedy-php/sprockets" : "dev-master",
 		"speedy-php/active-record" : "dev-speedy",

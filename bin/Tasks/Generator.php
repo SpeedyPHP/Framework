@@ -29,8 +29,22 @@ class Generator extends Speedy\Task {
 	);
 	
 	private $_variables = array();
+
+	public $description = 'Generate code';
 	
 	
+	/**
+	 * Run setup tasks
+	 */
+	public function setup() {
+	}
+
+	public function description() {
+		return array(
+				'name' => 'g',
+				'description' => 'Generate code'
+			);
+	}
 	
 	/**
 	 * Prints help for task
@@ -527,4 +541,4 @@ TPL;
 	
 }
 
-?>
+

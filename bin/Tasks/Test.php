@@ -1,6 +1,8 @@
 <?php 
 
 class Test extends Speedy\Task {
+
+	public $description = 'run test units';
 	
 	public function help() {
 		$help = <<<EOF

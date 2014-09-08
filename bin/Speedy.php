@@ -1,21 +1,33 @@
 <?php
 
-class Speedy extends Speedy\Task {
+class Speedy extends \Cilex\Application {
 	
 	private $_tasks = array();
 	
 	
+	public function renderTasksScreen() {
+		\cli\line("Commands:");
+		foreach ($this->_tasks as $task) {
+			$name = isset($task->alias) ? $task->alias : $task->name;
+			\cli\line("{$name}\t-- {$task->description}");
+		}
+	}
+
 	public function help() {
-		$help = <<<EOF
+		/*$help = <<<EOF
 -h/--help		This help menu
 test			Test unit
 g			Generators
 new 			Generate new project
-EOF;
-		\cli\output($help);
+EOF; */
+		// $this->args->parse();
+		\cli\line($this->args->getHelpScreen());
+		$this->renderTasksScreen();
 	}
 	
-	public function main() {
+	public function bootstrap() {
+		$this->args->addFlag(array('help', 'h'), 'Show this help screen');
+
 		\cli\line('------------------------------------------------');
 		\cli\line('------------------ SpeedyPHP -------------------');
 		\cli\line('------------------------------------------------');
@@ -24,7 +36,10 @@ EOF;
 		$this->_loadTasks();
 		// output();
 		
-		if ($this->argsCount() < 1) {
+		return $this;
+		/*$this->args->parse();
+		echo json_encode($this->args->getInvalidArguments());
+		if ($this->argsCount() < 2) {
 			$this->help();
 			return 0;
 		}
@@ -34,7 +49,7 @@ EOF;
 		
 		$task = $this->getTask($taskName);
 		
-		return $task->run();
+		return $task->run();*/
 	}
 	
 	/**
@@ -42,42 +57,24 @@ EOF;
 	 */
 	private function _loadApp() {
 		$app	= App::instance();
-		\cli\out("Loaded {$app->name()} from path " . CONFIG_PATH);
+		\cli\line("Loaded {$app->name()} from path " . CONFIG_PATH . "\n");
 	}
 	
 	private function _loadTasks() {
 		$directories = array(dirname(__FILE__) . DS . "Tasks");
-		$data = $this->data();
-		if ($data) array_shift($data);
 
 		foreach ($directories as $dir) {
 			if (!is_dir($dir)) continue;
-			
-			/*if ($dh = opendir($dir)) {				
-				while (($file = readdir($dh)) !== false) {
-					if (!preg_match("/^([\w_]+)\.php$/i", $file, $matches)) continue;
-					
-					require_once $dir . DS . $file;
-					$class = $matches[1];
-					
-					$obj = new $class();
-					$obj->setData($data);
-					
-					$this->_addTask(($obj->alias) ? $obj->alias : strtolower($class), $obj);
-				}
-				
-				closedir($dh);
-			}*/
 			
 			foreach (glob($dir . DS . '*.php') as $file) {
 				require_once $file;
 				$info	= pathinfo($file);
 				$class 	= $info['filename'];
 					
-				$obj = new $class();
-				$obj->setData($data);
+				$obj = new $class($this->args);
 					
-				$this->_addTask(($obj->alias) ? $obj->alias : strtolower($class), $obj);
+				if (!empty($obj->alias))
+					$this->_addTask(($obj->alias) ? $obj->alias : strtolower($class), $obj);
 			}
 		}
 	}
@@ -104,12 +101,8 @@ function fecho($str) {
 }
 
 if (php_sapi_name() == 'cli') {
-	$strict = in_array('--strict', $_SERVER['argv']);
-	$arguments = new \cli\Arguments(compact('strict'));
-	$self = new Speedy($arguments);
-
-	$return = $self->main();
-
-	exit($return);
+	// $app = new \Cilex\Application('Speedy');
+	$app = new Speedy('Speedy');
+	$app->run();
 }
 

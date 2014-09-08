@@ -10,6 +10,8 @@ class NewTask extends Speedy\Task {
 	private $_variables = array();
 	
 	private $_dir;
+
+	public $description = 'starts a new project';
 	
 	
 	public function __construct($args = null) {

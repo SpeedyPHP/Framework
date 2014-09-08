@@ -3,6 +3,8 @@
 class Server extends Speedy\Task {
 	
 	public $alias = "s";
+
+	public $description = 'start server';
 	
 	public function defaultTask() {
 		$php	= chop(`which php`);

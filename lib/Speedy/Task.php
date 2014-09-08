@@ -6,6 +6,8 @@ class Task {
 	
 	public $name;
 
+	public $description;
+
 	/**
 	 * @var \cli\Arguments
 	 */
@@ -41,25 +43,6 @@ class Task {
 		} else {
 			return $this->defaultTask();
 		}
-	}
-	
-	/**
-	 * Adds cli args to class data
-	 * @param array $args
-	 * @return $this
-	 */
-	private function _setArgs($args) {
-		while($value = array_shift($args)) {
-			if (preg_match("/^--([\w]+)=([\w]+)/i", $value, $matches)) {
-				$this->setData($matches[1], $matches[2]);
-			} elseif (preg_match("/^-([A-Za-z]{1})/i", $value, $matches)) {
-				$this->setData($matches[1], array_shift($args));
-			} else {
-				$this->setData($value);
-			}
-		}
-		
-		return $this;
 	}
 	
 	/**
